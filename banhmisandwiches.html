@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+  <html lang="jp">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="shortcut icon" href="https://i.imgur.com/j5sprRe.png" type="image/x-icon">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
+    <link rel ="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
+    <link rel="stylesheet" href="part/css/giaodien.css">
+     <!-------------- BoxIcons Stylesheet Link -------------->
+     <link href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
+
+     <!-------------- Owl Carousel Stylesheet Links -------------->
+     <link rel="stylesheet"
+         href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
+     <link rel="stylesheet"
+         href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css" />
+ 
+     <!-------------- AOS Stylesheet Link -------------->
+     <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+ 
+     <!-------------- Light Gallery Stylesheet Link -------------->
+     <link rel="stylesheet"
+         href="https://cdnjs.cloudflare.com/ajax/libs/lightgallery-js/1.4.0/css/lightgallery.min.css" />
+    <title>Banhmisandwichestokyo</title>
+  </head>
+  <body>
+    <header class="header" id="header">
+        <nav class="nav content">
+            <a href="#home" class="nav__logo">
+                <img src="https://i.imgur.com/j5sprRe.png" alt="logo image">
+            </a>
+            <div class="nav__menu" id="nav-menu">
+                <ul class="nav__list">
+                    <li class="nav__item">
+                        <a href="#home" class="nav__link active-link">ホ－ム</a>
+                    </li>
+                    <li class="nav__item">
+                        <a href="#about" class="nav__link">About us</a>
+                    </li> 
+                    <li class="nav__item">
+                        <a href="#menu" class="nav__link">メニュ</a>
+                    </li>
+                    <li class="nav__item">
+                        <a href="#gallery" class="nav__link">店舗写真</a>
+                    </li>
+                    <li class="nav__item">
+                        <a href="store.html" class="nav__link">店舗探し</a>
+                    </li>
+                    <li class="lang-select">
+                        <select id="language-select" onchange="location = this.value;">
+                          <option value="" selected disabled hidden>language</option>
+                          <option value="banhmisandwichtokyo.html">日本語</option>
+                          <option value="en.html">English</option>
+                          <option value="#">Tiếng Việt</option>
+                        </select>
+                    </li>
+                      
+                      
+                </ul>
+                <!--close button-->
+                <div class="nav__close" id="nav-close">
+                    <i class="ri-close-line"></i>
+                </div>
+            </div>
+            
+            <div class="nav__buttons">
+               <i class="ri-moon-line change-theme" id="theme-button"></i>
+                <div class="nav__toggle" id="nav-toggle">
+                    <i class="ri-menu-line"></i>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <main class="main">
+        <section class="home section" id="home">
+            <div class="home__container container grid">
+                <img src="https://i.imgur.com/uf6s0Ed.png" alt="home image" class="home__img">
+                <div class="home__data">
+                    <h1 class="home__title">
+                        ベトナムの代表的な料理であるバインミーは、</h1>
+                    <p class="home__description">
+                        新鮮な食材とベトナムの文化的な食文化の独特な組み合わせで、緻密な調理技術を使い作り上げた独特の味わいがあります。
+                        バインミーは世界的にも人気が高く、英語のオックスフォード辞書でも正式に認定された固有名詞として扱われています。
+                        また、手軽に食べられることから、ベトナム人の生活にも深く根付いています。
+                    </p>
+                    <a href="#" class="button">
+                        一覧を見る <i class="ri-arrow-right-line"></i>
+                    </a>
+                </div>
+            </div>
+
+        </section>
+        <!--==========ABOUT==========-->
+        <section class="about section" id="about">
+            <div class="about__container container grid">
+                <div class="about__data">
+                    <span class="setion__subtitle">About Us</span>
+                    <h2 class="section__title about__title">
+                        <div>
+                            バインミーは、
+                        </div>
+                    </h2>
+                    <p class="about__description">
+                        フレッシュなバゲット、おいしい肉、香味野菜とハーブを使用して作られたベトナムのサンドイッチです。タンパク質、野菜、全粒穀物の組み合わせにより、満腹感を得ることができます。また、バインミーに使用されるハーブや野菜には、免疫力を高めたり、
+                        消化を改善したりするために必要なビタミンやミネラルが豊富に含まれています。
+                    </p>
+                </div>
+                <img src="https://i.imgur.com/uf6s0Ed.png" alt="about image" class="about__img">
+            </div>
+     </section>
+    <!----========== MENU========-->
+    <section class="popular section" id="menu">
+        <span class="section__subtitle">メニュ</span>
+        <div class="popular__container container grid">
+             <article class="popular__card">
+                <img src="https://i.imgur.com/Qm7NZnd.png" alt="popiular image" class="popular__img">
+                <h3 class="popular__name">バインミー</h3>
+                <span class="popular__discription"></span>
+
+                <span class="popular__price">￥390～</span>
+                <a href="menu.html" class="popular__button">
+                    <i class="ri-arrow-right-line"></i>  
+                </a>
+             </article>
+
+            <article class="popular__card">
+                <img src="https://i.imgur.com/LQxfHq8.png" alt="popiular image" class="popular__img">
+                <h3 class="popular__name">フォーと麺</h3>
+                <span class="popular__discription"></span>
+
+                <span class="popular__price">￥840～</span>
+                <a href="menu.html" class="popular__button">
+                    <i class="ri-arrow-right-line"></i>  
+                </a>
+            </article>
+
+            <article class="popular__card">
+                <img src="https://i.imgur.com/eeZ3OVv.png" alt="popiular image" class="popular__img">
+                <h3 class="popular__name">サイド</h3>
+                <span class="popular__discription"></span>
+
+                <span class="popular__price">￥180～</span>
+                <a href="menu.html" class="popular__button">
+                    <i class="ri-arrow-right-line"></i>  
+                </a>
+            </article>
+
+            <article class="popular__card">
+                <img src="https://i.imgur.com/NjOXGBd.png" alt="popiular image" class="popular__img1">
+                <h3 class="popular__name">ドリンク</h3>
+                <span class="popular__discription"></span>
+
+                <span class="popular__price">￥380~</span>
+                <a href="menu.html" class="popular__button">
+                    <i class="ri-arrow-right-line"></i>  
+                </a>
+             </article>
+
+             </div> 
+    </section>
+
+<!--=============GALLERY============-->
+<section class="section-heading" id="gallery">
+            <span class="setion__subtitle">店舗の写真</span>
+
+    <div class="gallery-wrapper flex-row">
+
+        <a class="gallery-img" href="https://i.imgur.com/zOSXo1o.jpg">
+            <img src="https://i.imgur.com/zOSXo1o.jpg" alt="#">
+            <div class="overlay">
+                <i class="icon bx bx-search"></i>
+            </div>
+        </a>
+
+        <a class="gallery-img" href="https://i.imgur.com/zAN7ClS.jpg">
+            <img src="https://i.imgur.com/zAN7ClS.jpg" alt="#">
+            <div class="overlay">
+                <i class="icon bx bx-search"></i>
+            </div>
+        </a>
+
+        <a class="gallery-img" href="https://i.imgur.com/jtr4j4A.jpg">
+            <img src="https://i.imgur.com/jtr4j4A.jpg" alt="#">
+            <div class="overlay">
+                <i class="icon bx bx-search"></i>
+            </div>
+        </a>
+
+        <a class="gallery-img" href="https://i.imgur.com/PiYvM0Y.jpg">
+            <img src="https://i.imgur.com/PiYvM0Y.jpg" alt="#">
+            <div class="overlay">
+                <i class="icon bx bx-search"></i>
+            </div>
+        </a>
+
+        <a class="gallery-img" href="https://i.imgur.com/vtC9llV.jpg">
+            <img src="https://i.imgur.com/vtC9llV.jpg" alt="#">
+            <div class="overlay">
+                <i class="icon bx bx-search"></i>
+            </div>
+        </a>
+
+        <a class="gallery-img" href="https://i.imgur.com/bN1nOMS.jpg">
+            <img src="https://i.imgur.com/bN1nOMS.jpg" alt="#">
+            <div class="overlay">
+                <i class="icon bx bx-search"></i>
+            </div>
+        </a>
+    </div>
+</section>
+  
+
+  
+
+
+</main>
+
+<!--============-FOOTER============-->
+<footer class="footer">
+    <div class="footer__container container grid">
+        <div>
+            <a href="#home" class="footer__logo">
+                <img src="https://i.imgur.com/j5sprRe.png" alt="logo image">
+            </a>
+            <p class="footer__description">
+                 私たちの会社は、ベトナムのバインミーを全世界に広めることを目的としています。<br>
+                 私たちの使命は、誠実さと情熱を込めて、お客様に最高の価値を提供することです。<br>
+                 私たちは、おいしい食事を提供するだけでなく、お客様にベトナムの文化的な食体験を提供したいと考えています。<br>
+                 私たちは、お客様がバインミーを食べることが習慣になるよう努めています。<br>
+                 私たちは、お客様に最高の食体験を提供し、バインミーを通じてベトナムの美味しい食文化を広めることに情熱を傾けています。
+            </p>
+        </div>
+
+        <div class="footer__content">
+            <div>
+                <h3 class="footer__title">トップページ</h3>
+                <ul class="footer__link">
+                    <li >
+                        <a href="#about" class="footer__link">About</a>
+                    </li>
+                    <li >
+                        <a href="menu.html" class="footer__link">メニュ</a>
+                    </li>
+                    <li >
+                        <a href="#gallery" class="footer__link">店舗写真</a>
+                    </li>
+                    <li >
+                        <a href="store.html" class="footer__link">店舗探し</a>
+                    </li>
+                </ul>
+         </div>
+         <div>
+                <h3 class="footer__title">問い合わせ</h3>
+                <ul class="footer__links">
+                    <li class="footer__information">
+                        <li class="footer__information">
+                            <a href="https://goo.gl/maps/6QQqirmCDYXHcnGt9" target="_blank">
+                                <i class="fa-regular fa-building"></i> バィンミー☆サンドイッチ高田馬場本店 </a>
+                            </li>
+       
+                           <li class="footer__information">
+                               <a href="mailto:banhmisandwich@gmail.com" target="_blank" >
+                               <i class="fa-sharp fa-regular fa-envelope"></i>banhmisandwichtokyo<br>
+                               @gmail.com<a>
+       
+                           </li>
+                           <li class="footer__information">
+                           <a href="tel:0359374547" target="_blank">
+                            <i class="fa-solid fa-phone"></i>0359374547</a>
+                               
+       
+                           </li>
+                </ul>
+        </div>
+
+        <div>
+            <h3 class="footer__title">フォロー</h3>
+            <ul class="footer__social">
+                <a href="https://www.facebook.com/" target="_blank" class="footer__social-link">
+                        <i class="ri-facebook-circle-fill"></i>
+                </a>
+                 <a href="https://www.instagram.com/" target="_blank" class="footer__social-link">
+                        <i class="ri-instagram-fill"></i>
+                </a>
+                <a href="" target="_blank" class="footer__social-link">
+                        <i class="ri-line-fill"></i>
+                </a>
+            </ul>
+        </div>
+    </div>
+    <div class="footer__info container">
+
+        <div class="footer__card">
+            <img src="https://i.imgur.com/4uErpCj.jpg" alt="footer image">
+        </div>
+       <span class="footer__copy">
+         &#169; Copyright Hoang Kim Lan. All rights reserved
+       </span>
+    </div>
+</footer>
+<!--========= SCROLL UP========-->
+  <a href="#" class="scrollup" id="scroll-up">
+    <i class="ri-arrow-up-line"></i>
+  </a>
+<!--===== SCROLLREVEAL=======-->
+    <script src="part/main/main.js"></script>
+    <script src="part/main/scrollreveal.min.js"></script>
+    <script src="https://unpkg.com/scrollreveal"></script>
+
+    <!-------------- JQuery Script -------------->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+
+
+    <!-------------- Owl Carousel Script -------------->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+    <!-------------- Light Gallery Script -------------->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lightgallery-js/1.4.0/js/lightgallery.min.js"></script>
+
+    <script>
+       lightGallery(document.querySelector('.gallery-wrapper'));
+    </script>
+
+
+</body>
+  </html>
