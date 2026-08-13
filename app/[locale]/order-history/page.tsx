@@ -27,6 +27,7 @@ const translations: Record<Locale, any> = {
     completed: '受取完了', 
     unknownStatus: 'ステータス',
     allTime: '全期間', 
+    allMonths: 'すべての月',
     yearLabel: '年',
     monthLabel: '月',
     immediate: '今すぐ受取', 
@@ -50,6 +51,7 @@ const translations: Record<Locale, any> = {
     completed: 'Picked up', 
     unknownStatus: 'Status',
     allTime: 'All time',
+    allMonths: 'All months',
     yearLabel: 'Year',
     monthLabel: 'Month',
     immediate: 'ASAP Pickup',
@@ -73,9 +75,10 @@ const translations: Record<Locale, any> = {
     completed: 'Đã nhận món', 
     unknownStatus: 'Trạng thái',
     allTime: 'Tất cả thời gian',
+    allMonths: 'Tất cả các tháng',
     yearLabel: 'Năm',
     monthLabel: 'Tháng',
-    immediate: 'Lấy ngay (ASAP)', 
+    immediate: 'Lấy ngay', 
     scheduled: 'Hẹn giờ nhận', 
     scheduledFor: 'Thời gian hẹn lấy',
     customerLabel: 'Tên người nhận',
@@ -96,9 +99,10 @@ const translations: Record<Locale, any> = {
     completed: '已取餐', 
     unknownStatus: '订单状态',
     allTime: '全部时间',
+    allMonths: '全部月份',
     yearLabel: '年',
     monthLabel: '月',
-    immediate: '立即取餐 (ASAP)', 
+    immediate: '立即取餐', 
     scheduled: '预约取餐',
     scheduledFor: '预约取餐时间',
     customerLabel: '取餐人姓名',
@@ -170,22 +174,22 @@ export default function OrderHistoryPage() {
   const locale = getSafeLocale(params?.locale);
   const t = translations[locale];
 
-  const storeSlug = searchParams.get('store');
+  const currentStoreSlug = searchParams.get('store');
   const [storeInfo, setStoreInfo] = useState<any>(null);
   const [orders, setOrders] = useState<DisplayOrder[]>([]);
   const [loading, setLoading] = useState(true);
 
   const [selectedYear, setSelectedYear] = useState<string>('ALL');
   const [selectedMonth, setSelectedMonth] = useState<string>('ALL');
-  const [selectedOrder, setSelectedOrder] = useState<DisplayOrder | null>(null); // State quản lý Modal chi tiết
+  const [selectedOrder, setSelectedOrder] = useState<DisplayOrder | null>(null);
 
   useEffect(() => {
-    if (storeSlug) {
-      getStoreInfoBySlug(storeSlug)
+    if (currentStoreSlug) {
+      getStoreInfoBySlug(currentStoreSlug)
         .then((info) => { if (info) setStoreInfo(info); })
         .catch((err) => console.error('[OrderHistory] Failed to load store info', err));
     }
-  }, [storeSlug]);
+  }, [currentStoreSlug]);
 
   useEffect(() => {
     let cancelled = false;
@@ -320,7 +324,8 @@ export default function OrderHistoryPage() {
             </select>
             {selectedYear !== 'ALL' && (
               <select value={selectedMonth} onChange={(e) => setSelectedMonth(e.target.value)} className="order-filter-select">
-                <option value="ALL">All months</option>
+                {/* Đã dịch linh hoạt theo ngôn ngữ hiện tại */}
+                <option value="ALL">{t.allMonths}</option>
                 {Array.from({ length: 12 }, (_, i) => i + 1).map((m) => <option key={m} value={String(m)}>{m} {t.monthLabel}</option>)}
               </select>
             )}
@@ -330,7 +335,12 @@ export default function OrderHistoryPage() {
         {orders.length === 0 || filteredOrders.length === 0 ? (
           <div className="order-empty-state">
             <p>{t.empty}</p>
-            <Link href={`/${locale}`} className="order-empty-btn">{t.goHome}</Link>
+            <Link 
+              href={currentStoreSlug && currentStoreSlug.trim() !== '' ? `/${locale}/order?store=${currentStoreSlug}` : `/${locale}/store-select`} 
+              className="order-empty-btn"
+            >
+              {t.goHome}
+            </Link>
           </div>
         ) : (
           <div className="order-date-groups">
@@ -358,7 +368,6 @@ export default function OrderHistoryPage() {
         )}
       </div>
 
-      {/* Modal hiển thị chi tiết khi click */}
       <OrderModal
         order={selectedOrder}
         onClose={() => setSelectedOrder(null)}
