@@ -319,7 +319,7 @@ export default function StripePaymentForm({
             options={{
               layout: {
                 type: 'accordion',
-                defaultCollapsed: false,
+                defaultCollapsed: true,
               },
             }}
           />
