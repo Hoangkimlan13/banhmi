@@ -1,29 +1,69 @@
 import { NextResponse } from 'next/server';
+import { Prisma } from '@prisma/client';
 import { db } from '@/lib/prisma';
+
+// =========================================================
+// PRISMA TYPES
+// =========================================================
+
+type CustomerOrderWithItems =
+  Prisma.tbl_customer_ordersGetPayload<{
+    include: {
+      tbl_customer_order_items: true;
+    };
+  }>;
+
+type CustomerOrderItem =
+  CustomerOrderWithItems['tbl_customer_order_items'][number];
+
+type CustomerOrderItemOption =
+  Prisma.tbl_customer_order_item_optionsGetPayload<{}>;
+
+// =========================================================
+// POST
+// =========================================================
 
 export async function POST(req: Request) {
   try {
-    const body = await req.json();
+    const body: unknown = await req.json();
 
     // =========================================================
     // 1. LẤY ORDER TOKENS
     // =========================================================
 
-    const rawTokens: unknown[] = Array.isArray(body?.tokens)
-      ? body.tokens
-      : [];
+    const rawTokens: unknown[] =
+      body !== null &&
+      typeof body === 'object' &&
+      'tokens' in body &&
+      Array.isArray(
+        (body as Record<string, unknown>).tokens
+      )
+        ? ((body as Record<string, unknown>)
+            .tokens as unknown[])
+        : [];
 
     const tokens: string[] = rawTokens
-      .map((item: unknown) => {
+      .map((item: unknown): string | null => {
+        // -----------------------------------------------------
+        // Trường hợp:
+        // ["token1", "token2"]
+        // -----------------------------------------------------
+
         if (typeof item === 'string') {
           return item;
         }
+
+        // -----------------------------------------------------
+        // Trường hợp:
+        // [{ orderToken: "token1" }]
+        // -----------------------------------------------------
 
         if (
           item !== null &&
           typeof item === 'object'
         ) {
-          const record = item as Record<string, unknown>;
+          const record =
+            item as Record<string, unknown>;
 
           return typeof record.orderToken === 'string'
             ? record.orderToken
@@ -33,17 +73,23 @@ export async function POST(req: Request) {
         return null;
       })
       .filter(
-        (token): token is string =>
+        (token: string | null): token is string =>
           typeof token === 'string' &&
           token.trim().length > 0
       );
 
-    const uniqueTokens = [...new Set(tokens)];
+    const uniqueTokens: string[] = [
+      ...new Set(tokens),
+    ];
 
     console.log(
       '[OrderHistory] tokens received:',
       uniqueTokens.length
     );
+
+    // =========================================================
+    // KHÔNG CÓ TOKEN
+    // =========================================================
 
     if (uniqueTokens.length === 0) {
       return NextResponse.json({
@@ -56,7 +102,7 @@ export async function POST(req: Request) {
     // 2. LẤY ORDER + ORDER ITEMS
     // =========================================================
 
-    const orders =
+    const orders: CustomerOrderWithItems[] =
       await db.tbl_customer_orders.findMany({
         where: {
           order_token: {
@@ -79,30 +125,45 @@ export async function POST(req: Request) {
     );
 
     // =========================================================
-    // 3. LẤY OPTIONS ĐÃ SNAPSHOT
+    // 3. LẤY ORDER ITEM IDS
     // =========================================================
 
-    const orderItemIds: number[] = [];
+    const orderItemIds: number[] =
+      orders.flatMap(
+        (
+          order: CustomerOrderWithItems
+        ): number[] =>
+          order.tbl_customer_order_items.map(
+            (
+              item: CustomerOrderItem
+            ): number => Number(item.id)
+          )
+      );
 
-    for (const order of orders) {
-      for (const item of order.tbl_customer_order_items) {
-        orderItemIds.push(Number(item.id));
-      }
-    }
+    console.log(
+      '[OrderHistory] order item ids:',
+      orderItemIds.length
+    );
 
-    const options =
+    // =========================================================
+    // 4. LẤY OPTIONS ĐÃ SNAPSHOT
+    // =========================================================
+
+    const options: CustomerOrderItemOption[] =
       orderItemIds.length > 0
-        ? await db.tbl_customer_order_item_options.findMany({
-            where: {
-              order_item_id: {
-                in: orderItemIds,
+        ? await db.tbl_customer_order_item_options.findMany(
+            {
+              where: {
+                order_item_id: {
+                  in: orderItemIds,
+                },
               },
-            },
 
-            orderBy: {
-              id: 'asc',
-            },
-          })
+              orderBy: {
+                id: 'asc',
+              },
+            }
+          )
         : [];
 
     console.log(
@@ -111,17 +172,23 @@ export async function POST(req: Request) {
     );
 
     // =========================================================
-    // 4. GROUP OPTIONS THEO ORDER ITEM
+    // 5. GROUP OPTIONS THEO ORDER ITEM
     // =========================================================
 
     const optionsByOrderItem =
-      new Map<string, typeof options>();
+      new Map<
+        string,
+        CustomerOrderItemOption[]
+      >();
 
-    for (const option of options) {
-      const key = String(option.order_item_id);
+    for (
+      const option of options
+    ) {
+      const key: string =
+        String(option.order_item_id);
 
-      const current =
-        optionsByOrderItem.get(key) || [];
+      const current: CustomerOrderItemOption[] =
+        optionsByOrderItem.get(key) ?? [];
 
       current.push(option);
 
@@ -132,21 +199,19 @@ export async function POST(req: Request) {
     }
 
     // =========================================================
-    // 5. SERIALIZE ORDER
-    // =========================================================
-
-        // =========================================================
-    // 5. SERIALIZE ORDER
+    // 6. SERIALIZE ORDERS
     // =========================================================
 
     const serializedOrders =
       orders.map(
-        (order: typeof orders[number]) => ({
+        (
+          order: CustomerOrderWithItems
+        ) => ({
           ...order,
 
-          // -----------------------------------------------------
+          // =====================================================
           // ORDER
-          // -----------------------------------------------------
+          // =====================================================
 
           id: String(order.id),
 
@@ -171,19 +236,27 @@ export async function POST(req: Request) {
           total_amount:
             Number(order.total_amount),
 
-          // -----------------------------------------------------
+          // =====================================================
           // ORDER ITEMS
-          // -----------------------------------------------------
+          // =====================================================
 
           tbl_customer_order_items:
             order.tbl_customer_order_items.map(
               (
-                item: typeof order.tbl_customer_order_items[number]
+                item: CustomerOrderItem
               ) => {
-                const itemOptions =
+                // -----------------------------------------------
+                // LẤY OPTIONS CỦA ITEM
+                // -----------------------------------------------
+
+                const itemOptions: CustomerOrderItemOption[] =
                   optionsByOrderItem.get(
                     String(item.id)
-                  ) || [];
+                  ) ?? [];
+
+                // -----------------------------------------------
+                // RETURN ITEM
+                // -----------------------------------------------
 
                 return {
                   ...item,
@@ -204,17 +277,17 @@ export async function POST(req: Request) {
 
                   option_total:
                     Number(
-                      item.option_total || 0
+                      item.option_total ?? 0
                     ),
 
-                  // -------------------------------------------------
-                  // OPTIONS
-                  // -------------------------------------------------
+                  // =============================================
+                  // SNAPSHOT OPTIONS
+                  // =============================================
 
                   tbl_customer_order_item_options:
                     itemOptions.map(
                       (
-                        option: typeof options[number]
+                        option: CustomerOrderItemOption
                       ) => ({
                         id: String(option.id),
 
@@ -224,19 +297,22 @@ export async function POST(req: Request) {
                           ),
 
                         option_item_id:
-                          option.option_item_id !== null &&
-                          option.option_item_id !== undefined
+                          option.option_item_id !==
+                            null &&
+                          option.option_item_id !==
+                            undefined
                             ? Number(
                                 option.option_item_id
                               )
                             : null,
 
-                        // =========================================
+                        // -----------------------------------------
                         // SNAPSHOT
-                        // =========================================
+                        // -----------------------------------------
 
                         group_name_snap:
-                          option.group_name_snap ?? null,
+                          option.group_name_snap ??
+                          null,
 
                         option_name_snap:
                           option.option_name_snap,
@@ -254,15 +330,14 @@ export async function POST(req: Request) {
       );
 
     // =========================================================
-    // 6. RESPONSE
+    // 7. RESPONSE
     // =========================================================
 
     return NextResponse.json({
       success: true,
       orders: serializedOrders,
     });
-
-  } catch (error) {
+  } catch (error: unknown) {
     console.error(
       '[OrderHistory API Error]',
       error
@@ -271,6 +346,7 @@ export async function POST(req: Request) {
     return NextResponse.json(
       {
         success: false,
+
         error:
           error instanceof Error
             ? error.message
