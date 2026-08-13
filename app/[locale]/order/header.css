@@ -1,0 +1,429 @@
+/* =========================================================
+   MODERN ORDER HEADER & LAYOUT (Cố định chuẩn F&B Quốc Tế)
+   ========================================================= */
+
+/* 1. HEADER CỐ ĐỊNH CHIỀU CAO 56PX */
+.order-mini-header {
+  position: sticky;
+  top: 0;
+  height: 56px;
+  z-index: 300;
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(226, 232, 240, 0.9);
+  box-shadow: 0 4px 12px -2px rgba(15, 23, 42, 0.06);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 16px;
+  gap: 5px;
+}
+
+/* LEFT STORE INFO */
+.order-header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  flex: 1; /* Cho phép co giãn linh hoạt, nhường chỗ cho phần bên phải */
+  overflow: hidden; /* Bắt buộc phải có để ellipsis hoạt động trong flexbox */
+}
+
+.store-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #fb923c, #ea580c);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  box-shadow: 0 6px 16px rgba(234, 88, 12, 0.25);
+  flex-shrink: 0; /* Không bị bóp méo icon */
+}
+
+.store-avatar span,
+.store-avatar .material-symbols-outlined {
+  font-size: 22px;
+}
+
+.store-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0; /* Cực kỳ quan trọng để flex item chịu co lại và hiện dấu ... */
+  flex: 1;
+}
+
+.header-store-title {
+  font-size: 10px;
+  letter-spacing: 1.2px;
+  font-weight: 700;
+  color: #ea580c;
+  text-transform: uppercase;
+}
+
+.store-name {
+  font-size: 14px;
+  font-weight: 800;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; /* Tự động thêm dấu ... khi văn bản quá dài */
+  color: #111827;
+  display: block;
+  width: 100%;
+}
+
+/* RIGHT CONTROLS */
+.order-header-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0; /* Cố định phần bên phải, không bị đẩy hoặc bóp méo */
+}
+
+/* LANGUAGE DROPDOWN */
+.order-lang-wrapper {
+  position: relative;
+}
+
+.order-lang-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border: 1px solid #e2e8f0;
+  border-radius: 999px;
+  background: #ffffff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.order-lang-btn:hover {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+}
+
+.order-globe-icon {
+  width: 15px;
+  height: 15px;
+  color: #f97316;
+}
+
+.order-lang-code {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.order-chevron {
+  width: 12px;
+  height: 12px;
+  transition: transform 0.25s ease;
+  color: #64748b;
+}
+
+.order-chevron.rotated {
+  transform: rotate(180deg);
+}
+
+.order-lang-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.1);
+  border-radius: 12px;
+  overflow: hidden;
+  z-index: 310;
+  min-width: 130px;
+  padding: 6px;
+}
+
+.order-lang-item {
+  width: 100%;
+  padding: 8px 10px;
+  border: none;
+  background: transparent;
+  border-radius: 8px;
+  text-align: left;
+  font-size: 13px;
+  font-weight: 600;
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.order-lang-item:hover {
+  background: #fff7ed;
+  color: #f97316;
+}
+
+.order-lang-item.active {
+  background: #f97316;
+  color: white;
+  font-weight: 700;
+}
+
+/* MENU BUTTON */
+.order-menu-icon-btn {
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #f97316, #c2410c);
+  color: white;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 2px 8px rgba(249, 115, 22, 0.25);
+  transition: all 0.2s ease;
+}
+
+.order-menu-icon-btn:hover {
+  transform: translateY(-1px);
+}
+
+
+.order-menu-icon-btn span,
+.order-menu-icon-btn .material-symbols-outlined {
+  font-size: 22px;
+}
+
+
+
+/* 4. DRAWER MENU POPUP */
+.order-drawer-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 400;
+  background: rgba(15, 23, 42, .35);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .3s ease, visibility .3s ease;
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  display: flex;
+  justify-content: flex-end;
+}
+
+.order-drawer-backdrop.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+.order-drawer-content {
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+  width: min(86vw, 340px);
+  background: #fff;
+  padding: 24px 20px;
+  box-shadow: -20px 0 50px rgba(15, 23, 42, .15);
+  transform: translateX(100%);
+  transition: transform .35s cubic-bezier(.22, 1, .36, 1);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.order-drawer-content.show {
+  transform: translateX(0);
+}
+
+.drawer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 18px;
+  border-bottom: 1px solid #f1f5f9;
+  margin-bottom: 0;
+}
+
+.drawer-header h3 {
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -.3px;
+  color: #111827;
+  margin: 0;
+}
+
+.drawer-close {
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 50%;
+  background: #f8fafc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #64748b;
+  cursor: pointer;
+  transition: .25s;
+}
+
+.drawer-close:hover {
+  background: #fff7ed;
+  color: #ea580c;
+  transform: rotate(90deg);
+}
+
+.drawer-brand-area {
+
+  margin-top:24px;
+
+  padding:24px 20px;
+
+  border-radius:22px;
+
+
+  /* nền sang trọng hợp logo đỏ */
+  background:
+    linear-gradient(
+      145deg,
+      #ffffff 0%,
+      #fff7f7 100%
+    );
+
+
+  border:1px solid rgba(220,38,38,.15);
+
+
+  position:relative;
+
+  overflow:hidden;
+
+
+  display:flex;
+
+  flex-direction:column;
+
+  align-items:center;
+
+  text-align:center;
+
+
+  box-shadow:
+    0 10px 30px rgba(220,38,38,.08);
+
+}
+
+
+/* hiệu ứng mảng đỏ nhẹ phía sau logo */
+
+.drawer-brand-area::before{
+
+  content:"";
+
+  position:absolute;
+
+  width:180px;
+  height:180px;
+
+  top:-90px;
+  right:-70px;
+
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(220,38,38,.12),
+      transparent 70%
+    );
+
+
+}
+
+
+/* logo nổi hơn */
+
+.drawer-logo-wrapper{
+  width:150px;
+  height:60px;
+  position:relative;
+  z-index:1;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  border-radius:16px;
+  padding:8px;
+
+}
+
+
+
+.drawer-logo-image{
+
+  object-fit:contain;
+
+}
+
+
+
+/* slogan */
+
+.drawer-slogan{
+
+  position:relative;
+
+  z-index:1;
+
+
+  margin-top:14px;
+
+
+  color:#64748b;
+
+
+  font-size:12px;
+
+
+  line-height:1.6;
+
+
+  font-weight:500;
+
+
+}
+
+
+.drawer-links {
+  margin-top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.drawer-link {
+  height: 52px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 0 16px;
+  border-radius: 16px;
+  background: #f8fafc;
+  font-size: 14px;
+  font-weight: 700;
+  color: #1f2937;
+  text-decoration: none;
+  transition: .25s;
+}
+
+.drawer-link span:first-child {
+  font-size: 22px;
+  color: #ea580c;
+}
+
+.drawer-link:hover {
+  background: #fff7ed;
+  transform: translateX(6px);
+  color: #ea580c;
+}
+
+
+

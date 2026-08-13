@@ -1,0 +1,278 @@
+/* =========================================================
+   FOOD GRID & CARD DESIGN (Tinh tế, gọn gàng trên 1 hàng ngang)
+========================================================= */
+
+.food-area {
+  width: 100%;
+}
+
+.food-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+@media (min-width: 640px) {
+  .food-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .food-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
+}
+
+.food-card {
+  background: #ffffff;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid #edf2f7;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  position: relative;
+}
+
+.food-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+}
+
+.food-card:active {
+  transform: scale(0.97);
+}
+
+.food-image-wrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  background: #f7fafc;
+  overflow: hidden;
+}
+
+.food-image {
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.food-card:hover .food-image {
+  transform: scale(1.04);
+}
+
+.food-no-image-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: #f8fafc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.food-no-image-logo {
+  object-fit: contain;
+  padding: 20px;
+  opacity: 0.25;
+  filter: grayscale(100%);
+  transition: opacity 0.2s ease;
+}
+
+.food-card:hover .food-no-image-logo {
+  opacity: 0.4;
+}
+
+.food-content {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  justify-content: space-between;
+}
+
+@media (min-width: 640px) {
+  .food-content {
+    padding: 12px;
+  }
+}
+
+.food-title {
+  font-family: "Noto Sans JP", "Inter", sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: #2d3748;
+  line-height: 1.35;
+  margin: 0 0 4px 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+@media (min-width: 640px) {
+  .food-title {
+    font-size: 13.5px;
+  }
+}
+
+.food-desc {
+  font-size: 11px;
+  color: #718096;
+  margin: 0 0 6px 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* =========================================================
+   FOOTER: LUÔN GIỮ TRÊN 1 HÀNG NGANG DUY NHẤT
+========================================================= */
+
+.food-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 6px;
+  gap: 4px;
+}
+
+/* Gom cụm giá và nhãn thuế (Cho phép nhãn thuế rớt nhẹ dòng dưới số nếu màn cực nhỏ, nhưng vẫn nằm gọn bên trái) */
+.food-price-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.food-price {
+  font-family: "Inter", sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: #e05622;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+
+@media (min-width: 640px) {
+  .food-price {
+    font-size: 14px;
+  }
+}
+
+.tax-included {
+  font-size: 9px;
+  font-weight: 400;
+  color: #a0aec0;
+  line-height: 1.1;
+  white-space: nowrap;
+}
+
+@media (min-width: 640px) {
+  .tax-included {
+    font-size: 9.5px;
+  }
+}
+
+/* =========================================================
+   NÚT GIỎ HÀNG & STEPPER GỌN GÀNG (Tối ưu cho mobile 1 hàng)
+========================================================= */
+
+.food-cart-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #fff3ed;
+  border: 1px solid #ffd8cc;
+  color: #e05622;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+@media (min-width: 640px) {
+  .food-cart-btn {
+    width: 36px;
+    height: 36px;
+  }
+}
+
+/* Dùng kết hợp class cha để tăng độ ưu tiên và thêm !important */
+.food-cart-btn .cart-icon-symbol {
+  font-size: 20px !important;
+}
+
+@media (min-width: 640px) {
+  .food-cart-btn .cart-icon-symbol {
+    font-size: 16px !important;
+  }
+}
+
+.food-stepper {
+  display: flex;
+  align-items: center;
+  background: #fff3ed;
+  border: 1px solid #ffd8cc;
+  border-radius: 16px;
+  overflow: hidden;
+  height: 30px;
+  flex-shrink: 0;
+}
+
+@media (min-width: 640px) {
+  .food-stepper {
+    height: 36px;
+    border-radius: 20px;
+  }
+}
+
+.stepper-btn {
+  background: transparent;
+  border: none;
+  color: #e05622;
+  font-size: 14px;
+  font-weight: 700;
+  width: 24px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+@media (min-width: 640px) {
+  .stepper-btn {
+    width: 30px;
+    font-size: 16px;
+  }
+}
+
+.stepper-btn:hover {
+  background: rgba(224, 86, 34, 0.1);
+}
+
+.stepper-count {
+  font-family: "Inter", sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  color: #e05622;
+  padding: 0 2px;
+  min-width: 16px;
+  text-align: center;
+  line-height: 1;
+}
+
+@media (min-width: 640px) {
+  .stepper-count {
+    font-size: 13.5px;
+    padding: 0 4px;
+    min-width: 20px;
+  }
+}

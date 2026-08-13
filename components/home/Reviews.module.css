@@ -1,0 +1,287 @@
+.reviewsSection {
+  padding: 60px 20px;
+  background-color: var(--rice, #fffdf7);
+  border-top: 1px solid var(--line);
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.sectionHeader {
+  text-align: center;
+}
+
+.eyebrow {
+  font-family: var(--font-sans);
+  letter-spacing: 0.3em;
+  color: var(--gold);
+  margin-bottom: 16px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.mainTitle {
+  font-size: 2rem;
+  font-weight: 800;
+  margin-bottom: 24px;
+}
+
+/* Huy hiệu co giãn linh hoạt */
+.trustBadges {
+  display: flex;
+  justify-content: center;
+  gap: 16px; /* Giảm gap một chút để dễ thở hơn trên mobile */
+  flex-wrap: nowrap; /* Ép không cho xuống dòng trên mọi kích thước màn hình */
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.badgeCard {
+  flex: 1; /* Chia đều độ rộng cho cả 2 badge */
+  min-width: 0; /* Cho phép co lại dưới flexbox mà không bị tràn */
+  display: flex;
+  align-items: center;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 10px 14px; /* Giảm nhẹ padding mặc định */
+  text-decoration: none;
+  color: #333;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.badgeCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.badgeLogo {
+  margin-right: 8px; /* Thu gọn khoảng cách logo */
+  flex-shrink: 0; /* Không cho phép logo bị bóp méo */
+}
+
+.badgeInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0; /* Chống tràn văn bản bên trong */
+}
+
+.badgeRating {
+  display: flex;
+  align-items: center;
+  font-weight: 700;
+  font-size: 1rem; /* Giảm nhẹ từ 1.1rem xuống 1rem */
+  line-height: 1.2;
+}
+
+.badgeStars {
+  color: #ffb400;
+  margin-left: 4px;
+  font-size: 0.8rem;
+}
+
+.badgeLabel {
+  font-size: 0.7rem; /* Giảm nhẹ từ 0.75rem */
+  color: #718096;
+  white-space: nowrap; /* Giúp nhãn text dài không bị rớt dòng lộn xộn */
+  overflow: hidden;
+  text-overflow: ellipsis; /* Tạo dấu ... nếu text quá dài */
+  width: 100%;
+}
+
+/* Container cho Slider trượt ngang trên mobile, hiển thị lưới đẹp mắt trên desktop */
+.sliderWrapper {
+  position: relative;
+  margin-top: 30px;
+}
+
+.sliderContainer {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none; /* Ẩn scrollbar trên Firefox */
+  padding: 10px 0;
+}
+
+.sliderContainer::-webkit-scrollbar {
+  display: none; /* Ẩn scrollbar trên Chrome/Safari */
+}
+
+/* Thẻ đánh giá mượt mà */
+.reviewCard {
+  flex: 0 0 100%; /* Chiếm trọn bề ngang trên mobile */
+  scroll-snap-align: start;
+  background: white;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  position: relative;
+  box-sizing: border-box;
+}
+
+/* Responsive Desktop: Hiển thị 2 cột nếu màn hình lớn */
+@media (min-width: 768px) {
+  .reviewCard {
+    flex: 0 0 calc(50% - 10px);
+  }
+}
+
+/* Responsive Desktop Lớn: Hiển thị 3 hoặc 4 cột tùy ý */
+@media (min-width: 1024px) {
+  .reviewCard {
+    flex: 0 0 calc(33.333% - 13.3px);
+  }
+}
+
+.sourceWatermark {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #f0f0f0;
+  color: #c71e2c;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.2rem;
+  margin-right: 12px;
+}
+
+.authorName {
+  font-weight: 700;
+  margin: 0;
+  font-size: 1rem;
+}
+
+.metaRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+  color: #718096;
+}
+
+.comment {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #4a5568;
+  font-style: italic;
+  margin-bottom: 20px;
+  min-height: 80px; /* Đảm bảo chiều cao tối thiểu cho text */
+}
+
+.verifiedLabel {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border-top: 1px dashed #e2e8f0;
+  padding-top: 12px;
+}
+
+.verifiedLink {
+  font-size: 0.8rem;
+  color: #4caf50;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.verifiedLink:hover {
+  text-decoration: underline;
+}
+
+/* Nút bấm và dấu chấm chuyển trang */
+.controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.navButton {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.navButton:hover {
+  background-color: #f7fafc;
+}
+
+.paginationDots {
+  display: flex;
+  gap: 8px;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #cbd5e0;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.2s;
+}
+
+.activeDot {
+  background-color: #c71e2c;
+  transform: scale(1.2);
+}
+
+@media (max-width: 480px) {
+  .trustBadges {
+    gap: 8px; /* Thu hẹp tối đa khoảng cách giữa 2 badge */
+    padding: 0 4px;
+  }
+
+  .badgeCard {
+    padding: 8px 10px; /* Thu gọn ruột để vừa màn hình đứng */
+    border-radius: 8px;
+  }
+
+  .badgeLogo {
+    width: 20px !important; /* Thu nhỏ nhẹ logo SVG */
+    height: 20px !important;
+    margin-right: 6px;
+  }
+
+  .badgeRating {
+    font-size: 0.9rem;
+  }
+
+  .badgeStars {
+    font-size: 0.7rem;
+    margin-left: 2px;
+  }
+
+  .badgeLabel {
+    font-size: 0.65rem;
+  }
+}

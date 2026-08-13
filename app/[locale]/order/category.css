@@ -1,0 +1,86 @@
+/* =========================================================
+   CATEGORY TABS - JAPANESE F&B MINIMALIST STYLE
+========================================================= */
+
+.category-sticky-wrapper {
+  position: sticky;
+  top: 56px;
+  z-index: 250;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid #f1f3f5;
+}
+
+.category-tabs-container {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 0 16px;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.category-tabs-container::-webkit-scrollbar {
+  display: none;
+}
+
+/* Tab trạng thái bình thường: Nhã nhặn, chữ rõ ràng vừa phải */
+.category-tab {
+  position: relative;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  padding: 0 16px;
+  border: none;
+  border-radius: 999px;
+  background: #f7f8f9; /* Nền xám khói cực kỳ nhạt và sạch sẽ */
+  color: #61666b; /* Xám trung tính, không quá mờ nhưng dịu mắt */
+  font-family: "Noto Sans JP", "Inter", sans-serif;
+  font-size: 13.5px;
+  font-weight: 500; /* Độ đậm vừa phải, thanh thoát */
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* Tab đang chọn (Active): Tinh tế, thân thiện, không gắt mắt */
+.category-tab.active {
+  background: #fff3ed; /* Nền cam sữa cực kỳ nhạt (soft warm tint) */
+  color: #e05622; /* Màu cam chủ đạo ấm áp, rõ nét */
+  font-weight: 600; /* Nhấn mạnh vừa đủ, không bị quá thô */
+  box-shadow: inset 0 0 0 1.5px #e05622; /* Viền mảnh sắc nét bao quanh tạo cảm giác cao cấp */
+}
+
+/* Hover mượt mà trên desktop */
+@media (hover: hover) {
+  .category-tab:hover:not(.active) {
+    background: #edf0f2;
+    color: #383d42;
+  }
+}
+
+.cat-label {
+  white-space: nowrap;
+  line-height: 1;
+}
+
+@media (max-width: 640px) {
+  .category-tabs-container {
+    padding: 0 14px;
+    gap: 8px;
+  }
+  .category-tab {
+    height: 34px;
+    padding: 0 14px;
+    font-size: 13px;
+  }
+}

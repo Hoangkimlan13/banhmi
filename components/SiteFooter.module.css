@@ -1,0 +1,168 @@
+.footer {
+  background-color: #121212; /* Nền màu Than mờ nguyên bản cao cấp */
+  color: #e5e5e5;
+  padding: 80px 24px 40px;
+  border-top: 1px solid rgba(212, 175, 55, 0.2); /* Chỉ vàng Champagne siêu mảnh */
+  font-family: var(--font-sans), sans-serif;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.mainGrid {
+  display: grid;
+  grid-template-columns: 1.6fr 0.9fr 0.9fr 1.2fr;
+  gap: 48px;
+  margin-bottom: 60px;
+}
+
+.brandSection {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.logoImage {
+  height: 44px;
+  width: auto;
+  object-fit: contain;
+  align-self: flex-start;
+}
+
+.brandDescription {
+  font-size: 0.85rem;
+  line-height: 1.7;
+  color: #a3a3a3;
+  max-width: 320px;
+}
+
+/* --- KHỐI ICON SVG CAO CẤP MỚI --- */
+.socialWrapper {
+  display: flex;
+  gap: 14px;
+  margin-top: 6px;
+}
+
+.iconLink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 6px;
+  background-color: rgba(255, 255, 255, 0.04); /* Nền mờ tiệp với màu than */
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.svgIcon {
+  width: 26px;
+  height: 26px;
+  object-fit: contain;
+  transition: transform 0.3s ease;
+}
+
+/* Hiệu ứng hover cho từng Icon - Vừa tăng kích thước vừa đổi độ sáng nhẹ */
+.iconLink:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: rgba(214, 175, 55, 0.5); /* Sáng viền vàng đồng nhẹ */
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.iconLink:hover .svgIcon {
+  transform: scale(1.1);
+}
+
+/* --- CỘT LIÊN KẾT & THÔNG TIN --- */
+.linksColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.columnTitle {
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: #d4af37;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.linkItem {
+  color: #cccccc;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+  width: fit-content;
+}
+
+.linkItem:hover {
+  color: #d4af37;
+  transform: translateX(4px);
+}
+
+.infoText {
+  color: #a3a3a3;
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+
+/* --- BẢN QUYỀN --- */
+.bottomSection {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.copyright {
+  font-size: 0.75rem;
+  color: #737373;
+}
+
+.subLinks {
+  display: flex;
+  gap: 24px;
+}
+
+.subLinkItem {
+  font-size: 0.75rem;
+  color: #737373;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.subLinkItem:hover {
+  color: #d4af37;
+}
+
+/* --- RESPONSIVES --- */
+@media (max-width: 1024px) {
+  .mainGrid {
+    grid-template-columns: 1.2fr 1fr;
+    gap: 40px;
+  }
+}
+
+@media (max-width: 768px) {
+  .footer {
+    padding: 60px 20px 30px;
+  }
+  .mainGrid {
+    grid-template-columns: 1fr;
+    gap: 36px;
+    margin-bottom: 40px;
+  }
+  .bottomSection {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+}

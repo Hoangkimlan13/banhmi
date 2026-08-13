@@ -1,0 +1,174 @@
+:root {
+  --primary: #f97316;
+  --primary-dark: #ea580c;
+  --primary-light: #fff7ed;
+  --accent-red: #e11d48;
+  --bg-main: #f8fafc;
+  --surface: #ffffff;
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  --border-color: #e2e8f0;
+  --radius-lg: 1rem;
+  --radius-md: 0.75rem;
+  --radius-sm: 0.5rem;
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -1px rgba(0, 0, 0, 0.04);
+  --shadow-lg: 0 10px 25px -3px rgba(0, 0, 0, 0.12), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* 1. Reset & Layout chính có giới hạn chiều rộng chuẩn UI/UX */
+.menu-page {
+  min-height: 100vh;
+  padding-bottom: 3rem;
+}
+
+@media (min-width: 1024px) {
+  .menu-page {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+
+
+/* Khối bao quát từng danh mục món ăn */
+.category-section {
+  margin-bottom: 40px;
+  scroll-margin-top: 120px; 
+}
+
+/* Phần header của danh mục */
+.category-section-header {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+  margin-top: 20px;
+  position: relative;
+}
+
+/* Hàng chứa Tiêu đề và Số lượng món nằm ngang nhau cho hiện đại */
+.category-header-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  width: 100%;
+  gap: 12px;
+}
+
+/* Tiêu đề danh mục sang trọng hơn */
+.category-section-title {
+  font-size: 1.35rem; /* ~22px */
+  font-weight: 800;
+  color: #111827; /* Đen đậm hiện đại */
+  margin: 0;
+  letter-spacing: -0.02em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Điểm nhấn thanh màu nhỏ xinh trước tiêu đề (tùy chọn tạo điểm nhấn F&B) */
+.category-section-title::before {
+  content: "";
+  display: inline-block;
+  width: 5px;
+  height: 20px;
+  background: linear-gradient(135deg, #f97316 0%, #ea580c 105%); /* Màu cam ấm cúng đặc trưng ẩm thực, có thể đổi màu tùy brand */
+  border-radius: 4px;
+}
+
+/* Badge hiển thị số lượng món (Trông giống thẻ tag xịn xò) */
+.category-section-count {
+  font-size: 0.8rem;
+  color: #d97706; /* Màu cam vàng trầm ấm, hợp gu F&B */
+  font-weight: 600;
+  background-color: #fff7ed; /* Nền cam nhạt cực kỳ nhẹ nhàng (Soft amber) */
+  padding: 3px 10px;
+  border-radius: 6px; /* Bo góc nhẹ mềm mại thay vì tròn xoe */
+  display: inline-block;
+  width: fit-content;
+}
+
+/* Đường kẻ phân cách hiện đại, tinh tế hơn */
+.category-divider {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, #e5e7eb 0%, rgba(229, 231, 235, 0) 100%);
+  margin-top: 12px;
+}
+
+
+/* =========================================================
+   F&B MENU LAYOUT & FOOD GRID SYSTEM (JAPANESE STANDARD)
+========================================================= */
+
+/* Bố cục Grid chính */
+.menu-layout {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 1rem 0.875rem;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+@media (min-width: 1024px) {
+  .menu-layout {
+    grid-template-columns: 1fr 380px;
+    padding: 1rem 1.5rem;
+    gap: 2rem;
+    align-items: start;
+  }
+}
+
+
+
+
+
+
+/* =========================================================
+   HERO BANNER CÂN BẰNG: ĐẸP TRÊN MOBILE & VỪA VẶN TRÊN LAPTOP
+========================================================= */
+.menu-hero-banner {
+  position: relative;
+  width: 100%;
+  height: auto;
+  
+  /* Tăng max-height lên để laptop hiển thị thoáng và rõ nét hơn (khoảng 260px) */
+  max-height: 260px; 
+  min-height: 120px; 
+  
+  overflow: hidden;
+}
+
+.hero-bg-image {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.hero-bg-image img {
+  object-fit: contain; 
+  object-position: center center;
+  width: 100%;
+  height: auto;
+}
+
+/* Responsive cho màn hình điện thoại (Mobile) - Giữ nguyên độ mỏng gọn hoàn hảo */
+@media (max-width: 768px) {
+  .menu-hero-banner {
+    max-height: 120px; /* Giữ nguyên độ cao tối ưu trên điện thoại */
+  }
+}
+
+/* Tùy chọn cho màn hình lớn (Laptop / PC) */
+@media (min-width: 1200px) {
+  .menu-hero-banner {
+    max-height: 280px; /* Cho phép mở rộng thêm trên màn hình to để không bị thấp */
+  }
+}

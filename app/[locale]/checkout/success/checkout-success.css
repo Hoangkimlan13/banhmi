@@ -1,0 +1,247 @@
+/* ==========================================================================
+   Checkout Success & Processing Page - Cleaned & Optimized CSS
+   ========================================================================== */
+
+.checkout-success-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding: 20px;
+  background-color: var(--bg-main, #f8fafc);
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans JP", sans-serif;
+}
+
+.checkout-success-card {
+  background-color: var(--surface, #ffffff);
+  border: 1px solid var(--border-color, #e2e8f0);
+  border-radius: var(--radius-lg, 16px);
+  padding: clamp(24px, 5vw, 40px);
+  box-shadow: var(--shadow-lg, 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05));
+  width: 100%;
+  max-width: 480px;
+  text-align: center;
+  box-sizing: border-box;
+  animation: fadeInScale 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Biểu tượng trạng thái trực quan */
+.success-icon-wrapper {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  margin-bottom: 20px;
+}
+
+.checkout-success-card.is-success .success-icon-wrapper {
+  background-color: #ecfdf5;
+  color: var(--accent-green, #10b981);
+}
+
+.checkout-success-card.is-processing .success-icon-wrapper {
+  background-color: #fef3c7;
+  color: #d97706;
+}
+
+.success-icon-wrapper .material-symbols-outlined {
+  font-size: 38px;
+}
+
+/* Tiêu đề trang & Phụ đề */
+.checkout-success-card h1 {
+  font-size: clamp(20px, 3vw, 24px);
+  font-weight: 700;
+  color: var(--text-main, #0f172a);
+  margin: 0 0 8px 0;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+}
+
+.success-subtitle {
+  font-size: 0.875rem;
+  color: var(--text-muted, #64748b);
+  margin: 0 0 24px 0;
+  line-height: 1.5;
+  padding: 0 10px;
+}
+
+/* Khung hiển thị Số thứ tự nổi bật (Order Number Ticket Box) */
+.order-number-badge-box {
+  background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%);
+  border: 2px dashed #fed7aa;
+  border-radius: 14px;
+  padding: 16px;
+  margin-bottom: 20px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(249, 115, 22, 0.08);
+}
+
+.order-number-title {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #c2410c;
+  margin-bottom: 4px;
+}
+
+.order-number-value {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #9a3412;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+/* Khung thông tin tóm tắt */
+.checkout-success-summary {
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  text-align: left;
+}
+
+.summary-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+  color: #475569;
+}
+
+.summary-item strong, 
+.summary-item span:last-child {
+  color: #0f172a;
+  font-weight: 600;
+  text-align: right;
+}
+
+/* Trạng thái Badge */
+.status-badge {
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.status-badge.paid {
+  background-color: #ecfdf5;
+  color: #047857;
+}
+
+.status-badge.pending {
+  background-color: #fef3c7;
+  color: #b45309;
+}
+
+.not-found-text {
+  text-align: center;
+  color: var(--accent-red, #e11d48);
+  font-size: 14px;
+  font-weight: 500;
+  margin: 16px 0;
+}
+
+/* Thông điệp hiếu khách phong cách Nhật (Omotenashi) */
+.hospitality-message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background-color: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  color: #166534;
+  padding: 12px 16px;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.hospitality-message .material-symbols-outlined {
+  font-size: 1.15rem;
+  color: #15803d;
+}
+
+.hospitality-message p {
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* Nhóm nút bấm hành động */
+.checkout-success-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.checkout-success-actions .button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 14px 20px;
+  border-radius: var(--radius-md, 12px);
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  box-sizing: border-box;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  min-height: 50px;
+}
+
+.checkout-success-actions .button-primary {
+  background-color: var(--primary, #f97316);
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(249, 115, 22, 0.25);
+  border: none;
+}
+
+.checkout-success-actions .button-primary:hover {
+  background-color: var(--primary-dark, #ea580c);
+  box-shadow: 0 6px 16px rgba(249, 115, 22, 0.35);
+  transform: translateY(-1px);
+}
+
+.checkout-success-actions .button-ghost {
+  background-color: transparent;
+  color: var(--text-muted, #64748b);
+  border: 1px solid var(--border-color, #cbd5e1);
+}
+
+.checkout-success-actions .button-ghost:hover {
+  background-color: var(--bg-main, #f1f5f9);
+  color: var(--text-main, #0f172a);
+  border-color: #94a3b8;
+}
+
+.checkout-success-actions .button:active {
+  transform: translateY(1px);
+}

@@ -1,0 +1,250 @@
+.brandStorySection {
+  background-color: var(--rice, #fffdf7);
+  width: 100%;
+  overflow: hidden;
+}
+
+.container {
+  max-width: 1200px; /* Bóp nhẹ chiều rộng lại một chút để content trông gom cụm tinh tế hơn */
+  margin: 0 auto;
+  padding: 80px 40px; /* Giảm padding dọc xuống hẳn để không chiếm dụng chiều cao của trang */
+  box-sizing: border-box;
+}
+
+/* ----------------------------------------- */
+/* Bố cục phần Intro chính */
+/* ----------------------------------------- */
+.introGrid {
+  display: grid;
+  grid-template-columns: 1fr 1.3fr;
+  gap: 60px;
+  margin-bottom: 80px;
+  align-items: flex-start;
+}
+
+.headingBlock {
+  position: relative;
+  padding-left: 20px;
+  border-left: 2px solid var(--gold, #b88a44);
+}
+
+.eyebrow {
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 0.8rem;
+  letter-spacing: 0.35em;
+  color: var(--gold, #b88a44);
+  margin: 0 0 12px 0;
+  font-weight: 600;
+}
+
+.mainTitle {
+  font-family: "Noto Serif JP", "Shippori Mincho", serif;
+  font-size: 2.6rem; /* Giảm nhẹ kích thước để chữ tinh xảo, vừa vặn */
+  line-height: 1.5;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  color: var(--foreground, #17130f);
+  margin: 0;
+}
+
+.introContent {
+  display: flex;
+  flex-direction: column;
+}
+
+.jpPhilosophy {
+  font-family: "Noto Serif JP", serif;
+  line-height: 2.2;
+  font-size: 1.1rem;
+  color: var(--foreground, #17130f);
+  font-weight: 400;
+  letter-spacing: 0.03em;
+  margin: 0 0 32px 0;
+}
+
+.linkWrapper {
+  margin-top: 12px;
+  display: inline-block;
+}
+
+/* Nút bấm Premium góc cạnh tối giản mang tính thương hiệu */
+.luxuryButton {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 32px; /* Khoảng cách rộng rãi tạo cảm giác phóng khoáng */
+  padding: 16px 40px;
+  
+  /* Khung viền mảnh tinh tế nối liền với tinh thần Zen */
+  border: 1px solid var(--ink, #12110f); 
+  background-color: transparent; /* Nền trong suốt giúp hòa quyện vào màu kem gạo phía sau */
+  color: var(--ink, #12110f);
+  
+  text-decoration: none;
+  text-transform: uppercase;
+  overflow: hidden;
+  z-index: 1;
+  transition: color 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.buttonText {
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 0.75rem; /* Thu nhỏ cỡ chữ xuống một chút */
+  letter-spacing: 0.25em; /* Tăng độ giãn chữ để tạo cảm giác sang trọng, đắt tiền */
+  font-weight: 600;
+}
+
+.arrowIcon {
+  display: flex;
+  align-items: center;
+  transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.luxuryButton::before {
+  content: "";
+  position: absolute;
+  top: 100%; /* Nằm ẩn hoàn toàn ở dưới đáy nút */
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--ink, #12110f);
+  z-index: -1;
+  transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.luxuryButton:hover {
+  color: var(--rice, #fffdf7); /* Chữ chuyển sang màu kem sáng */
+}
+
+.luxuryButton:hover::before {
+  transform: translateY(-100%); /* Nền đen trượt mượt mà lên trên bọc lấy nút */
+}
+
+.luxuryButton:hover .arrowIcon {
+  transform: translateX(6px); /* Mũi tên SVG dịch chuyển nhẹ nhàng sang phải */
+}
+
+/* ----------------------------------------- */
+/* Khối 3 Đặc trưng - Thiết kế không viền (Borderless) */
+/* ----------------------------------------- */
+.featureBand {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 48px;
+  border-top: 1px solid var(--line, rgba(23, 19, 15, 0.15)); /* Một đường kẻ chỉ duy nhất ngăn cách */
+  padding-top: 50px;
+}
+
+.featureCard {
+  background-color: transparent; /* Loại bỏ toàn bộ nền trắng thô cứng */
+  padding: 0; /* Xóa khoảng đệm hộp */
+  border: none; /* Xóa viền hộp */
+  transition: transform 0.3s ease;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.cardNumber {
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  color: var(--gold, #b88a44);
+  font-weight: 700;
+}
+
+.cardTitle {
+  font-family: "Noto Serif JP", serif;
+  font-size: 1.25rem; /* Cân chỉnh lại kích thước chữ tiêu đề */
+  font-weight: 500;
+  color: var(--foreground, #17130f);
+  margin: 0;
+  letter-spacing: 0.02em;
+}
+
+.jpSub {
+  font-family: "Noto Serif JP", serif;
+  font-size: 0.92rem;
+  color: var(--foreground, #17130f);
+  line-height: 1.8;
+  margin: 0 0 10px 0;
+  font-weight: 400;
+  opacity: 0.9;
+}
+
+.enSub {
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 0.78rem;
+  color: var(--muted, #6c6256);
+  line-height: 1.5;
+  margin: 0;
+  font-weight: 400;
+}
+
+/* ----------------------------------------- */
+/* RESPONSIVE HỆ THỐNG CAO CẤP */
+/* ----------------------------------------- */
+
+@media (max-width: 1200px) {
+  .container {
+    padding: 60px 32px;
+  }
+  .introGrid {
+    gap: 40px;
+    margin-bottom: 60px;
+  }
+  .mainTitle {
+    font-size: 2.3rem;
+  }
+  .featureBand {
+    gap: 32px;
+  }
+}
+
+@media (max-width: 992px) {
+  .introGrid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+    margin-bottom: 50px;
+  }
+  .featureBand {
+    grid-template-columns: 1fr;
+    gap: 36px;
+    padding-top: 40px;
+  }
+}
+
+/* Tối ưu hóa cực hạn cho Mobile: Biến đổi thành danh sách dòng kẻ mảnh, siêu tiết kiệm chiều cao */
+@media (max-width: 576px) {
+  .container {
+    padding: 50px 24px;
+  }
+  .mainTitle {
+    font-size: 2rem;
+  }
+  .jpPhilosophy {
+    font-size: 1.05rem;
+    line-height: 2.0;
+  }
+  .luxuryButton {
+    width: 100%;
+    justify-content: space-between;
+    padding: 16px 24px;
+  }
+  
+  /* Tạo cấu trúc border phân tầng nhẹ nhàng tinh giản trên mobile */
+  .featureBand {
+    gap: 0; 
+  }
+  .featureCard {
+    padding: 24px 0;
+    border-bottom: 1px solid var(--line, rgba(23, 19, 15, 0.1));
+  }
+  .featureCard:last-child {
+    border-bottom: none; /* Khối cuối cùng xóa gạch chân */
+  }
+}

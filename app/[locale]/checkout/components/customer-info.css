@@ -1,0 +1,111 @@
+.customer-info-card {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border-color);
+}
+
+.customer-info-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.customer-info-header span.material-symbols-outlined {
+  font-size: 1.25rem;
+  color: var(--primary);
+}
+
+.customer-info-header h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-main);
+  margin: 0;
+}
+
+.customer-info-group {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.customer-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.customer-field label {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.customer-field label span.material-symbols-outlined {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+/* Không bắt buộc */
+.optional-text {
+  color: var(--text-muted);
+  font-weight: 400;
+  font-size: 0.7rem;
+}
+
+/* Bắt buộc */
+.required-text {
+  color: var(--accent-red);
+  font-weight: 600;
+  font-size: 0.7rem;
+}
+
+.customer-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-main);
+  font-size: 0.875rem;
+  color: var(--text-main);
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.customer-input:focus {
+  border-color: var(--primary);
+  background-color: var(--surface);
+  box-shadow: 0 0 0 2px var(--primary-light);
+}
+
+.customer-input::placeholder {
+  color: var(--text-muted);
+  opacity: 0.6;
+}
+
+.customer-input.input-error {
+  border-color: var(--accent-red);
+  background-color: #fff1f2;
+}
+
+.error-message {
+  font-size: 0.7rem;
+  color: var(--accent-red);
+  margin-top: 0.15rem;
+  font-weight: 500;
+}
+
+.customer-input:required:invalid {
+  /* Không ép đỏ ngay khi vừa mở trang */
+}
+
+.customer-input:required:focus:invalid {
+  border-color: var(--accent-red);
+}

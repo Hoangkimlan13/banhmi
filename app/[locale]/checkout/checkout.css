@@ -1,0 +1,176 @@
+:root {
+  --primary: #f97316;
+  --primary-dark: #ea580c;
+  --primary-light: #fff7ed;
+  --accent-red: #e11d48;
+  --bg-main: #f8fafc;
+  --surface: #ffffff;
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  --border-color: #e2e8f0;
+  --radius-lg: 1rem;
+  --radius-md: 0.75rem;
+  --radius-sm: 0.5rem;
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -1px rgba(0, 0, 0, 0.04);
+  --shadow-lg: 0 10px 25px -3px rgba(0, 0, 0, 0.12), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.checkout-container {
+  min-height: 100vh;
+  padding-bottom: 3rem;
+}
+
+@media (min-width: 1024px) {
+  .checkout-container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+
+
+.checkout-title {
+  color: #0f172a;
+}
+
+.checkout-subtitle {
+  color: #64748b;
+}
+
+/* --- STORE PICKUP CARD --- */
+.checkout-store-card {
+  display: flex;
+  align-items: flex-start;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.03);
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+  gap: 16px;
+}
+
+.checkout-store-card:hover {
+  border-color: #cbd5e1;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
+}
+
+/* Thanh điểm nhấn màu cam đặc trưng bên trái */
+.checkout-store-card::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: linear-gradient(to bottom, #f97316, #ea580c);
+}
+
+.store-card-left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.store-card-icon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  background-color: #fff7ed;
+  color: #f97316;
+  border-radius: 12px;
+}
+
+.store-card-icon-wrapper .material-symbols-outlined {
+  font-size: 24px;
+}
+
+.store-card-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.store-card-header-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.store-card-tag {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #f97316;
+  background-color: #fff7ed;
+  padding: 2px 8px;
+  border-radius: 6px;
+}
+
+.store-card-location-sub {
+  font-size: 12px;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.store-card-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 10px 0;
+  line-height: 1.4;
+}
+
+.store-card-details {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  border-top: 1px dashed #f1f5f9;
+  padding-top: 10px;
+}
+
+.store-card-detail-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #475569;
+  font-size: 13px;
+}
+
+.store-card-detail-item .material-symbols-outlined {
+  font-size: 16px;
+  color: #94a3b8;
+  flex-shrink: 0;
+}
+
+.store-card-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* --- RESPONSIVE CHO MOBILE --- */
+@media (max-width: 640px) {
+  .checkout-store-card {
+    padding: 16px;
+    gap: 12px;
+  }
+  
+  .store-card-icon-wrapper {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .store-card-title {
+    font-size: 15px;
+  }
+}

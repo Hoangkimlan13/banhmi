@@ -1,0 +1,680 @@
+.siteHeader {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  width: 100%;
+  background-color: rgba(250, 246, 238, 0.85);
+  border-bottom: 1px solid rgba(197, 155, 79, 0.12);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.headerScrolled {
+  background-color: rgba(250, 246, 238, 0.98);
+  box-shadow: 0 12px 40px rgba(23, 61, 53, 0.03);
+  border-bottom-color: rgba(197, 155, 79, 0.2);
+}
+
+.container {
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  height: 90px;
+  max-width: 1440px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 40px;
+  transition: height 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.headerScrolled .container {
+  height: 74px;
+}
+
+.logoLink {
+  display: flex;
+  align-items: center;
+}
+
+.logoWrapper {
+  position: relative;
+  height: 52px;
+  width: 130px;
+  transition: transform 0.3s ease;
+}
+
+.logoImage {
+  object-fit: contain;
+  /* DÒNG filter ĐÃ ĐƯỢC XÓA BỎ Ở ĐÂY */
+}
+
+/* ================= NAV DESKTOP ================= */
+.desktopNav {
+  display: none;
+}
+
+.navLink {
+  position: relative;
+  font-size: 0.88rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  color: #1a1a1a;
+  padding: 10px 0;
+  transition: color 0.3s ease;
+}
+
+.navLink:hover {
+  color: #c59b4f;
+}
+
+.navLink::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  height: 1.5px;
+  width: 0;
+  background-color: #c59b4f;
+  transform: translateX(-50%);
+  transition: width 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.navLink:hover::after {
+  width: 100%;
+}
+
+/* ================= ACTIONS RIGHT ================= */
+.rightActions {
+  display: none;
+  align-items: center;
+  gap: 20px;
+}
+
+/* --- Lang Button Tinh Chỉnh --- */
+.langContainer {
+  position: relative;
+}
+
+.customLangBtn {
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(197, 155, 79, 0.2);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 8px 16px;
+  border-radius: 30px;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.langLabelText {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0 6px 0 8px; /* Giúp giãn cách chữ và icon đều đặn */
+}
+
+.customLangBtn:hover, .customLangBtnActive {
+  color: #c59b4f;
+  background-color: #ffffff;
+  border-color: #c59b4f;
+  box-shadow: 0 4px 12px rgba(197, 155, 79, 0.1);
+}
+
+.langIcon {
+  width: 15px;
+  height: 15px;
+}
+
+.chevronIcon {
+  width: 10px;
+  height: 10px;
+  opacity: 0.5;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.chevronIconRotated {
+  transform: rotate(180deg);
+  opacity: 0.9;
+  color: #c59b4f;
+}
+
+.langDropdownList {
+  position: absolute;
+  top: 135%;
+  right: 0;
+  background: #ffffff;
+  border: 1px solid rgba(197, 155, 79, 0.15);
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  min-width: 140px;
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(23, 61, 53, 0.08);
+  animation: fadeInDown 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.langDropdownItem {
+  background: transparent;
+  border: none;
+  padding: 9px 12px;
+  text-align: left;
+  font-size: 0.8rem;
+  color: #444444;
+  cursor: pointer;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.bulletActive {
+  display: inline-block;
+  color: transparent;
+}
+
+.langDropdownItem:hover {
+  background-color: rgba(197, 155, 79, 0.05);
+  color: #c59b4f;
+}
+
+.langActive {
+  background-color: rgba(197, 155, 79, 0.08) !important;
+  color: #c59b4f;
+  font-weight: 600;
+}
+
+.langActive .bulletActive {
+  color: #c59b4f;
+}
+
+/* ================= LUXURY BUTTONS ================= */
+.btnPhone, .btnReservation {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px; 
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btnPhone {
+  padding: 0 22px;            
+  font-size: 0.78rem;        
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  height: 40px;              
+  background-color: var(--gold, #b88a44);
+  color: #faf6ee;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); 
+}
+
+.btnPhone:hover {
+  background-color: transparent;
+  color: #11342b; 
+  border: 1px solid #11342b;
+  border-color: #11342b;
+  transform: translateY(-2px);
+}
+
+.btnReservation {
+  padding: 0 22px;            
+  font-size: 0.78rem;        
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  height: 40px;              
+  background-color: #11342b;
+  color: #faf6ee;
+  border: 1px solid #11342b;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.btnReservation:hover {
+  background-color: #c59b4f; /* Chuyển sang vàng đồng của thương hiệu */
+  color: #ffffff; /* Chữ trắng sáng cho nổi bật trên nền vàng */
+  border-color: #c59b4f; /* Viền cùng màu nền */
+  transform: translateY(-2px); /* Nút nổi lên nhẹ */
+  box-shadow: 0 8px 20px rgba(197, 155, 79, 0.3); /* Đổ bóng sang trọng */
+}
+
+.btnReservation:active {
+  transform: translateY(0); /* Nút "ấn" xuống khi click */
+  box-shadow: 0 2px 10px rgba(197, 155, 79, 0.2);
+}
+
+.deliveryTextGroup {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.textDivider {
+  opacity: 0.5;
+  font-weight: 300;
+}
+.menuInDeliveryBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 52px;
+  background-color: #11342b;
+  color: #fff;
+  border-radius: 12px; /* Bo góc mềm mại hơn */
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* Tạo chiều sâu */
+  border: 1px solid rgba(197, 155, 79, 0.3);
+  box-shadow: 0 4px 12px rgba(17, 52, 43, 0.15);
+}
+
+.menuInDeliveryBtn::before {
+  content: 'delivery_dining';
+  font-family: 'Material Symbols Outlined';
+  margin-right: 10px;
+  font-size: 24px;
+  opacity: 0.9;
+}
+
+/* Thêm hiệu ứng hover/active rõ ràng hơn */
+.menuInDeliveryBtn:active {
+  background-color: #c59b4f;
+  color: #11342b;
+  transform: translateY(2px); /* Hiệu ứng nhấn xuống */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* ================= CONTROLS MOBILE ================= */
+.mobileControls {
+  display: flex;
+  align-items: center;
+  gap: 0; 
+}
+
+
+.topActionButtons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.btnMobilePhone {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background-color: var(--gold, #b88a44); 
+  color: #faf6ee;
+  font-weight: 600;
+  font-size: 0.85rem;
+  padding: 12px;
+  border-radius: 8px;
+  text-decoration: none;
+}
+
+.btnMobileReserve {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #11342b;
+  color: #faf6ee;
+  font-weight: 600;
+  font-size: 0.85rem;
+  padding: 12px;
+  border-radius: 8px;
+  text-decoration: none;
+}
+
+.hamburger {
+  background: none;
+  border: none;
+  cursor: pointer;
+  width: 26px;
+  height: 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.hamburgerLine {
+  display: block;
+  width: 26px;
+  height: 1.5px;
+  background-color: #111111;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hamburgerActive .hamburgerLine:nth-child(1) {
+  transform: translateY(6px) rotate(45deg);
+}
+.hamburgerActive .hamburgerLine:nth-child(2) {
+  transform: translateY(-10px) rotate(-45deg);
+}
+
+/* ================= MOBILE MENU ================= */
+.mobileMenu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  max-height: calc(100vh - 100%);
+  overflow-y: auto;
+  background-color: #faf6ee;
+  border-bottom: 1px solid rgba(23, 61, 53, 0.08);
+  padding: 32px 24px 48px 24px;
+  box-shadow: 0 20px 50px rgba(23, 61, 53, 0.12);
+  
+  animation: fadeInDown 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.mobileMenuContainer {
+  max-width: 500px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.mobileFeaturedActions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.featuredActionBtn {
+  display: flex;
+  align-items: center;      
+  justify-content: center;   
+  height: 46px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-radius: 30px;
+  gap: 8px;                 
+  background-color: rgba(255, 255, 255, 0.9);
+  color: #11342b;
+  border: 1px solid rgba(197, 155, 79, 0.25);
+  box-shadow: 0 4px 12px rgba(23, 61, 53, 0.03);
+  opacity: 0; /* Để ẩn đi trước khi animation chạy */
+  animation: fadeInUpItem 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.featuredActionBtn:active {
+  background-color: #ffffff;
+  border-color: #c59b4f;
+  color: #c59b4f;
+  box-shadow: 0 6px 16px rgba(197, 155, 79, 0.1);
+}
+
+
+.mobileLinksGrid {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 8px 0;
+}
+
+.mobileNavLink {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 18px 4px;
+  color: #11342b;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(197, 155, 79, 0.15);
+  transition: all 0.3s ease;
+}
+
+.mobileNavLinkInner {
+  display: flex;
+  align-items: center;
+}
+
+/* Thêm icon vào nút Delivery cho đồng bộ */
+.menuInDeliveryBtn::before {
+  content: 'delivery_dining';
+  font-family: 'Material Symbols Outlined';
+  margin-right: 8px;
+  font-size: 20px;
+}
+
+.mobileNavLink:active {
+  background-color: rgba(197, 155, 79, 0.06); /* Nền hắt nhẹ màu vàng ấm */
+  padding-left: 12px; /* Chữ dịch nhẹ sang phải tạo hiệu ứng phản hồi động */
+  color: #c59b4f; /* Đổi chữ sang màu vàng đồng sang trọng */
+}
+
+.mobileNavLink:active .mobileNavArrow {
+  color: #c59b4f;
+  opacity: 1; 
+  transform: translateX(4px); 
+}
+
+.mobileNavLabel {
+  font-size: 0.95rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+}
+
+.mobileNavArrow {
+  width: 16px;
+  height: 16px;
+  color: #11342b;
+  opacity: 0.4;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.mobileLinksGrid .mobileNavLink:last-child {
+  border-bottom: none;
+}
+
+.mobileMenuFooter {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.menuInDeliveryBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 50px;
+  /* Thay vì một ô màu trắng thô, ta dùng một lớp nền mịn hòa vào màu kem của background */
+  background-color: rgba(23, 61, 53, 0.04); 
+  border: 1px solid rgba(197, 155, 79, 0.2);
+  border-radius: 100px; /* Bo tròn tuyệt đối viên thuốc */
+  padding: 0 24px;
+  color: #11342b;
+  transition: all 0.25s ease;
+}
+
+.menuInDeliveryBtn:active {
+  background-color: rgba(197, 155, 79, 0.1);
+  border-color: #c59b4f;
+}
+
+/* SEGMENTED CONTROL MOBILE */
+.mobileLangSection {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.mobileLangTrack {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr); 
+  background-color: rgba(23, 61, 53, 0.05);
+  padding: 4px;
+  border-radius: 30px;
+  width: 100%;
+  box-shadow: 0 4px 12px #11342b26;
+}
+
+.mobileLangTab {
+  background: transparent;
+  border: none;
+  font-size: 0.70rem; 
+  font-weight: 500;
+  color: #555555;
+  padding: 8px 4px;
+  text-align: center;
+  border-radius: 20px;
+  transition: all 0.3s ease;
+  white-space: nowrap; /* Ngăn không cho chữ xuống dòng */
+}
+
+.mobileLangTabActive {
+  color: #ffffff !important;
+  font-weight: 600;
+  background-color: #11342b;
+  box-shadow: 0 4px 10px rgba(17, 52, 43, 0.2); 
+}
+
+
+.mobileBrandIntro {
+  color: #8c734b;
+  font-size: 1rem;
+  text-align: center;
+  margin: 30px 20px 20px;
+  letter-spacing: 0.05em;
+  line-height: 1.6;
+  font-weight: 500;
+  
+  /* Tạo không gian cho gạch chân */
+  padding-bottom: 12px;
+  position: relative;
+}
+
+/* Tạo gạch chân bằng pseudo-element */
+.mobileBrandIntro::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%; /* Căn giữa */
+  transform: translateX(-50%); /* Căn giữa tuyệt đối */
+  width: 60px; /* Độ dài gạch chân - bạn có thể chỉnh số này (ví dụ: 40px, 80px) */
+  height: 2px;
+  background-color: #8c734b;
+  border-radius: 2px; /* Bo tròn đầu gạch chân cho sang trọng */
+}
+
+.socialWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 25px;
+  padding: 10px 0 40px;
+}
+
+.iconLink {
+  background-color: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  transition: 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  display: inline-flex;
+}
+
+.svgIcon {
+  object-fit: contain;
+  width: 26px;
+  height: 26px;
+  transition: transform 0.3s;
+}
+
+
+.iconLink:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: rgba(214, 175, 55, 0.5); /* Sáng viền vàng đồng nhẹ */
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.iconLink:hover .svgIcon {
+  transform: scale(1.1);
+}
+
+
+/* Tăng độ sang trọng cho câu giới thiệu */
+.mobileBrandIntro {
+  color: #8c734b;
+  font-size: 0.75rem;
+  text-align: center;
+  margin: 30px 20px 20px;
+  letter-spacing: 0.1em;
+  font-weight: 300;
+  border-top: 1px solid rgba(140, 115, 75, 0.2);
+  padding-top: 20px;
+}
+
+/* Đảm bảo các icon cùng màu vàng đồng sang trọng */
+.monochromeIcon {
+  color: #8c734b !important;
+  opacity: 0.8;
+  transition: opacity 0.3s ease;
+}
+
+.monochromeIcon:hover {
+  opacity: 1;
+}
+
+/* Style cho phần Copyright */
+.copyright {
+  color: #a8a8a8;
+  font-size: 0.65rem;
+  text-align: center;
+  letter-spacing: 0.05em;
+  font-family: sans-serif;
+}
+
+.socialWrapper {
+  display: flex;
+  justify-content: center;
+  gap: 25px;
+  padding: 10px 0 20px;
+}
+
+/* RESPONSIVE */
+@media (min-width: 1200px) {
+  .desktopNav { display: flex; align-items: center; gap: 36px; }
+  .rightActions { display: flex; }
+  .mobileControls { display: none; }
+}
+
+@media (min-width: 768px) and (max-width: 1199px) {
+  .container { padding: 0 32px; }
+  .rightActions { display: flex; }
+  .mobileControls { display: flex; gap: 0;}
+  .mobileControls .btnMobileReserve { display: none; }
+  .tabletDesktopActions {
+    display: flex;
+    gap: 15px;
+  }
+  .topActionButtons {
+    display: none !important;
+  }
+  
+}
+
+@media (max-width: 767px) {
+  .container { padding: 0 20px; height: 74px; }
+  .logoWrapper { height: 40px; width: 110px; }
+}
+
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeInUpItem {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}

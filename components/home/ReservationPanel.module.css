@@ -1,0 +1,304 @@
+.reservationSection {
+  background-color: var(--rice, #fffdf7);
+  padding: 60px 20px;
+  border-top: 1px solid rgba(139, 115, 85, 0.1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Lưới Grid tinh giản với khoảng cách thoáng đạt rộng rãi */
+.layoutGrid {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 80px;
+  align-items: center;
+}
+
+/* --- CỘT TRÁI: THÔNG TIN TRANG TRỌNG --- */
+.header {
+  text-align: left;
+}
+
+.eyebrow {
+    font-family: var(--font-sans);
+    letter-spacing: .3em;
+    color: var(--gold);
+    margin-bottom: 16px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+/* Thêm vạch chỉ vàng nhỏ tinh tế bên cạnh Eyebrow */
+.eyebrow::after {
+  content: "";
+  width: 24px;
+  height: 1px;
+  background-color: #8b7355;
+}
+
+.title {
+  font-size: 42px;
+  line-height: 1.5;
+  white-space: pre-line;
+  margin-bottom: 24px;
+  font-family: var(--font-serif);
+  color: var(--foreground);
+  letter-spacing: .02em;
+}
+
+.subtitle {
+    font-family: var(--font-sans);
+    color: var(--muted);
+    letter-spacing: .05em;
+    font-size: 15px;
+}
+
+/* --- CỘT PHẢI: HỘP THIỆP MỜI LUXURY CARD --- */
+.luxuryCard {
+  background: #ffffff;
+  border: 1px solid rgba(139, 115, 85, 0.2);
+  border-radius: 4px; /* Sử dụng góc vuông sắc nét cổ điển phong cách Nhật thay vì bo tròn rẻ tiền */
+  padding: 48px 40px;
+  box-shadow: 0 20px 50px rgba(139, 115, 85, 0.05);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+.luxuryCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 30px 60px rgba(139, 115, 85, 0.08);
+}
+
+/* Đường khung chỉ kép tinh xảo chạy ẩn bên trong */
+.luxuryCard::before {
+  content: "";
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  right: 8px;
+  bottom: 8px;
+  border: 1px solid rgba(139, 115, 85, 0.12);
+  pointer-events: none;
+}
+
+
+/* Tăng kích thước bao quanh cho riêng Icon Uber Eats */
+.uberEatsIcon {
+  width: auto !important;
+  height: 28px !important;
+  
+  /* Nền xám nhạt nhẹ nhàng */
+  background-color: #f3f3f3; 
+  padding: 4px 10px;
+  border-radius: 4px;
+  
+  display: inline-flex;
+  align-items: center;
+  margin-right: 14px;
+  
+  /* Màu xanh lá Uber Eats đặc trưng */
+  fill: #06C167 !important;
+  transition: all 0.3s ease;
+}
+
+.btnSecondary:hover .uberEatsIcon {
+  background-color: #0c2d1c; /* Khi hover nút bấm thì hộp chuyển sang nền tối */
+  fill: #06C167 !important;
+}
+
+/* Hiệu ứng tương tác khi di chuột vào nút bấm */
+.btnSecondary:hover .uberEatsIcon {
+  background-color: #ffffff; /* Đảo ngược nền hộp sang trắng khi hover */
+  fill: #06C167 !important;   /* Giữ nguyên màu xanh lá xịn của Uber Eats */
+}
+
+/* Container chứa các nút bấm */
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: relative;
+  z-index: 1;
+}
+
+/* Nút bấm thiết kế tinh gọn dẹt phẳng kiểu tối giản Nhật Bản */
+.button {
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px 24px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-decoration: none;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  border-radius: 2px; /* Góc bo cực nhỏ tạo vẻ nghiêm túc, đắt tiền */
+}
+
+.btnIcon {
+  width: 16px;
+  height: 16px;
+  margin-right: 12px;
+  flex-shrink: 0;
+}
+
+/* Nút Đặt Bàn (Chủ đạo): Xanh lục Hoàng gia kết hợp viền sắc nét */
+.btnPrimary {
+  background-color: #0c2d1c;
+  color: #ffffff;
+  border: 1px solid #0c2d1c;
+}
+
+.btnPrimary:hover {
+  background-color: #071f13;
+  border-color: #071f13;
+  letter-spacing: 0.12em; /* Hiệu ứng dãn chữ nhẹ tinh tế khi hover */
+}
+
+/* Nút Delivery: Viền mỏng thanh mảnh nền trắng */
+.btnSecondary {
+  background-color: #ffffff;
+  color: #0c2d1c;
+  border: 1px solid rgba(12, 45, 28, 0.25);
+}
+
+.btnSecondary:hover {
+  background-color: rgba(12, 45, 28, 0.02);
+  border-color: #0c2d1c;
+}
+
+/* --- KHỐI ĐIỆN THOẠI (PHONE BLOCK) --- */
+.phoneBlock {
+  border-top: 1px solid rgba(139, 115, 85, 0.15); /* Thay nét đứt đứt bằng nét liền mảnh cao cấp */
+  padding-top: 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+  z-index: 1;
+}
+
+.phoneLabel {
+  font-size: 0.75rem;
+  color: #8b7355;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.phoneLink {
+  font-family: var(--font-serif, "Noto Serif JP", serif);
+  font-size: 2rem;
+  font-weight: 500;
+  color: #0c2d1c; /* Đồng bộ màu xanh lục thẫm thay vì màu nâu xỉn */
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.phoneLink:hover {
+  color: #8b7355;
+  transform: scale(1.02);
+}
+
+.phoneIcon {
+  width: 22px;
+  height: 22px;
+  stroke-width: 1.5px;
+}
+
+.phoneNote {
+  font-size: 0.75rem;
+  color: #888888;
+  font-weight: 300;
+}
+
+/* --- ĐIỀU CHỈNH IPAD & TABLET (992px - 768px) --- */
+@media (max-width: 1024px) {
+  .reservationSection {
+    padding: 60px 32px;
+  }
+
+  .layoutGrid {
+    gap: 40px;
+  }
+
+  .title {
+    font-size: 2rem;
+  }
+
+  .luxuryCard {
+    padding: 36px 28px;
+  }
+}
+
+/* --- ĐIỀU CHỈNH DI ĐỘNG SMARTPHONE --- */
+@media (max-width: 768px) {
+  .reservationSection {
+    padding: 60px 16px;
+  }
+
+  /* Trở về 1 cột dọc mượt mà */
+  .layoutGrid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .header {
+    text-align: center;
+  }
+
+  .eyebrow {
+    margin-bottom: 16px;
+  }
+  
+  .eyebrow::after {
+    display: none; /* Ẩn vạch gạch ngang trên mobile để căn giữa đẹp mắt */
+  }
+
+  .title {
+    font-size: 1.6rem;
+    line-height: 1.4;
+    white-space: normal;
+  }
+
+  .subtitle {
+    font-size: 0.9rem;
+    margin: 0 auto;
+  }
+
+  .luxuryCard {
+    padding: 40px 24px 32px 24px;
+    border-radius: 2px;
+  }
+
+  .luxuryCard::before {
+    top: 6px;
+    left: 6px;
+    right: 6px;
+    bottom: 6px;
+  }
+
+  .button {
+    padding: 16px 20px;
+    font-size: 0.85rem;
+  }
+
+  .phoneLink {
+    font-size: 1.7rem;
+  }
+}

@@ -1,0 +1,277 @@
+.heroWrapper {
+  width: 100%;
+  background-color: #fcfbf9;
+}
+
+.heroSection {
+  position: relative;
+  height: 76vh; 
+  min-height: 550px;
+  width: 100%;
+  overflow: hidden;
+  background-color: #0b0a09;
+}
+
+.sliderContainer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  cursor: zoom-in;
+}
+
+.slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  z-index: 1;
+}
+
+.slideActive {
+  opacity: 1;
+  z-index: 2;
+}
+
+.slideImage {
+  object-fit: cover;
+  object-position: center;
+  transform: scale(1.04);
+  transition: transform 6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.slideActive .slideImage {
+  transform: scale(1);
+}
+
+.sliderOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom, rgba(11, 10, 9, 0.2) 0%, rgba(0, 0, 0, 0) 50%, rgba(11, 10, 9, 0.4) 100%);
+  z-index: 3;
+  pointer-events: none;
+}
+
+/* ================= CORNER NAV CONTROLS ================= */
+.premiumNavControls {
+  position: absolute;
+  left: 5%;
+  bottom: 8%;
+  display: flex;
+  align-items: center;
+  background-color: rgba(11, 10, 9, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 30px;
+  padding: 6px 16px;
+  backdrop-filter: blur(15px);
+  z-index: 10;
+}
+
+.controlBtn {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.5);
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.controlBtn:hover { color: #d4af37; }
+.navSeparator { width: 1px; height: 16px; background-color: rgba(255, 255, 255, 0.15); }
+
+/* ================= EXTERNAL THUMBNAILS SECTION ================= */
+.externalThumbSection {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  background-color: #fcfbf9;
+}
+
+.thumbnailTrack {
+  display: flex;
+  gap: 14px;
+  padding: 8px 40vw;
+  max-width: 100%;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+}
+
+.thumbnailTrack::-webkit-scrollbar {
+  display: none;
+}
+
+.thumbWrapper {
+  position: relative;
+  width: 84px;
+  height: 52px;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 2px solid transparent;
+  background: none;
+  padding: 0;
+  cursor: pointer;
+  opacity: 0.4;
+  flex-shrink: 0;
+  transition: all 0.45s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.thumbImage {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+}
+
+.thumbWrapper:hover {
+  opacity: 0.8;
+}
+
+.thumbActive {
+  opacity: 1 !important;
+  border-color: #1a3322;
+  transform: scale(1.12);
+  box-shadow: 0 8px 24px rgba(26, 51, 34, 0.15);
+}
+
+/* ================= LUXURY COUNTER & PROGRESS BAR ================= */
+.luxuryCounter {
+  position: absolute;
+  right: 4%;
+  bottom: 6%;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  z-index: 10;
+  color: #ffffff;
+}
+
+.currentNum { font-size: 0.95rem; font-weight: 500; color: #d4af37; letter-spacing: 0.08em; }
+.totalNum { font-size: 0.8rem; opacity: 0.3; }
+.progressBarTrack { position: relative; width: 60px; height: 1px; background-color: rgba(255, 255, 255, 0.12); overflow: hidden; }
+.progressBarFill { height: 100%; width: 0; background-color: #d4af37; animation: fillHorizontal linear forwards; }
+
+@keyframes fillHorizontal { from { width: 0%; } to { width: 100%; } }
+
+/* ================= LIGHTBOX Fullscreen ================= */
+.lightboxOverlay {
+  position: fixed;
+  top: 0; 
+  left: 0; 
+  width: 100vw; 
+  height: 100vh;
+  
+  /* Tạo nền đen sâu, không xuyên thấu */
+  background: radial-gradient(circle at center, #1a1a1a 0%, #050505 100%);
+  
+  z-index: 99999;
+  display: flex; 
+  flex-direction: column; 
+  align-items: center; 
+  justify-content: center;
+  overscroll-behavior: contain;
+}
+
+.lightboxImageContainer{
+    position:relative;
+    width:90vw;
+    height:60vh;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    filter:drop-shadow(0 20px 30px rgba(0,0,0,.5));
+
+    touch-action:pan-x;
+}
+
+.lightboxMainImage { 
+  object-fit: contain;
+  /* Thêm viền mỏng để ảnh tách biệt với nền đen */
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.closeLightbox{
+  position:absolute;
+
+  top:18px;
+  right:18px;
+
+  width:60px;
+  height:60px;
+
+  border:none;
+  border-radius:999px;
+
+  background:rgba(0,0,0,.55);
+
+  backdrop-filter:blur(12px);
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  color:#fff;
+
+  cursor:pointer;
+
+  z-index:100002;
+
+  transition:.25s;
+
+  touch-action:manipulation;
+
+  -webkit-tap-highlight-color:transparent;
+}
+
+.closeLightbox:hover{
+  background:rgba(255,255,255,.18);
+}
+
+.closeLightbox svg{
+  width:28px;
+  height:28px;
+}
+
+.lightboxBtn { position: absolute; top: 50%; transform: translateY(-50%); background: none; border: none; color: rgba(255, 255, 255, 0.4); cursor: pointer; padding: 40px 24px; z-index: 100000; transition: color 0.3s; }
+.lightboxBtn:hover { color: #d4af37; }
+.lightboxLeft { left: 2%; } .lightboxRight { right: 2%; }
+.lightboxCounter { margin-top: 24px; display: flex; align-items: center; gap: 8px; font-family: serif; color: #fff; }
+.lightboxCurrent { font-size: 1.1rem; } .lightboxTotal { opacity: 0.4; }
+
+/* ================= RESPONSIVE SYSTEM ================= */
+@media (max-width: 1024px) {
+  .heroSection { height: 48vh; }
+  .thumbnailTrack { padding: 6px 35vw; }
+  .thumbWrapper { width: 70px; height: 44px; }
+}
+
+@media (max-width: 768px) {
+  .heroSection { height: 42vh; min-height: 300px; }
+  
+  /* Ẩn bộ nút góc dưới của slider thường (vì đã có thanh thumb lướt dưới chân) */
+  .premiumNavControls, .luxuryCounter { display: none; }
+  
+  .thumbnailTrack { padding: 6px 40vw; }
+  .thumbWrapper { width: 64px; height: 40px; }
+
+  /* ĐỊNH VỊ LẠI LIGHTBOX CHO MOBILE (GIỮ NÚT NHƯNG GỌN HƠN) */
+  .lightboxImageContainer { width: 92vw; height: 60vh; }
+  .lightboxBtn { padding: 20px 10px; color: rgba(255, 255, 255, 0.6); }
+  .lightboxLeft { left: 0px; }
+  .lightboxRight { right: 0px; }
+  .closeLightbox { top: 24px; right: 24px; }
+  .desktopOnly {
+    display: none !important;
+  }
+}

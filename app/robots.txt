@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://tonkatsu-niimura.vercel.app/sitemap.xml

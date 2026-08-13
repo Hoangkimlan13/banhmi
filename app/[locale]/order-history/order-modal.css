@@ -1,0 +1,175 @@
+/* order-modal.css */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+.modal-content-box {
+  background: var(--surface, #ffffff);
+  border-radius: var(--radius-lg, 1rem);
+  max-width: 600px;
+  width: 100%;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column; /* Chia bố cục dọc để ghim footer */
+  padding: 1.5rem;
+  position: relative;
+  box-shadow: var(--shadow-lg, 0 10px 25px -3px rgba(0, 0, 0, 0.1));
+  border: 1px solid var(--border-color, #e2e8f0);
+}
+
+.modal-close-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: var(--bg-main, #f8fafc);
+  border: 1px solid var(--border-color, #e2e8f0);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  font-size: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--text-muted, #64748b);
+  transition: all 0.2s;
+  z-index: 2;
+}
+
+.modal-close-btn:hover {
+  background: var(--primary-light, #fff7ed);
+  color: var(--primary, #f97316);
+  border-color: var(--primary, #f97316);
+}
+
+.modal-header {
+  margin-bottom: 1rem;
+  padding-right: 2rem;
+}
+
+.modal-title {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--text-main, #0f172a);
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.modal-order-highlight {
+  color: var(--primary, #f97316);
+  background: var(--primary-light, #fff7ed);
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--radius-sm, 0.5rem);
+  font-size: 1.2rem;
+  border: 1px dashed var(--primary, #f97316);
+}
+
+.modal-divider {
+  border: 0;
+  height: 1px;
+  background: var(--border-color, #e2e8f0);
+  margin: 1rem 0;
+  flex-shrink: 0;
+}
+
+/* Vùng chứa danh sách món có thể cuộn độc lập khi quá nhiều */
+.modal-scrollable-body {
+  overflow-y: auto;
+  flex-grow: 1;
+  padding-right: 0.25rem;
+  /* Tùy chỉnh thanh cuộn đẹp hơn */
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-color) transparent;
+}
+
+.modal-scrollable-body::-webkit-scrollbar {
+  width: 6px;
+}
+
+.modal-scrollable-body::-webkit-scrollbar-thumb {
+  background-color: var(--border-color, #e2e8f0);
+  border-radius: 4px;
+}
+
+.modal-section-title {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text-main, #0f172a);
+  margin-bottom: 0.75rem;
+}
+
+.modal-items-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.modal-item-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px dashed var(--border-color, #e2e8f0);
+}
+
+.modal-item-info {
+  width: 100%;
+}
+
+.modal-item-header {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 600;
+  color: var(--text-main, #0f172a);
+  font-size: 1rem;
+}
+
+.modal-option-list {
+  font-size: 0.875rem;
+  color: var(--text-muted, #64748b);
+  padding-left: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+.modal-item-note {
+  font-style: italic;
+  color: var(--text-muted, #64748b);
+  opacity: 0.9;
+}
+
+/* Footer ghim cố định bên dưới cùng */
+.modal-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-main, #0f172a);
+  margin-top: 1rem;
+  background: var(--bg-main, #f8fafc);
+  padding: 0.85rem 1rem;
+  border-radius: var(--radius-md, 0.75rem);
+  border: 1px solid var(--border-color, #e2e8f0);
+  flex-shrink: 0;
+}
+
+.modal-total-amount {
+  color: var(--primary, #f97316);
+  font-size: 1.35rem;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}

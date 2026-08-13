@@ -1,0 +1,222 @@
+/* Tổng thể khung tóm tắt đơn hàng */
+.order-summary-card {
+  background: var(--surface, #ffffff);
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  border: 1px solid var(--border-color, #e5e7eb);
+  margin-bottom: 1.25rem;
+}
+
+/* Phần Tiêu đề */
+.order-summary-header {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.85rem;
+  border-bottom: 1px solid var(--border-color, #e5e7eb);
+}
+
+.order-header-icon-wrapper {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background-color: var(--primary-light, #fef2f2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.order-header-icon-wrapper span.material-symbols-outlined {
+  font-size: 1.25rem;
+  color: var(--primary, #e11d48);
+}
+
+.order-summary-header h2 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-main, #1f2937);
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+/* Danh sách món ăn */
+.order-items-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-height: 320px;
+  overflow-y: auto;
+  margin-bottom: 1.25rem;
+  padding-right: 0.25rem;
+}
+
+/* Từng dòng sản phẩm */
+.order-item-row {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 1rem;
+  border-bottom: 1px dashed var(--border-color, #e5e7eb);
+}
+
+.order-item-row:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.order-item-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  width: 100%;
+}
+
+.order-item-top-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.order-item-name {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-main, #1f2937);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.order-item-price {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-main, #1f2937);
+  white-space: nowrap;
+}
+
+/* Hàng hiển thị số lượng rõ ràng, thân thiện */
+.order-item-qty-row {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.order-item-qty-label {
+  font-size: 0.85rem;
+  color: var(--text-muted, #6b7280);
+}
+
+.order-item-qty-value {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--primary, #e11d48);
+}
+
+/* Khung nhóm tùy chọn (Options) gọn gàng, tinh tế */
+.order-item-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  margin-top: 0.15rem;
+  background-color: var(--bg-main, #f9fafb);
+  padding: 0.35rem 0.5rem;
+  border-radius: 6px;
+  border: 1px solid var(--border-color, #e5e7eb);
+}
+
+.order-option-group-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.72rem; /* Giảm kích thước chữ nhỏ lại, không tranh chấp với tên món */
+}
+
+.order-option-group-title {
+  font-weight: 500;
+  color: var(--text-muted, #6b7280);
+}
+
+.order-option-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2rem;
+}
+
+.order-option-tag-pill {
+  background-color: var(--surface, #ffffff);
+  color: var(--text-main, #374151);
+  padding: 0.05rem 0.35rem;
+  border-radius: 4px;
+  font-size: 0.7rem; /* Kích thước chữ nhỏ, tinh gọn */
+  border: 1px solid var(--border-color, #e5e7eb);
+  font-weight: 400;
+}
+
+/* Ghi chú của khách hàng */
+.order-item-note {
+  font-size: 0.8rem;
+  color: #991b1b;
+  background-color: #fef2f2;
+  padding: 0.4rem 0.6rem;
+  border-radius: 8px;
+  margin-top: 0.3rem;
+  border: 1px solid #fee2e2;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.3rem;
+}
+
+.order-note-tag {
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* Phần chân tổng kết (Subtotal, Tax, Total) */
+.order-summary-footer {
+  border-top: 1px solid var(--border-color, #e5e7eb);
+  padding-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+}
+
+.summary-label {
+  color: var(--text-muted, #6b7280);
+}
+
+.summary-value {
+  color: var(--text-main, #1f2937);
+  font-weight: 600;
+}
+
+.summary-value-muted {
+  color: var(--text-muted, #9ca3af);
+  font-size: 0.85rem;
+}
+
+.total-row {
+  margin-top: 0.4rem;
+  padding-top: 0.75rem;
+  border-top: 1px dashed var(--border-color, #e5e7eb);
+}
+
+.summary-label-total {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-main, #1f2937);
+}
+
+.summary-value-total {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--primary, #e11d48);
+  letter-spacing: -0.02em;
+}

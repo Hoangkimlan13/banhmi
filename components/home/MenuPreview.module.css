@@ -1,0 +1,312 @@
+.splitSection {
+  display: flex;
+  flex-direction: column;
+  max-width: 100%;
+  padding: 40px 0;
+  background-color: var(--rice, #fffdf7);
+  overflow: hidden;
+  border-top: 1px solid var(--line);
+}
+
+.sectionMeta {
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 40px;
+  box-sizing: border-box;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.eyebrow {
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 0.85rem;
+  letter-spacing: 0.4em;
+  color: var(--gold, #b88a44);
+  margin: 0 0 16px 0;
+  font-weight: 600;
+  text-indent: 0.4em;
+}
+
+.mainTitle {
+  font-family: "Noto Serif JP", serif;
+  font-size: 2.6rem;
+  line-height: 1.4;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  color: var(--foreground, #17130f);
+  margin: 0;
+}
+
+/* ----------------------------------------- */
+/* Slider Container (Đã bỏ toàn bộ nút mũi tên) */
+/* ----------------------------------------- */
+.menuSliderOuter {
+  width: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.menuPreviewSlider {
+  display: flex;
+  gap: 48px;
+  overflow-x: auto;
+  padding: 60px calc(50vw - 195px); /* Tính toán để card giữa nằm chính giữa */
+  scrollbar-width: none;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  background-color: var(--rice, #fffdf7); /* Giữ màu nền cũ */
+}
+
+.menuPreviewSlider::-webkit-scrollbar {
+  display: none; 
+}
+
+.previewCard {
+  flex: 0 0 360px;
+  scroll-snap-align: center;
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  color: inherit;
+  background-color: #fff; /* Nền trắng sạch */
+  padding: 16px;          /* Thêm khoảng thở bên trong card */
+  border-radius: 12px;    /* Bo góc vừa phải (không quá lớn) */
+  transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+  opacity: 0.6;           /* Mờ nhẹ các card xung quanh */
+  transform: scale(0.95);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05); /* Shadow cực kỳ nhẹ */
+  cursor: pointer;
+}
+
+
+.activeCard {
+  opacity: 1;
+  transform: scale(1);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.12); /* Shadow "nổi" khi active */
+}
+
+
+.imageWrapper {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border-radius: 8px; /* Bo góc ảnh đồng bộ */
+  margin-bottom: 20px;
+}
+
+.menuImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.previewCard:hover {
+  transform: translateY(-8px) scale(1.02); /* Nhấc card lên nhẹ */
+  box-shadow: 0 25px 50px rgba(184, 138, 68, 0.15); /* Shadow màu vàng đồng nhẹ */
+}
+
+.previewCard:hover .menuImage {
+  transform: scale(1.08); /* Zoom nhẹ ảnh */
+}
+
+.cardInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 0 4px;
+}
+
+.title {
+  font-family: "Noto Serif JP", serif;
+  font-size: 1.35rem; /* Tăng size chút xíu */
+  font-weight: 600;
+  color: var(--foreground, #17130f);
+  letter-spacing: 0.05em;
+}
+
+.pricesBlock {
+  margin-top: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  border-top: 1px dashed #e4dcd0;
+  padding-top: 14px;
+}
+
+.priceLine {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.priceLabel {
+  font-family: "Noto Serif JP", serif;
+  font-size: 0.75rem;
+  color: var(--foreground, #17130f);
+  background-color: #f2ebd9;
+  padding: 2px 8px;
+  font-weight: 500;
+}
+
+.priceValue {
+  font-family: system-ui, sans-serif;
+  font-size: 1.25rem;
+  color: var(--gold, #b88a44);
+  font-weight: 700;
+}
+
+.priceLabelSecondary {
+  font-family: "Noto Serif JP", serif;
+  font-size: 0.75rem;
+  color: #8a8175;
+  padding-left: 8px;
+}
+
+.priceValueSecondary {
+  font-family: system-ui, sans-serif;
+  font-size: 1.05rem;
+  color: #8a8175;
+  font-weight: 500;
+}
+
+/* ----------------------------------------- */
+/* Hệ thống Dấu chấm điều hướng (Dots) */
+/* ----------------------------------------- */
+.paginationDots {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin: 20px 0;
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #d1c7bd;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.activeDot {
+  background-color: var(--gold, #b88a44);
+  width: 28px;
+  border-radius: 3px;
+}
+
+/* ----------------------------------------- */
+/* THIẾT KẾ NÚT BẤM TOÀN BỘ THỰC ĐƠN HIGH-END */
+/* ----------------------------------------- */
+.linkWrapper {
+  align-self: center;
+  margin-top: 10px;
+}
+
+.luxuryButton {
+  position: relative;
+  display: inline-block;
+  min-width: 260px;
+  height: 64px;
+  text-decoration: none;
+  box-sizing: border-box;
+}
+
+/* Khung viền ngoài màu Ink */
+.buttonBorder {
+  position: absolute;
+  inset: 0;
+  border: 1px solid var(--ink, #12110f);
+  z-index: 1;
+  transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), border-color 0.4s ease;
+}
+
+/* Lớp nền trượt từ dưới lên */
+.buttonBg {
+  position: absolute;
+  inset: 0;
+  background-color: var(--ink, #12110f);
+  transform: scaleY(0);
+  transform-origin: bottom;
+  z-index: 2;
+  transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* Khung nội dung chứa text và icon */
+.buttonContent {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  padding: 0 40px;
+  box-sizing: border-box;
+  z-index: 3;
+  color: var(--ink, #12110f);
+  transition: color 0.4s ease;
+}
+
+.buttonText {
+  font-family: "Noto Serif JP", serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+}
+
+.arrowIcon {
+  display: flex;
+  align-items: center;
+  transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* --- HIỆU ỨNG HOVER SANG TRỌNG --- */
+.luxuryButton:hover .buttonBg {
+  transform: scaleY(1);
+  transform-origin: top;
+}
+
+.luxuryButton:hover .buttonContent {
+  color: var(--rice, #fffdf7); /* Đổi màu chữ sang trắng kem khi nền đen bao phủ */
+}
+
+.luxuryButton:hover .buttonBorder {
+  border-color: var(--gold, #b88a44);
+  transform: scale(1.05, 1.12); /* Phóng nhẹ viền ngoài tạo hiệu ứng viền kép lệch pha */
+}
+
+.luxuryButton:hover .arrowIcon {
+  transform: translateX(6px);
+}
+
+/* ----------------------------------------- */
+/* RESPONSIVE */
+/* ----------------------------------------- */
+@media (max-width: 768px) {
+  .mainTitle { font-size: 2rem; }
+  .menuPreviewSlider {
+    padding: 20px calc(50vw - 140px);
+    gap: 24px;
+  }
+  .previewCard { flex: 0 0 280px; }
+  
+  .luxuryButton {
+    min-width: 100%;
+    width: 100%;
+  }
+  .buttonContent {
+    justify-content: space-between;
+    padding: 0 24px;
+  }
+  .luxuryButton:hover .buttonBorder {
+    transform: none; /* Mobile không cần scale viền để tránh vỡ layout block */
+  }
+}

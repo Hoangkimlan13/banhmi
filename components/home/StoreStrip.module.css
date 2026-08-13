@@ -1,0 +1,360 @@
+.storeStripSection {
+  padding: 80px 20;
+  background-color: var(--rice, #fffdf7);
+  border-top: 1px solid var(--line);
+  overflow: hidden;
+}
+
+.container {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 32px;
+}
+
+.sectionHeading {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.eyebrow {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  letter-spacing: 0.3em;
+  color: var(--gold);
+  margin-bottom: 16px;
+  font-weight: 600;
+}
+
+.mainTitle {
+  font-family: var(--font-serif);
+  font-size: 42px;
+  color: var(--foreground);
+  margin-bottom: 20px;
+  letter-spacing: 0.02em;
+}
+
+.subTitle {
+  font-family: var(--font-sans);
+  font-size: 15px;
+  color: var(--muted);
+  letter-spacing: 0.05em;
+}
+
+/* --- DESKTOP VIEW --- */
+.storeListOuter {
+  width: 100%;
+}
+
+.storeList {
+  display: flex;
+  flex-direction: column;
+  gap: 100px;
+}
+
+.scrollItem {
+  width: 100%;
+}
+
+.storeRow {
+  display: flex;
+  gap: 64px; 
+  align-items: center;
+}
+
+.mapBlock {
+  flex: 1.1;
+  height: 400px;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.03);
+  border: 1px solid var(--line);
+}
+
+.googleMapIframe {
+  filter: grayscale(0.15) contrast(1.02);
+  transition: filter 0.5s ease;
+}
+
+.storeRow:hover .googleMapIframe {
+  filter: grayscale(0);
+}
+
+.infoBlock {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.storeName {
+  font-family: var(--font-serif);
+  font-size: 30px;
+  color: var(--foreground);
+  margin-bottom: 14px;
+  line-height: 1.3;
+}
+
+.storeAddress, .storeTel {
+  font-family: var(--font-sans);
+  font-size: 14.5px;
+  color: var(--foreground);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.storeTel {
+  margin-top: 6px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+}
+
+.metaDivider {
+  width: 50px;
+  height: 1px;
+  background-color: var(--gold);
+  margin: 24px 0;
+}
+
+.detailsGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  margin-bottom: 32px;
+}
+
+.detailItem {
+  display: flex;
+  font-size: 13.5px;
+  line-height: 1.6;
+}
+
+.label {
+  width: 110px;
+  color: var(--muted);
+  font-family: var(--font-sans);
+  font-weight: 500;
+  flex-shrink: 0;
+}
+
+.value {
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  margin: 0;
+}
+
+.actionButtonGroup {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.primaryButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background-color: var(--foreground);
+  color: var(--background);
+  padding: 12px 26px;
+  font-size: 13px;
+  font-family: var(--font-sans);
+  letter-spacing: 0.05em;
+  font-weight: 500;
+  border-radius: 2px;
+  transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.primaryButton:hover {
+  background-color: var(--gold);
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(184, 138, 68, 0.2);
+}
+
+.mapButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  color: var(--gold);
+  border-bottom: 1px solid rgba(184, 138, 68, 0.3);
+  padding-bottom: 4px;
+  transition: all 0.3s ease;
+}
+
+.mapButton:hover {
+  color: var(--gold-deep);
+  border-bottom-color: var(--gold-deep);
+}
+
+/* Ẩn thanh hiển thị dấu chấm trên PC */
+.paginationDots {
+  display: none;
+}
+
+
+/* 📱 SỬA LỖI LỆCH TRÁI, ĐƯA CARD VÀO GIỮA MÀN HÌNH TRÊN MOBILE & TABLET (< 1024px) */
+@media (max-width: 1024px) {
+  .storeStripSection {
+    padding: 60px 0;
+  }
+
+  .container {
+    padding: 0;
+  }
+
+  .sectionHeading {
+    padding: 0 24px;
+    margin-bottom: 32px;
+  }
+
+  /* Khung trượt ngang */
+  .storeListOuter {
+    position: relative;
+    width: 100%;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+    /* Dùng padding lề để tạo khoảng đệm lùi tự nhiên khi cuộn */
+    padding: 0 0 24px 0; 
+    box-sizing: border-box;
+  }
+
+  .storeListOuter::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
+  }
+
+  .storeList {
+    display: inline-flex;
+    flex-direction: row;
+    gap: 16px;
+    /* Thiết lập khoảng trống đều ở hai đầu danh sách cuộn */
+    padding: 0 calc(6vw + 8px); 
+    box-sizing: border-box;
+  }
+
+  /* SỬA QUAN TRỌNG: scroll-snap-align: center giúp card tự động hút dính thẳng vào giữa màn hình */
+  .scrollItem {
+    width: 88vw; 
+    max-width: 440px;
+    flex-shrink: 0;
+    scroll-snap-align: center; 
+    box-sizing: border-box;
+  }
+
+  .storeRow {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 20px;
+    background: #ffffff;
+    border-radius: 8px;
+    padding: 24px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+    border: 1px solid var(--line);
+    box-sizing: border-box;
+    width: 100%;
+  }
+
+  .mapBlock {
+    width: 100%;
+    height: 220px;
+    border-radius: 6px;
+  }
+
+  .infoBlock {
+    align-items: stretch;
+  }
+
+  .storeName {
+    font-size: 22px;
+    margin-bottom: 8px;
+  }
+
+  .storeAddress, .storeTel {
+    font-size: 13.5px;
+  }
+
+  .metaDivider {
+    margin: 16px 0;
+  }
+
+  .detailsGrid {
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .detailItem {
+    font-size: 13px;
+  }
+
+  .actionButtonGroup {
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+  }
+
+  .primaryButton {
+    justify-content: center;
+    padding: 14px;
+    font-size: 13px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .mapButton {
+    justify-content: center;
+    border: 1px solid var(--gold);
+    padding: 12px;
+    border-radius: 2px;
+    width: 100%;
+    font-size: 13px;
+    box-sizing: border-box;
+  }
+
+  /* Hiển thị thanh Dấu chấm chỉ mục dưới Mobile */
+  .paginationDots {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background-color: #e0dcd3;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .activeDot {
+    background-color: var(--gold);
+    transform: scale(1.1);
+    width: 20px; /* Hiệu ứng kén kéo dài phong cách iOS hiện đại */
+    border-radius: 4px;
+  }
+}
+
+@media (max-width: 500px) {
+  .scrollItem {
+    width: 86vw; 
+  }
+  .storeList {
+    padding: 0 calc(7vw + 8px); 
+  }
+  .mapBlock {
+    height: 190px;
+  }
+  .storeRow {
+    padding: 20px 16px;
+  }
+}
