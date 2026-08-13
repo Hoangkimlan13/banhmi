@@ -1010,6 +1010,7 @@ const {
       input.orderToken
     ),
   {
+    /* sau này xóa */
     maxWait: 10000,
     timeout: 15000,
   }

@@ -31,7 +31,8 @@ export async function processStripeWebhook(
   rawPayload: string
 ): Promise<WebhookProcessResult> {
   try {
-    return await db.$transaction(async (tx) => {
+    return await db.$transaction(
+      async (tx) => {
       /*
        * ============================================================
        * 1. IDEMPOTENCY
@@ -1107,7 +1108,12 @@ export async function processStripeWebhook(
       throw new Error(
         `Unhandled PaymentIntent event: ${event.type}`
       );
-    });
+    },
+    {
+        maxWait: 10000, // Chờ connection tối đa 10s
+        timeout: 20000, // Tăng thời gian timeout lên 20s để không bị sập giữa chừng trên Vercel
+      }
+  );
   } catch (error) {
     /*
      * ============================================================
