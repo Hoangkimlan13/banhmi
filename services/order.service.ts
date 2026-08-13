@@ -998,18 +998,22 @@ export async function prepareCheckoutPayment(
    *
    * order_number được tạo trong transaction.
    */
-  const {
-    order,
-    orderNumber,
-    total,
-  } = await db.$transaction(
-    (tx) =>
-      createOrderAndItems(
-        tx,
-        input,
-        input.orderToken
-      )
-  );
+const {
+  order,
+  orderNumber,
+  total,
+} = await db.$transaction(
+  (tx) =>
+    createOrderAndItems(
+      tx,
+      input,
+      input.orderToken
+    ),
+  {
+    maxWait: 10000,
+    timeout: 15000,
+  }
+);
 
 
   /*
