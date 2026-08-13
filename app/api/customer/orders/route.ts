@@ -135,6 +135,10 @@ export async function POST(req: Request) {
     // 5. SERIALIZE ORDER
     // =========================================================
 
+        // =========================================================
+    // 5. SERIALIZE ORDER
+    // =========================================================
+
     const serializedOrders =
       orders.map(
         (order: typeof orders[number]) => ({
@@ -209,7 +213,9 @@ export async function POST(req: Request) {
 
                   tbl_customer_order_item_options:
                     itemOptions.map(
-                      (option) => ({
+                      (
+                        option: typeof options[number]
+                      ) => ({
                         id: String(option.id),
 
                         order_item_id:
