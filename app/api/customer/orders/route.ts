@@ -82,12 +82,13 @@ export async function POST(req: Request) {
     // 3. LẤY OPTIONS ĐÃ SNAPSHOT
     // =========================================================
 
-    const orderItemIds =
-      orders.flatMap((order: typeof orders[number]) =>
-        order.tbl_customer_order_items.map(
-          (item: typeof order.tbl_customer_order_items[number]) => item.id
-        )
-      );
+    const orderItemIds: number[] = [];
+
+    for (const order of orders) {
+      for (const item of order.tbl_customer_order_items) {
+        orderItemIds.push(Number(item.id));
+      }
+    }
 
     const options =
       orderItemIds.length > 0
@@ -135,112 +136,116 @@ export async function POST(req: Request) {
     // =========================================================
 
     const serializedOrders =
-      orders.map((order) => ({
-        ...order,
+      orders.map(
+        (order: typeof orders[number]) => ({
+          ...order,
 
-        // -----------------------------------------------------
-        // ORDER
-        // -----------------------------------------------------
+          // -----------------------------------------------------
+          // ORDER
+          // -----------------------------------------------------
 
-        id: String(order.id),
+          id: String(order.id),
 
-        subtotal:
-          order.subtotal !== null &&
-          order.subtotal !== undefined
-            ? Number(order.subtotal)
-            : 0,
+          subtotal:
+            order.subtotal !== null &&
+            order.subtotal !== undefined
+              ? Number(order.subtotal)
+              : 0,
 
-        discount_amount:
-          order.discount_amount !== null &&
-          order.discount_amount !== undefined
-            ? Number(order.discount_amount)
-            : 0,
+          discount_amount:
+            order.discount_amount !== null &&
+            order.discount_amount !== undefined
+              ? Number(order.discount_amount)
+              : 0,
 
-        tax_amount:
-          order.tax_amount !== null &&
-          order.tax_amount !== undefined
-            ? Number(order.tax_amount)
-            : 0,
+          tax_amount:
+            order.tax_amount !== null &&
+            order.tax_amount !== undefined
+              ? Number(order.tax_amount)
+              : 0,
 
-        total_amount:
-          Number(order.total_amount),
+          total_amount:
+            Number(order.total_amount),
 
-        // -----------------------------------------------------
-        // ORDER ITEMS
-        // -----------------------------------------------------
+          // -----------------------------------------------------
+          // ORDER ITEMS
+          // -----------------------------------------------------
 
-        tbl_customer_order_items:
-          order.tbl_customer_order_items.map(
-            (item) => {
-              const itemOptions =
-                optionsByOrderItem.get(
-                  String(item.id)
-                ) || [];
+          tbl_customer_order_items:
+            order.tbl_customer_order_items.map(
+              (
+                item: typeof order.tbl_customer_order_items[number]
+              ) => {
+                const itemOptions =
+                  optionsByOrderItem.get(
+                    String(item.id)
+                  ) || [];
 
-              return {
-                ...item,
+                return {
+                  ...item,
 
-                id: String(item.id),
+                  id: String(item.id),
 
-                order_id:
-                  String(item.order_id),
+                  order_id:
+                    String(item.order_id),
 
-                quantity:
-                  Number(item.quantity),
+                  quantity:
+                    Number(item.quantity),
 
-                price_at_time:
-                  Number(item.price_at_time),
+                  price_at_time:
+                    Number(item.price_at_time),
 
-                discount_amount:
-                  Number(item.discount_amount),
+                  discount_amount:
+                    Number(item.discount_amount),
 
-                option_total:
-                  Number(
-                    item.option_total || 0
-                  ),
+                  option_total:
+                    Number(
+                      item.option_total || 0
+                    ),
 
-                // -------------------------------------------------
-                // OPTIONS
-                // -------------------------------------------------
+                  // -------------------------------------------------
+                  // OPTIONS
+                  // -------------------------------------------------
 
-                tbl_customer_order_item_options:
-                  itemOptions.map(
-                    (option) => ({
-                      id: String(option.id),
+                  tbl_customer_order_item_options:
+                    itemOptions.map(
+                      (option) => ({
+                        id: String(option.id),
 
-                      order_item_id:
-                        String(
-                          option.order_item_id
-                        ),
+                        order_item_id:
+                          String(
+                            option.order_item_id
+                          ),
 
-                      option_item_id:
-                        option.option_item_id !== null &&
-                        option.option_item_id !== undefined
-                          ? Number(
-                              option.option_item_id
-                            )
-                          : null,
+                        option_item_id:
+                          option.option_item_id !== null &&
+                          option.option_item_id !== undefined
+                            ? Number(
+                                option.option_item_id
+                              )
+                            : null,
 
-                      // =========================================
-                      // SNAPSHOT
-                      // =========================================
+                        // =========================================
+                        // SNAPSHOT
+                        // =========================================
 
-                      group_name_snap:
-                        option.group_name_snap ?? null,
+                        group_name_snap:
+                          option.group_name_snap ?? null,
 
-                      option_name_snap:
-                        option.option_name_snap,
+                        option_name_snap:
+                          option.option_name_snap,
 
-                      price_snap:
-                        Number(
-                          option.price_snap
-                        ),
-                    })
-                  ),
-              };
-            }
-          ),
-      }));
+                        price_snap:
+                          Number(
+                            option.price_snap
+                          ),
+                      })
+                    ),
+                };
+              }
+            ),
+        })
+      );
 
     // =========================================================
     // 6. RESPONSE
