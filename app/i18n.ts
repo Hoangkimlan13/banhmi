@@ -1,4 +1,4 @@
-export const locales = ['ja', 'en', 'vi', 'zh'] as const;
+export const locales = ['ja', 'en', 'vi', 'zh', 'ko'] as const;
 
 export type Locale = (typeof locales)[number];
 
@@ -28,6 +28,11 @@ export const languageOptions: {
     code: 'zh',
     label: '中文',
     shortLabel: 'ZH',
+  },
+  {
+    code: 'ko',
+    label: '한국어',
+    shortLabel: 'KO',
   },
 ];
 
@@ -200,5 +205,35 @@ export const dictionary = {
 
     sendMessage: '发送消息',
     askConcierge: '咨询客服',
+  },
+
+  ko: {
+    siteName: 'Banh Mi Sandwiches',
+
+    delivery: '포장',
+    deliveryAlt: '배달',
+
+    reservation: '예약',
+    phoneReservation: '전화 예약',
+
+    menu: '메뉴',
+    store: '매장',
+    about: '소개',
+    news: '소식',
+    contact: '문의하기',
+    home: '홈',
+
+    viewMenu: '전체 메뉴 보기',
+
+    bookingDelivery: '예약 및 배달',
+    reserveOrOrder:
+      '매장 픽업을 예약하거나 집에서 배달을 주문할 수 있습니다.',
+
+    chooseMenu: '메뉴 선택',
+
+    corporateOrder: '기업 주문',
+
+    sendMessage: '메시지 보내기',
+    askConcierge: '고객 센터 문의',
   },
 } satisfies Record<Locale, Record<string, string>>;

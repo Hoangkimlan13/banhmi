@@ -83,7 +83,7 @@ export async function POST(req: Request) {
     // =========================================================
 
     const orderItemIds =
-      orders.flatMap((order) =>
+      orders.flatMap((order: typeof orders[number]) =>
         order.tbl_customer_order_items.map(
           (item) => item.id
         )

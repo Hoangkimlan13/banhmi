@@ -75,44 +75,50 @@ export default function StoreSelectPage({ params }: Props) {
     }
   };
 
-  const titles = {
+  const titles: Record<Locale, string> = {
     ja: "店舗を選択してください",
     vi: "Vui lòng chọn cửa hàng",
     en: "Please select a store",
-    zh: "请选择门店"
+    zh: "请选择门店",
+    ko: "매장을 선택해주세요",
   };
 
-  const subtitles = {
+  const subtitles: Record<Locale, string> = {
     ja: "ご注文いただく店舗をお選びください。",
     vi: "Chọn chi nhánh bạn muốn bắt đầu đặt món.",
     en: "Choose a location to start your order.",
-    zh: "请选择您要点餐的门店位置。"
+    zh: "请选择您要点餐的门店位置。",
+    ko: "주문하실 매장을 선택해 주세요.",
   };
 
-  const loadingText = {
+  const loadingText: Record<Locale, string> = {
     ja: "読み込み中...",
     vi: "Đang tải...",
     en: "Loading stores...",
-    zh: "加载中..."
+    zh: "加载中...",
+    ko: "불러오는 중...",
   };
-  const emptyText = {
+  const emptyText: Record<Locale, string> = {
     ja: "利用可能な店舗がありません",
     vi: "Không tìm thấy cửa hàng khả dụng",
     en: "No available stores found",
-    zh: "暂无可用门店"
+    zh: "暂无可用门店",
+    ko: "이용 가능한 매장이 없습니다",
   };
-  const selectStoreText = {
+  const selectStoreText: Record<Locale, string> = {
     ja: "店舗を選ぶ",
     vi: "Chọn quán",
     en: "Select Store",
-    zh: "选择门店"
+    zh: "选择门店",
+    ko: "매장 선택",
   };
 
-  const labels = {
+  const labels: Record<Locale, { location: string; address: string; hours: string }> = {
     ja: { location: "エリア", address: "住所", hours: "営業時間" },
     vi: { location: "Khu vực", address: "Địa chỉ", hours: "Giờ mở cửa" },
     en: { location: "Area", address: "Address", hours: "Hours" },
-    zh: { location: "区域", address: "地址", hours: "营业时间" }
+    zh: { location: "区域", address: "地址", hours: "营业时间" },
+    ko: { location: "지역", address: "주소", hours: "영업 시간" },
   };
 
   const currentLabels = labels[locale] || labels.en;

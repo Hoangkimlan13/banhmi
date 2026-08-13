@@ -19,6 +19,7 @@ const layoutSubtitles: Record<Locale, { subtitle: string }> = {
   en: { subtitle: 'Complete your pickup details and secure checkout' },
   vi: { subtitle: 'Hoàn tất thông tin nhận món và thanh toán bảo mật' },
   zh: { subtitle: '请完成取餐信息填写与安全支付' },
+  ko: { subtitle: '수령 정보를 입력하고 안전하게 결제해 주세요' },
 };
 
 export default function CheckoutLayout({
