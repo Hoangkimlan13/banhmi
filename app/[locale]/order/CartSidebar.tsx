@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation"; 
+import { useState, useEffect } from "react";
 import { type Locale } from "@/app/i18n";
 import { getSelectedStore } from "@/app/web/store/selected-store";
 import "./cart-sidebar.css";
@@ -15,7 +16,7 @@ interface CartSidebarProps {
   totalItemsCount: number;
   total: number;
   loading: boolean;
-  onCheckout?: () => void; // Cho phép optional vì ta có thể chuyển trang trực tiếp
+  onCheckout?: () => void;
 }
 
 export default function CartSidebar({
@@ -29,7 +30,34 @@ export default function CartSidebar({
   loading,
   onCheckout,
 }: CartSidebarProps) {
-  const router = useRouter(); // 2. Khởi tạo router
+  const router = useRouter();
+
+  const [showFloatingCart, setShowFloatingCart] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
+
+  useEffect(() => {
+    let timeoutId: NodeJS.Timeout;
+
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        if (currentScrollY > lastScrollY && currentScrollY > 60) {
+          setShowFloatingCart(false); // Cuộn xuống -> Ẩn từ từ
+        } else {
+          setShowFloatingCart(true);  // Cuộn lên -> Hiện từ từ
+        }
+        setLastScrollY(currentScrollY);
+      }, 100); // Tăng từ 50ms lên 100ms để mượt và ổn định hơn
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      clearTimeout(timeoutId);
+    };
+  }, [lastScrollY]);
 
   const dict = {
     ja: {
@@ -122,17 +150,14 @@ export default function CartSidebar({
           if (optionsList.length === 0 || !optionsList[0]) return null;
 
           return (
-            <div key={idx} className="option-group-container" style={{ marginBottom: '6px' }}>
-              <div className="option-row-item" style={{ display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
-                {/* Chỉ hiển thị tên nhóm 1 lần duy nhất cho mỗi nhóm */}
+            <div key={idx} className="option-group-container">
+              <div className="option-row-item">
                 {groupName && (
-                  <span className="option-group-title" style={{ fontWeight: '600', fontSize: '0.9em', whiteSpace: 'nowrap' }}>
+                  <span className="option-group-title">
                     {groupName}:
                   </span>
                 )}
-                
-                {/* Danh sách các tags nằm cạnh tên nhóm */}
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
+                <div className="option-tags">
                   {optionsList.map((opt: any, oIdx: number) => {
                     let realOpt = opt;
                     if (groupInfo && groupInfo.options) {
@@ -144,7 +169,7 @@ export default function CartSidebar({
                     const optPrice = Number(realOpt.price || opt.price || 0);
 
                     return (
-                      <span key={oIdx} className="option-tag-pill" style={{ fontSize: '0.9em' }}>
+                      <span key={oIdx} className="option-tag-pill">
                         {optName} {optPrice > 0 ? `(+¥${optPrice.toLocaleString()})` : ''}
                       </span>
                     );
@@ -158,13 +183,10 @@ export default function CartSidebar({
     );
   };
 
-  // 3. Hàm xử lý khi bấm nút Checkout: Lấy store từ URL hoặc localStorage rồi chuyển hướng sang /[locale]/checkout?store=...
   const handleGoToCheckout = () => {
     const searchParams = new URLSearchParams(window.location.search);
-    // Lấy slug từ URL, ưu tiên dùng key "store"
     let storeSlug: string | null = searchParams.get("store");
 
-    // Nếu không có trên URL, lấy từ localStorage
     if (!storeSlug) {
       const savedStore = getSelectedStore();
       storeSlug = savedStore?.slug ?? null;
@@ -173,7 +195,6 @@ export default function CartSidebar({
     setIsCartOpen(false);
 
     if (storeSlug) {
-      // Luôn chuyển hướng với ?store=slug
       router.push(`/${locale}/checkout?store=${storeSlug}`);
     } else {
       router.push(`/${locale}/store-select`);
@@ -275,7 +296,6 @@ export default function CartSidebar({
                 <strong>¥{Number(total || 0).toLocaleString()}</strong>
               </div>
 
-              {/* 4. Gắn sự kiện chuyển trang vào nút Checkout */}
               <button className="checkout-btn" onClick={handleGoToCheckout} disabled={loading}>
                 {loading ? t.processing : t.checkout}
               </button>
@@ -285,7 +305,10 @@ export default function CartSidebar({
       </aside>
 
       {cart.length > 0 && !isCartOpen && (
-        <div className="mobile-floating-cart" onClick={() => setIsCartOpen(true)}>
+        <div 
+          className={`mobile-floating-cart ${!showFloatingCart ? 'cart-hidden' : 'cart-visible'}`}
+          onClick={() => setIsCartOpen(true)}
+        >
           <div className="mobile-cart-left">
             <span className="mobile-cart-badge">{totalItemsCount}</span>
             <span className="mobile-cart-label">{t.viewCart}</span>
