@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation"; 
-import { useState, useEffect } from "react";
 import { type Locale } from "@/app/i18n";
 import { getSelectedStore } from "@/app/web/store/selected-store";
 import "./cart-sidebar.css";
@@ -31,33 +30,6 @@ export default function CartSidebar({
   onCheckout,
 }: CartSidebarProps) {
   const router = useRouter();
-
-  const [showFloatingCart, setShowFloatingCart] = useState(true);
-  const [lastScrollY, setLastScrollY] = useState(0);
-
-  useEffect(() => {
-    let timeoutId: NodeJS.Timeout;
-
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      
-      clearTimeout(timeoutId);
-      timeoutId = setTimeout(() => {
-        if (currentScrollY > lastScrollY && currentScrollY > 60) {
-          setShowFloatingCart(false); // Cuộn xuống -> Ẩn từ từ
-        } else {
-          setShowFloatingCart(true);  // Cuộn lên -> Hiện từ từ
-        }
-        setLastScrollY(currentScrollY);
-      }, 100); // Tăng từ 50ms lên 100ms để mượt và ổn định hơn
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      clearTimeout(timeoutId);
-    };
-  }, [lastScrollY]);
 
   const dict = {
     ja: {
@@ -305,10 +277,7 @@ export default function CartSidebar({
       </aside>
 
       {cart.length > 0 && !isCartOpen && (
-        <div 
-          className={`mobile-floating-cart ${!showFloatingCart ? 'cart-hidden' : 'cart-visible'}`}
-          onClick={() => setIsCartOpen(true)}
-        >
+        <div className="mobile-floating-cart" onClick={() => setIsCartOpen(true)}>
           <div className="mobile-cart-left">
             <span className="mobile-cart-badge">{totalItemsCount}</span>
             <span className="mobile-cart-label">{t.viewCart}</span>
