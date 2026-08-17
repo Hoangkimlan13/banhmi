@@ -283,14 +283,38 @@ export function parseCheckoutInput(
 
   let scheduledTime: Date | null = null;
 
-  if (
-    typeof body.scheduledTime === 'string' &&
-    body.scheduledTime.trim()
-  ) {
+  const scheduledTimeRaw =
+    typeof body.scheduledTime === 'string'
+      ? body.scheduledTime.trim()
+      : '';
 
-    scheduledTime = new Date(
-      body.scheduledTime
-    );
+  if (!isImmediate) {
+
+    if (!scheduledTimeRaw) {
+      throw new ValidationError(
+        'scheduledTime is required'
+      );
+    }
+
+    /**
+     * Frontend gửi:
+     *
+     * 2026-08-18T14:30
+     *
+     * Đây là GIỜ NHẬT, không phải UTC.
+     *
+     * Vì server/database có thể chạy timezone khác
+     * nên phải thêm +09:00 trước khi new Date().
+     */
+    const japanDateTime =
+      /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(
+        scheduledTimeRaw
+      )
+        ? `${scheduledTimeRaw}:00+09:00`
+        : scheduledTimeRaw;
+
+    scheduledTime =
+      new Date(japanDateTime);
 
     if (
       Number.isNaN(
@@ -301,28 +325,47 @@ export function parseCheckoutInput(
         'scheduledTime is invalid'
       );
     }
-  }
 
-
-  if (
-    !isImmediate &&
-    !scheduledTime
-  ) {
-    throw new ValidationError(
-      'scheduledTime is required'
-    );
-  }
-
-
-  if (
-    scheduledTime &&
-    !isImmediate &&
-    scheduledTime.getTime() <
+    /**
+     * Không cho chọn thời gian trong quá khứ.
+     */
+    if (
+      scheduledTime.getTime() <=
       Date.now()
-  ) {
-    throw new ValidationError(
-      'scheduledTime must be in the future'
-    );
+    ) {
+      throw new ValidationError(
+        'scheduledTime must be in the future'
+      );
+    }
+  }
+
+  /**
+   * IMMEDIATE:
+   *
+   * Không bắt buộc scheduledTime.
+   *
+   * Nhưng nếu frontend có gửi thời gian
+   * estimated pickup thì có thể giữ lại.
+   */
+  else if (scheduledTimeRaw) {
+
+    const japanDateTime =
+      /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(
+        scheduledTimeRaw
+      )
+        ? `${scheduledTimeRaw}:00+09:00`
+        : scheduledTimeRaw;
+
+    scheduledTime =
+      new Date(japanDateTime);
+
+    if (
+      Number.isNaN(
+        scheduledTime.getTime()
+      )
+    ) {
+      scheduledTime = null;
+    }
   }
 
 
