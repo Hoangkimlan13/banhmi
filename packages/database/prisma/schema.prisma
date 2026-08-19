@@ -21,7 +21,7 @@ model push_tokens {
   user_id    Int?       @db.UnsignedInt
   store_id   Int?
   created_at DateTime   @default(now()) @db.Timestamp(0)
-  tbl_admin  tbl_admin? @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_user")
+  tbl_admin  tbl_admin? @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "fk_user")
 
   @@index([user_id], map: "fk_user")
 }
@@ -101,7 +101,9 @@ model tbl_customer_order_item_options {
   option_name_snap    String  @db.VarChar(100)
   option_name_ja_snap String? @db.VarChar(100)
   price_snap          Decimal @default(0.00) @db.Decimal(10, 2)
-
+  
+  tbl_customer_order_item tbl_customer_order_items @relation(fields: [order_item_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "fk_order_item_id")
+  
   @@index([option_item_id], map: "fk_option_item_id")
   @@index([order_item_id], map: "fk_order_item_id")
 }
@@ -118,8 +120,11 @@ model tbl_customer_order_items {
   note                String?             @db.VarChar(255)
   image_snap          String?             @db.VarChar(500)
   option_total        Decimal?            @default(0.00) @db.Decimal(10, 2)
-  tbl_menu_item       tbl_menu_item?      @relation(fields: [menu_item_id], references: [id], onDelete: NoAction, map: "fk_order_item_menu_item")
-  tbl_customer_orders tbl_customer_orders @relation(fields: [order_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_order_item_order")
+  tbl_menu_item       tbl_menu_item?      @relation(fields: [menu_item_id], references: [id], onDelete: Restrict, map: "fk_order_item_menu_item")
+  tbl_customer_orders tbl_customer_orders @relation(fields: [order_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "fk_order_item_order")
+
+  tbl_customer_order_item_options tbl_customer_order_item_options[]
+
 
   @@index([order_id], map: "fk_order_item_order")
   @@index([menu_item_id], map: "idx_order_item_menu_item")
@@ -149,8 +154,8 @@ model tbl_customer_orders {
   created_at               DateTime?                      @default(now()) @db.Timestamp(0)
   updated_at               DateTime                       @default(now()) @db.Timestamp(0)
   tbl_customer_order_items tbl_customer_order_items[]
-  tbl_store_daily_schedule tbl_store_daily_schedule?      @relation(fields: [daily_schedule_id], references: [id], onUpdate: NoAction, map: "fk_customer_order_schedule")
-  tbl_store                tbl_store                      @relation(fields: [store_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_customer_order_store")
+  tbl_store_daily_schedule tbl_store_daily_schedule?      @relation(fields: [daily_schedule_id], references: [id], onUpdate: Restrict, map: "fk_customer_order_schedule")
+  tbl_store                tbl_store                      @relation(fields: [store_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "fk_customer_order_store")
   tbl_print_jobs           tbl_print_jobs[]
 
   @@index([daily_schedule_id], map: "fk_customer_order_schedule")
@@ -271,7 +276,7 @@ model tbl_menu {
   name          String          @db.VarChar(100)
   is_default    Boolean?        @default(false)
   is_active     Boolean?        @default(true)
-  tbl_store     tbl_store       @relation(fields: [store_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_menu_store")
+  tbl_store     tbl_store       @relation(fields: [store_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "fk_menu_store")
   tbl_menu_item tbl_menu_item[]
 
   @@index([store_id], map: "fk_menu_store")
@@ -315,7 +320,7 @@ model tbl_menu_item {
   display_order               Int?                          @default(0)
   is_available                Boolean?                      @default(true)
   tbl_customer_order_items    tbl_customer_order_items[]
-  tbl_menu                    tbl_menu                      @relation(fields: [menu_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_menu_item_menu")
+  tbl_menu                    tbl_menu                      @relation(fields: [menu_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "fk_menu_item_menu")
   tbl_menu_item_option_groups tbl_menu_item_option_groups[]
   tbl_menu_item_tag           tbl_menu_item_tag[]
   tbl_menu_item_variants      tbl_menu_item_variants[]
@@ -349,8 +354,8 @@ model tbl_menu_item_option_groups {
   sort_order                 Int                          @default(0)
   created_at                 DateTime                     @default(now()) @db.Timestamp(0)
   updated_at                 DateTime                     @default(now()) @db.Timestamp(0)
-  tbl_menu_item              tbl_menu_item                @relation(fields: [menu_item_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_menu_option_group_item")
-  tbl_option_group_templates tbl_option_group_templates   @relation(fields: [group_template_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_menu_option_group_template")
+  tbl_menu_item              tbl_menu_item                @relation(fields: [menu_item_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "fk_menu_option_group_item")
+  tbl_option_group_templates tbl_option_group_templates   @relation(fields: [group_template_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "fk_menu_option_group_template")
   tbl_menu_item_option_items tbl_menu_item_option_items[]
 
   @@unique([menu_item_id, group_template_id], map: "uk_menu_group")
@@ -367,8 +372,8 @@ model tbl_menu_item_option_items {
   sort_order                  Int                         @default(0)
   created_at                  DateTime                    @default(now()) @db.Timestamp(0)
   updated_at                  DateTime                    @default(now()) @db.Timestamp(0)
-  tbl_menu_item_option_groups tbl_menu_item_option_groups @relation(fields: [menu_option_group_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_menu_option_item_group")
-  tbl_option_item_templates   tbl_option_item_templates   @relation(fields: [option_item_template_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_menu_option_item_template")
+  tbl_menu_item_option_groups tbl_menu_item_option_groups @relation(fields: [menu_option_group_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "fk_menu_option_item_group")
+  tbl_option_item_templates   tbl_option_item_templates   @relation(fields: [option_item_template_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "fk_menu_option_item_template")
   tbl_variant_option_prices   tbl_variant_option_prices[]
 
   @@unique([menu_option_group_id, option_item_template_id], map: "uk_menu_option_item")
@@ -390,8 +395,8 @@ model tbl_menu_item_option_overrides {
 model tbl_menu_item_tag {
   menu_item_id  Int
   tag_id        Int
-  tbl_menu_item tbl_menu_item @relation(fields: [menu_item_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_mit_menu_item")
-  tbl_tag       tbl_tag       @relation(fields: [tag_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_mit_tag")
+  tbl_menu_item tbl_menu_item @relation(fields: [menu_item_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "fk_mit_menu_item")
+  tbl_tag       tbl_tag       @relation(fields: [tag_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "fk_mit_tag")
 
   @@id([menu_item_id, tag_id])
   @@index([tag_id], map: "fk_mit_tag")
@@ -415,7 +420,7 @@ model tbl_menu_item_variants {
   deleted_at                DateTime?                           @db.Timestamp(0)
   created_at                DateTime                            @default(now()) @db.Timestamp(0)
   updated_at                DateTime                            @default(now()) @db.Timestamp(0)
-  tbl_menu_item             tbl_menu_item                       @relation(fields: [menu_item_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_variant_menu_item")
+  tbl_menu_item             tbl_menu_item                       @relation(fields: [menu_item_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "fk_variant_menu_item")
   tbl_variant_option_prices tbl_variant_option_prices[]
 
   @@unique([menu_item_id, code], map: "uk_variant_code")
@@ -446,8 +451,8 @@ model tbl_menu_section_item {
   section_id       Int
   menu_item_id     Int
   display_order    Int?             @default(0)
-  tbl_menu_item    tbl_menu_item    @relation(fields: [menu_item_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_msi_menu_item")
-  tbl_menu_section tbl_menu_section @relation(fields: [section_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_msi_section")
+  tbl_menu_item    tbl_menu_item    @relation(fields: [menu_item_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "fk_msi_menu_item")
+  tbl_menu_section tbl_menu_section @relation(fields: [section_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "fk_msi_section")
 
   @@id([section_id, menu_item_id])
   @@index([menu_item_id], map: "fk_msi_menu_item")
@@ -514,7 +519,7 @@ model tbl_option_item_templates {
   created_at                 DateTime                     @default(now()) @db.Timestamp(0)
   updated_at                 DateTime                     @default(now()) @db.Timestamp(0)
   tbl_menu_item_option_items tbl_menu_item_option_items[]
-  tbl_option_group_templates tbl_option_group_templates   @relation(fields: [group_template_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_option_item_group")
+  tbl_option_group_templates tbl_option_group_templates   @relation(fields: [group_template_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "fk_option_item_group")
 
   @@unique([group_template_id, code], map: "uk_option_group_code")
   @@index([group_template_id], map: "idx_group_template")
@@ -635,7 +640,7 @@ model tbl_print_jobs {
   printed_at          DateTime?               @db.DateTime(0)
   created_at          DateTime                @default(now()) @db.Timestamp(0)
   tbl_customer_orders tbl_customer_orders     @relation(fields: [order_id], references: [id], onDelete: Cascade, map: "fk_print_jobs_order")
-  tbl_store           tbl_store               @relation(fields: [store_id], references: [id], onDelete: NoAction, map: "fk_print_jobs_store")
+  tbl_store           tbl_store               @relation(fields: [store_id], references: [id], map: "fk_print_jobs_store")
 
   @@unique([order_id, job_type], map: "uk_print_jobs_order_type")
   @@index([status], map: "status")
@@ -651,9 +656,9 @@ model tbl_schedule_menu_item {
   food_id                  Int                      @db.UnsignedInt
   price                    Decimal?                 @db.Decimal(10, 2)
   is_available             Boolean?
-  tbl_menu_item            tbl_menu_item?           @relation(fields: [menu_item_id], references: [id], onDelete: NoAction, map: "fk_schedule_menu_item_menu_item")
-  tbl_food                 tbl_food                 @relation(fields: [food_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_schedule_override_food")
-  tbl_store_daily_schedule tbl_store_daily_schedule @relation(fields: [daily_schedule_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_schedule_override_schedule")
+  tbl_menu_item            tbl_menu_item?           @relation(fields: [menu_item_id], references: [id], onDelete: Restrict, map: "fk_schedule_menu_item_menu_item")
+  tbl_food                 tbl_food                 @relation(fields: [food_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "fk_schedule_override_food")
+  tbl_store_daily_schedule tbl_store_daily_schedule @relation(fields: [daily_schedule_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "fk_schedule_override_schedule")
 
   @@unique([daily_schedule_id, food_id], map: "uk_schedule_food")
   @@index([food_id], map: "fk_schedule_override_food")
@@ -664,13 +669,13 @@ model tbl_shifts {
   id         Int                @id @default(autoincrement()) @db.UnsignedInt
   start      DateTime           @db.Time(0)
   end        DateTime           @db.Time(0)
-  break_time DateTime?          @default(dbgenerated("'00:00:00'")) @db.Time(0)
+  break_time DateTime?          @default(dbgenerated("('00:00:00')")) @db.Time(0)
   store_id   Int?               @db.UnsignedInt
   staff_id   Int?               @db.UnsignedInt
   date       DateTime           @db.Date
   status     tbl_shifts_status? @default(draft)
-  tbl_admin  tbl_admin?         @relation(fields: [staff_id], references: [id], onUpdate: NoAction, map: "fk_staff")
-  tbl_store  tbl_store?         @relation(fields: [store_id], references: [id], onUpdate: NoAction, map: "fk_store")
+  tbl_admin  tbl_admin?         @relation(fields: [staff_id], references: [id], onUpdate: Restrict, map: "fk_staff")
+  tbl_store  tbl_store?         @relation(fields: [store_id], references: [id], onUpdate: Restrict, map: "fk_store")
 
   @@unique([staff_id, date], map: "unique_staff_date")
   @@index([staff_id], map: "fk_staff")
@@ -685,8 +690,8 @@ model tbl_shifts_complete {
   end        DateTime?  @db.Time(0)
   break_time DateTime?  @db.Time(0)
   store_id   Int?       @db.UnsignedInt
-  tbl_admin  tbl_admin? @relation(fields: [staff_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "tbl_shifts_complete_ibfk_1")
-  tbl_store  tbl_store? @relation(fields: [store_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "tbl_shifts_complete_ibfk_2")
+  tbl_admin  tbl_admin? @relation(fields: [staff_id], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "tbl_shifts_complete_ibfk_1")
+  tbl_store  tbl_store? @relation(fields: [store_id], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "tbl_shifts_complete_ibfk_2")
 
   @@index([staff_id], map: "staff_id")
   @@index([store_id], map: "store_id")
@@ -706,12 +711,18 @@ model tbl_store {
   phone                    String?                    @db.VarChar(30)
   open_time                DateTime?                  @db.Time(0)
   close_time               DateTime?                  @db.Time(0)
+  accepting_orders         Boolean                    @default(true)
+  order_status_date        DateTime?                  @db.Date
+  order_stop_reason        String?                    @db.VarChar(100)
+  order_stopped_at         DateTime?                  @db.DateTime(0)
+  order_reopen_at          DateTime?                  @db.DateTime(0)
   latitude                 Decimal?                   @db.Decimal(10, 8)
   longitude                Decimal?                   @db.Decimal(11, 8)
   pickup_note              String?                    @db.Text
   tbl_customer_orders      tbl_customer_orders[]
   tbl_menu                 tbl_menu[]
   tbl_print_jobs           tbl_print_jobs[]
+  tbl_printer_status       tbl_printer_status?
   tbl_shifts               tbl_shifts[]
   tbl_shifts_complete      tbl_shifts_complete[]
   tbl_store_daily_schedule tbl_store_daily_schedule[]
@@ -740,7 +751,7 @@ model tbl_store_daily_schedule {
   longitude              Decimal?                         @db.Decimal(11, 8)
   tbl_customer_orders    tbl_customer_orders[]
   tbl_schedule_menu_item tbl_schedule_menu_item[]
-  tbl_store              tbl_store                        @relation(fields: [store_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_store_schedule")
+  tbl_store              tbl_store                        @relation(fields: [store_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "fk_store_schedule")
 
   @@unique([store_id, work_date], map: "uk_store_date")
 }
@@ -766,8 +777,8 @@ model tbl_store_menu {
   food_id       Int            @db.UnsignedInt
   price         Decimal        @db.Decimal(10, 2)
   is_available  Boolean?       @default(true)
-  tbl_menu_item tbl_menu_item? @relation(fields: [menu_item_id], references: [id], onDelete: NoAction, map: "fk_store_menu_menu_item")
-  tbl_store     tbl_store      @relation(fields: [store_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_store_menu_store")
+  tbl_menu_item tbl_menu_item? @relation(fields: [menu_item_id], references: [id], onDelete: Restrict, map: "fk_store_menu_menu_item")
+  tbl_store     tbl_store      @relation(fields: [store_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "fk_store_menu_store")
 
   @@unique([store_id, food_id], map: "uk_store_food")
   @@index([menu_item_id], map: "idx_store_menu_item")
@@ -824,8 +835,8 @@ model tbl_variant_option_prices {
   is_available               Boolean                    @default(true)
   created_at                 DateTime                   @default(now()) @db.Timestamp(0)
   updated_at                 DateTime                   @default(now()) @db.Timestamp(0)
-  tbl_menu_item_option_items tbl_menu_item_option_items @relation(fields: [menu_option_item_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_variant_option_price_item")
-  tbl_menu_item_variants     tbl_menu_item_variants     @relation(fields: [variant_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_variant_option_price_variant")
+  tbl_menu_item_option_items tbl_menu_item_option_items @relation(fields: [menu_option_item_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "fk_variant_option_price_item")
+  tbl_menu_item_variants     tbl_menu_item_variants     @relation(fields: [variant_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "fk_variant_option_price_variant")
 
   @@unique([variant_id, menu_option_item_id], map: "uk_variant_option_price")
   @@index([menu_option_item_id], map: "idx_option_price")
@@ -874,6 +885,22 @@ model tbl_daily_order_numbers {
   last_number Int      @default(299) @db.UnsignedInt
 
   @@unique([store_id, order_date], map: "uk_store_order_date")
+}
+
+model tbl_printer_status {
+  id                BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
+  store_id          Int       @unique(map: "uq_printer_store") @db.UnsignedInt
+  printer_ip        String?   @db.VarChar(45)
+  printer_port      Int?      @db.UnsignedInt
+  status            String    @default("OFFLINE") @db.VarChar(20)
+  last_heartbeat    DateTime? @db.DateTime(0)
+  last_print_at     DateTime? @db.DateTime(0)
+  last_error        String?   @db.Text
+  worker_started_at DateTime? @db.DateTime(0)
+  updated_at        DateTime  @default(now()) @db.DateTime(0)
+  tbl_store         tbl_store @relation(fields: [store_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "fk_printer_status_store")
+
+  @@index([store_id], map: "idx_printer_status_store")
 }
 
 enum tbl_expense_categories_type {

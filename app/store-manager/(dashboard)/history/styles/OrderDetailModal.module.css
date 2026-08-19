@@ -1,0 +1,432 @@
+/* styles/OrderDetailModal.module.css */
+
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 16px;
+  animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.modalContent {
+  background: #fbfbfd;
+  width: 100%;
+  max-width: 580px;
+  max-height: 90vh;
+  border-radius: 24px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  animation: scaleUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* Header */
+.modalHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px;
+  background: #ffffff;
+  border-bottom: 1px solid #e5e5ea;
+  gap: 12px;
+}
+
+.headerTitles {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+
+.headerRightArea {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.modalTag {
+  font-size: 11px;
+  font-weight: 600;
+  color: #8e8e93;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.modalTitle {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1d1d1f;
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+.statusCard {
+  padding: 6px 12px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.cardLabel {
+  font-size: 10px;
+  font-weight: 600;
+  color: #8e8e93;
+  margin-bottom: 2px;
+  display: block;
+  text-transform: uppercase;
+}
+
+.statusBadgeWrapper {
+  display: inline-block;
+}
+
+.closeBtn {
+  background: #e5e5ea;
+  border: none;
+  cursor: pointer;
+  color: #3a3a3c;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.closeBtn:hover {
+  background: #d1d1d6;
+}
+
+.closeBtn span {
+  font-size: 18px;
+}
+
+/* Body */
+.modalBody {
+  padding: 20px 24px;
+  overflow-y: auto;
+  flex: 1;
+  background-color: #f2f2f7;
+}
+
+/* Summary Grid Cards */
+.summaryGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.scheduleCard {
+  background-color: #fffbeb;
+  border: 1px solid #fde68a;
+  padding: 14px 18px;
+  border-radius: 14px;
+  box-shadow: 0 2px 8px rgba(231, 234, 105, 0.02);
+}
+
+.cardLabelHighlight {
+  font-size: 12px;
+  font-weight: 600;
+  color: #b45309;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.cardValueHighlight {
+  font-size: 16px;
+  font-weight: 700;
+  color: #b45309;
+}
+
+/* Details Info Card */
+.infoCard {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 4px 18px;
+  margin-bottom: 24px;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+}
+
+.metaRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  padding: 12px 0;
+  border-bottom: 1px solid #f2f2f7;
+}
+
+.metaRow:last-child {
+  border-bottom: none;
+}
+
+.metaLabel {
+  color: #8e8e93;
+  font-weight: 500;
+}
+
+.metaValue {
+  color: #3a3a3c;
+  font-weight: 500;
+}
+
+.metaValueBold {
+  color: #1d1d1f;
+  font-weight: 600;
+}
+
+.sectionTitle {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1d1d1f;
+  margin: 0 0 12px 4px;
+  letter-spacing: -0.01em;
+}
+
+/* Items List */
+.itemList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.orderItemRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 16px;
+  background: #ffffff;
+  border-radius: 14px;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+}
+
+.itemInfo {
+  flex: 1;
+  padding-right: 12px;
+}
+
+.itemHeaderRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.itemName {
+  font-size: 15px;
+  font-weight: 600;
+  color: #1d1d1f;
+  flex: 1;
+}
+
+.itemQuantity {
+  font-size: 13px;
+  font-weight: 700;
+  color: #e11d48;
+  background: #ffe4e6;
+  padding: 3px 8px;
+  border-radius: 6px;
+  flex-shrink: 0;
+}
+
+.optionsContainer {
+  margin-top: 10px;
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+
+.optionGroup {
+  font-size: 13px;
+  color: #3a3a3c;
+  margin-bottom: 8px;
+}
+
+.optionGroup:last-child {
+  margin-bottom: 0;
+}
+
+.optionGroupName {
+  font-weight: 600;
+  color: #8e8e93;
+  font-size: 11.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  margin-bottom: 3px;
+}
+
+.optionItemRow {
+  display: flex;
+  justify-content: space-between;
+  padding-left: 4px;
+  font-size: 13px;
+  color: #48484a;
+  margin-top: 2px;
+}
+
+.optionPrice {
+  color: #34c759;
+  font-weight: 600;
+}
+
+.itemNote {
+  font-size: 12.5px;
+  color: #ff3b30;
+  background: rgba(255, 59, 48, 0.08);
+  padding: 8px 12px;
+  border-radius: 10px;
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 500;
+}
+
+.itemPrice {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1d1d1f;
+  white-space: nowrap;
+}
+
+.noItemsText {
+  text-align: center;
+  color: #8e8e93;
+  font-size: 14px;
+  padding: 24px 0;
+  background: #ffffff;
+  border-radius: 14px;
+}
+
+/* Footer */
+.modalFooter {
+  padding: 16px 24px;
+  background: #ffffff;
+  border-top: 1px solid #e5e5ea;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.02);
+}
+
+.modalTotalRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 4px;
+}
+
+.totalLabel {
+  font-size: 15px;
+  font-weight: 600;
+  color: #3a3a3c;
+}
+
+.modalTotalAmount {
+  font-size: 22px;
+  font-weight: 800;
+  color: #ff3b30;
+  letter-spacing: -0.02em;
+}
+
+.modalCloseActionBtn {
+  width: 100%;
+  background-color: #e5e5ea;
+  color: #3a3a3c;
+  border: none;
+  padding: 12px;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.modalCloseActionBtn:hover {
+  background-color: #d1d1d6;
+}
+
+.modalCloseActionBtn:active {
+  transform: scale(0.98);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleUp {
+  from { transform: scale(0.96); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+
+.actionButtonsContainer {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+}
+
+.printButton {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.printButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.kitchenButton {
+  background-color: #f2f2f7;
+  color: #3a3a3c;
+  border: 1px solid #d1d1d6;
+}
+
+.kitchenButton:hover:not(:disabled) {
+  background-color: #e5e5ea;
+  border-color: #c7c7cc;
+}
+
+.customerButton {
+  background-color: #34c759;
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(52, 199, 89, 0.25);
+}
+
+.customerButton:hover:not(:disabled) {
+  background-color: #2eb04f;
+}
+
+.spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}

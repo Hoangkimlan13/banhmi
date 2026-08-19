@@ -1,0 +1,437 @@
+.storeManager {
+  --blue: #0071e3;
+  --blue-hover: #0077ed;
+
+  --text: #111827;
+  --text-secondary: #64748b;
+  --text-muted: #94a3b8;
+
+  --border: #e5e7eb;
+  --background: #f8fafc;
+  --surface: #ffffff;
+
+  display: flex;
+  flex-direction: column;
+
+  width: 100%;
+  height: 100dvh;
+
+  background: var(--background);
+
+  color: var(--text);
+
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    "Noto Sans JP",
+    sans-serif;
+
+  overflow: hidden;
+}
+
+.body {
+  display: flex;
+
+  flex: 1;
+  min-height: 0;
+
+  overflow: hidden;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.header {
+  height: 64px;
+  flex: 0 0 64px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 0 20px;
+
+  background: #ffffff;
+
+  border-bottom: 1px solid var(--border);
+
+  z-index: 10;
+}
+
+.storeTitleWrapper {
+  display: flex;
+  align-items: center;
+
+  min-width: 0;
+
+  gap: 11px;
+}
+
+.storeLogoBox {
+  width: 36px;
+  height: 36px;
+
+  flex: 0 0 36px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 9px;
+
+  background: #0071e3;
+  color: #ffffff;
+}
+
+.storeLogoBox :global(.material-symbols-outlined) {
+  font-size: 20px;
+}
+
+.storeInfo {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 1px;
+}
+
+.storeName {
+  margin: 0;
+
+  color: #0f172a;
+
+  font-size: 15px;
+  font-weight: 700;
+
+  line-height: 1.25;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.storeSubtitle {
+  color: #94a3b8;
+
+  font-size: 10px;
+  font-weight: 500;
+
+  line-height: 1.2;
+}
+
+.headerActions {
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  flex-shrink: 0;
+}
+
+/* =========================
+   MOBILE MENU BUTTON
+========================= */
+
+.mobileMenuBtn {
+  display: none;
+
+  width: 36px;
+  height: 36px;
+
+  align-items: center;
+  justify-content: center;
+
+  padding: 0;
+
+  border: 0;
+  border-radius: 8px;
+
+  background: transparent;
+
+  color: #334155;
+
+  cursor: pointer;
+}
+
+.mobileMenuBtn:hover {
+  background: #f1f5f9;
+}
+
+.mobileMenuBtn :global(.material-symbols-outlined) {
+  font-size: 23px;
+}
+
+/* =========================
+   CONTENT
+========================= */
+
+.content {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+
+  display: grid;
+
+  grid-template-columns:
+    minmax(340px, 0.85fr)
+    minmax(420px, 1.15fr);
+
+  overflow: hidden;
+
+  background: var(--background);
+}
+
+/* =========================
+   ORDER LIST
+========================= */
+
+.orderListContainer {
+  min-width: 0;
+  min-height: 0;
+
+  overflow-y: auto;
+
+
+  background: #f8fafc;
+
+  border-right: 1px solid var(--border);
+}
+
+.orderListHeader {
+  margin: 0 0 14px;
+
+  color: #0f172a;
+
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.orderItems {
+  display: flex;
+  flex-direction: column;
+
+  gap: 8px;
+}
+
+.orderItemCard {
+  padding: 13px 14px;
+
+  background: #ffffff;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+
+  cursor: pointer;
+
+  transition:
+    border-color 0.15s ease,
+    background-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.orderItemCard:hover {
+  border-color: #cbd5e1;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+}
+
+.orderItemCard.selected {
+  background: #eff6ff;
+  border-color: #0071e3;
+
+  box-shadow:
+    0 0 0 1px rgba(0, 113, 227, 0.12);
+}
+
+.orderItemTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 10px;
+
+  margin-bottom: 6px;
+
+  color: #111827;
+
+  font-size: 14px;
+}
+
+.orderItemMiddle {
+  margin-bottom: 6px;
+
+  color: #475569;
+
+  font-size: 13px;
+}
+
+.orderItemBottom {
+  display: flex;
+  flex-wrap: wrap;
+
+  gap: 6px;
+
+  color: #94a3b8;
+
+  font-size: 12px;
+}
+
+/* =========================
+   ORDER DETAIL
+========================= */
+
+.orderDetailContainer {
+  min-width: 0;
+  min-height: 0;
+
+  overflow-y: auto;
+
+  background: #ffffff;
+}
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 1024px) {
+  .content {
+    grid-template-columns: 1fr;
+    
+    /* Cho phép chiều cao tự động theo nội dung thay vì bị ép cứng */
+    min-height: auto;
+    overflow-y: auto;
+  }
+
+  .header {
+    padding: 0 16px;
+  }
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 768px) {
+  .header {
+    height: 60px;
+    flex-basis: 60px;
+  }
+
+  .mobileMenuBtn {
+    display: flex;
+  }
+
+  .storeTitleWrapper {
+    gap: 8px;
+  }
+
+  .storeLogoBox {
+    width: 34px;
+    height: 34px;
+
+    flex-basis: 34px;
+  }
+
+  .storeSubtitle {
+    display: none;
+  }
+
+  .headerActions {
+    gap: 6px;
+  }
+
+  .content {
+    display: block;
+
+    overflow-y: auto;
+  }
+
+  .orderListContainer {
+    border-right: 0;
+  }
+
+  .orderDetailContainer {
+    display: none;
+  }
+}
+
+/* =========================
+   SMALL MOBILE
+========================= */
+
+@media (max-width: 480px) {
+  .storeName {
+    max-width: 130px;
+  }
+
+  .headerActions {
+    gap: 4px;
+  }
+
+}
+
+
+
+.mobileStoreNameOnly {
+  display: none;
+  font-size: 15px;
+  font-weight: 700;
+  color: #0f172a;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.desktopStoreBranding {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  min-width: 0;
+}
+
+@media (max-width: 1024px) {
+  .desktopStoreBranding {
+    display: none; /* Ẩn cụm logo và tiêu đề dài trên màn hình nhỏ/iPad */
+  }
+  .mobileStoreNameOnly {
+    display: block; /* Chỉ hiện tên gọn trên Header */
+  }
+}
+
+
+
+/* =========================
+   TABLET & MOBILE (Dưới 1024px: Bao gồm cả iPad Mini 768px)
+========================= */
+
+@media (max-width: 1024px) {
+  .header {
+    height: 60px;
+    flex-basis: 60px;
+    padding: 0px;
+  }
+  .mobileMenuBtn {
+    display: flex;
+  }
+
+  .content .orderDetailContainer {
+    display: none;
+  }
+  .content .orderListContainer {
+    display: block;
+    width: 100%;
+    border-right: none;
+  }
+
+  /* Khi có class showDetail (tức là đã chọn 1 order): Ẩn danh sách, hiện chi tiết full màn hình */
+  .content.showDetail .orderListContainer {
+    display: none;
+  }
+  .content.showDetail .orderDetailContainer {
+    display: block;
+    width: 100%;
+
+  }
+}

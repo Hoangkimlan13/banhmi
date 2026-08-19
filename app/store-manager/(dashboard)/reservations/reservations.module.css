@@ -1,0 +1,157 @@
+/* ==========================================
+   RESERVATIONS MODULE STYLES (Horizontal & Header Layout)
+   ========================================== */
+
+.pageContainer {
+  display: flex;
+  flex-direction: column;
+  background-color: #f8fafc;
+  width: 100%;
+}
+
+/* --- HEADER QUẢN LÝ --- */
+.pageHeader {
+  background: #ffffff;
+  padding: 1.25rem 2rem;
+  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+}
+
+.headerTitleArea {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.pageTitle {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+}
+
+.totalBadge {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #475569;
+  background: #f1f5f9;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+}
+
+.filterTabs {
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+  padding-bottom: 0.25rem;
+  scrollbar-width: none; 
+}
+.filterTabs::-webkit-scrollbar {
+  display: none;
+}
+
+.filterTab {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  color: #64748b;
+  padding: 0.45rem 0.95rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+}
+
+.filterTab:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+.activeTab {
+  background: #3b82f6 !important;
+  color: #ffffff !important;
+  border-color: #3b82f6 !important;
+}
+
+/* --- DANH SÁCH THẺ --- */
+.reservationsList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem 2rem;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  background: #ffffff;
+  border: 2px dashed #e2e8f0;
+  border-radius: 12px;
+  color: #64748b;
+  font-size: 1rem;
+  font-weight: 500;
+  text-align: center;
+}
+
+/* --- STATUS BADGES --- */
+.waitingBadge,
+.paidBadge,
+.cancelledBadge,
+.completedBadge,
+.statusBadge {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.25rem 0.6rem;
+  border-radius: 20px;
+  display: inline-block;
+  text-align: center;
+}
+
+.waitingBadge {
+  background-color: #fef3c7;
+  color: #d97706;
+}
+
+.paidBadge {
+  background-color: #ecfdf5;
+  color: #059669;
+}
+
+.cancelledBadge {
+  background-color: #fef2f2;
+  color: #dc2626;
+}
+
+.completedBadge {
+  background-color: #eff6ff;
+  color: #2563eb;
+}
+
+.statusBadge {
+  background-color: #f1f5f9;
+  color: #475569;
+}
+
+/* ==========================================
+   RESPONSIVE DESIGN (IPAD & MOBILE < 992px)
+   ========================================== */
+@media (max-width: 992px) {
+  .pageHeader {
+    padding: 1rem;
+  }
+
+  .reservationsList {
+    padding: 5px;
+  }
+}

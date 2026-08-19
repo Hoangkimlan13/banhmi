@@ -5,20 +5,48 @@ import { locales, defaultLocale } from "./app/i18n";
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Kiểm tra xem URL hiện tại đã có mã ngôn ngữ hợp lệ chưa (ví dụ: /ja, /en, /vi)
+  // =========================================================
+  // STORE MANAGER
+  // Không sử dụng hệ thống đa ngôn ngữ.
+  // Giữ nguyên URL /store-manager/*
+  // =========================================================
+  if (
+    pathname === "/store-manager" ||
+    pathname.startsWith("/store-manager/")
+  ) {
+    return NextResponse.next();
+  }
+
+  // =========================================================
+  // KIỂM TRA LOCALE
+  // Ví dụ:
+  // /ja
+  // /ja/order
+  // /vi/order
+  // /en/order
+  // =========================================================
   const pathnameHasLocale = locales.some(
-    (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
+    (locale) =>
+      pathname.startsWith(`/${locale}/`) ||
+      pathname === `/${locale}`
   );
 
-  // Nếu đã có ngôn ngữ trên URL rồi thì không làm gì cả
-  if (pathnameHasLocale) return;
+  // Nếu URL đã có locale thì không làm gì
+  if (pathnameHasLocale) {
+    return NextResponse.next();
+  }
 
-  // Nếu chưa có (người dùng vào /), tự động chuyển hướng sang ngôn ngữ mặc định (/ja)
+  // =========================================================
+  // CÁC TRANG KHÁCH HÀNG KHÔNG CÓ LOCALE
+  // → chuyển sang locale mặc định
+  // =========================================================
   request.nextUrl.pathname = `/${defaultLocale}${pathname}`;
+
   return NextResponse.redirect(request.nextUrl);
 }
 
 export const config = {
-  // Bỏ qua các file hệ thống, hình ảnh tĩnh để không bị chuyển hướng vô tận
-  matcher: ["/((?!api|_next/static|_next/image|images|favicon.ico).*)"],
+  matcher: [
+    "/((?!api|_next/static|_next/image|images|favicon.ico).*)",
+  ],
 };

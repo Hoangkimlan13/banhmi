@@ -1,0 +1,241 @@
+/* app/store-manager/orders/styles/sidebar.module.css */
+
+:root {
+  --apple-bg: #f5f5f7;
+  --glass-bg: rgba(255, 255, 255, 0.95);
+  --app-blue: #0071e3;
+  --text-main: #1d1d1f;
+  --text-secondary: #86868b;
+  --radius-md: 10px;
+}
+
+.sidebar {
+  width: 236px;
+  flex: 0 0 236px;
+  height: 100%;
+  background: #ffffff;
+  border-right: 1px solid #e5e7eb;
+  display: flex;
+  flex-direction: column;
+  padding: 16px 12px;
+  box-sizing: border-box;
+  z-index: 100;
+}
+
+.sidebarNav {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sidebarItem {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 44px;
+  padding: 0 13px;
+  gap: 12px;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  color: #475569;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+  text-align: left;
+  box-sizing: border-box;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.sidebarItem:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+.sidebarItem.active {
+  background: #eff6ff;
+  color: #0071e3;
+  font-weight: 600;
+}
+
+/* Thanh xanh bên trái item đang active */
+.sidebarItem.active::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 9px;
+  bottom: 9px;
+  width: 3px;
+  border-radius: 0 3px 3px 0;
+  background: #0071e3;
+}
+
+.sidebarItem :global(.material-symbols-outlined) {
+  width: 22px;
+  font-size: 21px;
+  line-height: 1;
+  font-variation-settings:
+    "FILL" 0,
+    "wght" 450,
+    "GRAD" 0,
+    "opsz" 24;
+  flex-shrink: 0;
+}
+
+.sidebarItem.active :global(.material-symbols-outlined) {
+  font-variation-settings:
+    "FILL" 1,
+    "wght" 450,
+    "GRAD" 0,
+    "opsz" 24;
+}
+
+.sidebarLabel {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* =========================
+   LOGOUT
+========================= */
+
+.logoutForm {
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px solid #f1f5f9;
+}
+
+.logoutBtn {
+  color: #64748b;
+}
+
+.logoutBtn:hover {
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+/* =========================
+   MOBILE OVERLAY & HEADER MẶC ĐỊNH (DESKTOP)
+========================= */
+
+.mobileOverlay {
+  display: none;
+}
+
+.mobileSidebarHeader {
+  display: none;
+}
+
+/* ==========================================================
+   TABLET & MOBILE (Dưới 1024px: Bao gồm cả iPad Mini 768px)
+   Gom tất cả cấu hình drawer và header trong sidebar vào đây
+========================================================== */
+
+@media (max-width: 1024px) {
+  /* Biến Sidebar thành Drawer ẩn sang trái */
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 280px;
+    height: 100dvh;
+    padding: 16px 12px;
+    transform: translateX(-100%);
+    box-shadow: 12px 0 35px rgba(15, 23, 42, 0.12);
+    transition: transform 0.22s ease;
+    z-index: 1001;
+  }
+
+  .sidebar.mobileOpen {
+    transform: translateX(0);
+  }
+
+  /* Hiện lớp phủ tối (Overlay) khi mở menu */
+  .mobileOverlay {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.35);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition:
+      opacity 0.2s ease,
+      visibility 0.2s ease;
+    z-index: 1000;
+  }
+
+  .mobileOverlay.show {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
+
+  .sidebarItem {
+    min-height: 48px;
+    font-size: 15px;
+  }
+
+  /* HIỆN PHẦN HEADER THU NHỎ TRONG SIDEBAR TRÊN IPAD & MOBILE */
+  .mobileSidebarHeader {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding-bottom: 16px;
+    margin-bottom: 16px;
+    border-bottom: 1px solid #f1f5f9;
+  }
+
+  .mobileBrandRow {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .mobileLogoBox {
+    width: 38px;
+    height: 38px;
+    flex: 0 0 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    background: #0071e3;
+    color: #ffffff;
+  }
+
+  .mobileLogoBox span {
+    font-size: 20px;
+  }
+
+  .mobileStoreInfo {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .mobileStoreTitle {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 700;
+    color: #0f172a;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .mobileStoreSub {
+    font-size: 11px;
+    color: #94a3b8;
+  }
+
+  .mobilePrinterWrapper {
+    width: 100%;
+  }
+}

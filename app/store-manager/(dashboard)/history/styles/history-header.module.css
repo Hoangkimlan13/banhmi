@@ -1,0 +1,193 @@
+.pageHeader {
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 14px 18px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  border: 1px solid #e5e7eb;
+}
+
+.headerTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.pageTitle {
+  font-size: 18px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0;
+}
+
+/* Bộ lọc ngày gọn gàng */
+.filterBar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.datePicker {
+  padding: 5px 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 13px;
+  color: #374151;
+  outline: none;
+  background: #f9fafb;
+}
+
+.datePicker:focus {
+  border-color: #2563eb;
+  background: #ffffff;
+}
+
+.searchBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 6px 12px;
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 0.2s;
+}
+
+.searchBtn span {
+  font-size: 16px;
+}
+
+.searchBtn:hover {
+  background-color: #1d4ed8;
+}
+
+/* Thẻ thống kê (Mặc định cho Desktop / Tablet lớn: Chia lưới 4 cột) */
+.statsContainer {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.statCard {
+  background: #f9fafb;
+  border: 1px solid #f3f4f6;
+  border-radius: 8px;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Icon nhỏ gọn bên trong thẻ */
+.statCard :global(.headerIcon) {
+  font-size: 20px;
+  padding: 6px;
+  border-radius: 6px;
+}
+
+.statCard :global(.headerIcon.orders) {
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+.statCard :global(.headerIcon.revenue) {
+  background: #f0fdf4;
+  color: #16a34a;
+}
+
+.statCard :global(.headerIcon.waiting) {
+  background: #fef3c7;
+  color: #d97706;
+}
+
+.statCard :global(.headerIcon.cancelled) {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.statInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.statLabel {
+  font-size: 11px;
+  font-weight: 500;
+  color: #6b7280;
+  line-height: 1.1;
+  margin-bottom: 2px;
+  white-space: nowrap;
+}
+
+.statValue {
+  font-size: 15px;
+  font-weight: 700;
+  color: #111827;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.statValue small {
+  font-size: 12px;
+  font-weight: 500;
+  color: #4b5563;
+}
+
+/* ==========================================
+   RESPONSIVE DESIGN CHO MOBILE (Lướt ngang)
+   ========================================== */
+@media screen and (max-width: 768px) {
+  .pageHeader {
+    padding: 12px;
+  }
+  
+  .headerTop {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+  }
+
+  .filterBar {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .datePicker {
+    flex-grow: 1;
+  }
+
+  /* Biến grid thành thanh cuộn ngang trên mobile */
+  .statsContainer {
+    display: flex;
+    overflow-x: auto;
+    gap: 8px;
+    padding-bottom: 4px; /* Tạo không gian cho thanh cuộn (nếu hiện) */
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Ẩn thanh cuộn mặc định trên các trình duyệt cho gọn giao diện */
+  .statsContainer::-webkit-scrollbar {
+    display: none;
+  }
+  .statsContainer {
+    scrollbar-width: none;
+  }
+
+  /* Cố định kích thước từng thẻ để khi vuốt không bị co dãn méo mó */
+  .statCard {
+    flex: 0 0 auto;
+    width: 155px;
+    scroll-snap-align: start;
+  }
+}

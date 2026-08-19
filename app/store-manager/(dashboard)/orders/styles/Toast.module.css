@@ -1,0 +1,62 @@
+.toast {
+  position: fixed;
+  top: 24px;       /* Hiển thị ở góc trên bên phải */
+  right: 24px;    
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  z-index: 9999;
+  animation: slideDown 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  max-width: 450px;
+}
+
+.success {
+  background: #065f46;
+  color: #ffffff;
+}
+
+.error {
+  background: #991b1b;
+  color: #ffffff;
+}
+
+.toastMessage {
+  flex: 1; /* Giúp đoạn text tự dãn đều và xuống dòng nếu quá dài */
+  word-break: break-word;
+}
+
+/* Style cho nút X đóng Toast */
+.closeButton {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: inherit;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  margin-left: 4px;
+  border-radius: 6px;
+  opacity: 0.8;
+  transition: all 0.2s ease;
+}
+
+.closeButton:hover {
+  opacity: 1;
+  background: rgba(255, 255, 255, 0.15); /* Tạo hiệu ứng nền sáng nhẹ khi hover */
+}
+
+.closeButton .material-symbols-outlined {
+  font-size: 18px; /* Chỉnh kích thước icon X cho vừa vặn */
+}
+
+/* Đổi hiệu ứng trượt từ trên xuống */
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}

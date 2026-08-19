@@ -1,0 +1,420 @@
+/* Khung bọc tổng thể */
+.panelContainer {
+  padding: 16px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  background-color: #f1f5f9;
+  overflow-y: auto;
+  gap: 12px;
+}
+
+/* Trạng thái chưa chọn đơn */
+.emptyContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #94a3b8;
+  text-align: center;
+  padding: 24px;
+  background-color: #ffffff;
+  border-radius: 12px;
+}
+
+.emptyIconWrapper {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background-color: #f8fafc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+  color: #64748b;
+  border: 1px solid #e2e8f0;
+}
+
+.emptyText {
+  font-size: 16px;
+  font-weight: 700;
+  color: #334155;
+  margin: 0 0 4px 0;
+}
+
+.emptySubText {
+  font-size: 13px;
+  color: #64748b;
+  max-width: 260px;
+}
+
+.backButtonMobile {
+  display: none;
+  align-items: center;
+  gap: 6px;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #334155;
+  cursor: pointer;
+}
+
+@media (max-width: 1024px) {
+  .backButtonMobile {
+    display: flex;
+  }
+  /* Khung bọc tổng thể */
+    .panelContainer {
+    padding: 5px;
+    }
+}
+
+/* Hộp thông báo lịch hẹn / đặt trước */
+.scheduledAlertBox {
+  background-color: #fffbeb;
+  border: 1px solid #fde68a;
+  border-radius: 8px;
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.scheduledIcon {
+  color: #d97706;
+  flex-shrink: 0;
+}
+
+.scheduledTitle {
+  font-size: 11px;
+  font-weight: 700;
+  color: #b45309;
+  text-transform: uppercase;
+}
+
+.scheduledTime {
+  font-size: 14px;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+/* Khối thông tin đơn hàng và khách hàng */
+.topInfoCard {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 14px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
+.headerRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.orderLabel {
+  font-size: 11px;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.orderTitle {
+  margin: 2px 0 2px 0;
+  font-size: 22px;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.orderTypeInfo {
+  font-size: 12px;
+  color: #475569;
+}
+
+.orderTypeInfo span {
+  font-weight: 600;
+  color: #0284c7;
+}
+
+.statusBadgeGroup {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.statusBadge {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  background-color: #dcfce7;
+  color: #166534;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.timeTag {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.customerGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding-top: 10px;
+  border-top: 1px dashed #e2e8f0;
+  margin-top: 10px;
+}
+
+.customerRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+}
+
+.customerIcon {
+  color: #64748b;
+}
+
+.customerLabel {
+  color: #64748b;
+}
+
+.customerValue {
+  color: #0f172a;
+  font-weight: 700;
+}
+
+/* Khu vực danh sách sản phẩm */
+.itemListSection {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 240px;
+  background-color: #ffffff;
+  border: 2px solid #cbd5e1;
+  border-radius: 10px;
+  padding: 12px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+}
+
+.sectionHeaderBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid #e2e8f0;
+  padding-bottom: 8px;
+  margin-bottom: 8px;
+}
+
+.sectionTitle {
+  font-size: 14px;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.itemCountBadge {
+  font-size: 12px;
+  color: #ffffff;
+  font-weight: 700;
+  background: #0284c7;
+  padding: 2px 10px;
+  border-radius: 12px;
+}
+
+.itemsScrollArea {
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.itemRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px;
+  border: 1px solid #e2e8f0;
+  background-color: #f8fafc;
+  border-radius: 8px;
+}
+
+.itemQuantity {
+  font-weight: 900;
+  font-size: 16px;
+  color: #e11d48;
+  min-width: 32px;
+  text-align: center;
+  background: #ffe4e6;
+  padding: 2px 0;
+  border-radius: 6px;
+}
+
+.itemInfo {
+  flex: 1;
+}
+
+.itemName {
+  font-size: 14px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.optionGroup {
+  margin-top: 4px;
+  font-size: 12px;
+}
+
+.optionList {
+  color: #475569;
+  font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.optionGroupName {
+  color: #334155;
+  font-weight: 700;
+}
+
+.optionItemsContainer {
+  padding-left: 10px;
+  border-left: 2px solid #cbd5e1;
+  margin-left: 2px;
+  margin-top: 2px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.optionItemRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.optionPrice {
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.itemNote {
+  font-size: 11px;
+  color: #0284c7;
+  margin-top: 4px;
+  font-style: italic;
+  font-weight: 600;
+  background: #f0f9ff;
+  padding: 2px 6px;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.itemPrice {
+  font-size: 14px;
+  font-weight: 800;
+  color: #0f172a;
+  white-space: nowrap;
+}
+
+/* Footer & Nút In */
+.footerSection {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 14px;
+  box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.02);
+}
+
+.totalRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 700;
+  color: #334155;
+  margin-bottom: 10px;
+}
+
+.totalAmount {
+  font-size: 22px;
+  font-weight: 900;
+  color: #e11d48;
+}
+
+.actionButtonsContainer {
+  display: flex;
+  gap: 10px;
+}
+
+.printButton {
+  flex: 1;
+  padding: 12px;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-weight: 800;
+  font-size: 13px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: background-color 0.2s, opacity 0.2s;
+}
+
+.kitchenButton {
+  background-color: #d97706; /* Màu cam nhận diện phiếu bếp */
+  box-shadow: 0 4px 6px rgba(217, 119, 6, 0.2);
+}
+
+.kitchenButton:hover:not(:disabled) {
+  background-color: #b45309;
+}
+
+.customerButton {
+  background-color: #0284c7; /* Màu xanh dương nhận diện hóa đơn khách */
+  box-shadow: 0 4px 6px rgba(2, 132, 199, 0.2);
+}
+
+.customerButton:hover:not(:disabled) {
+  background-color: #0369a1;
+}
+
+.printButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}

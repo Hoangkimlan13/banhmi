@@ -1,0 +1,457 @@
+.page {
+  width: 100%;
+  min-height: 100%;
+  padding: 24px;
+  box-sizing: border-box;
+  background: #f7f7f7;
+}
+
+.pageHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 22px;
+}
+
+.titleArea {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.titleIcon {
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  border: 1px solid #e5e5e5;
+}
+
+.title {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 800;
+  color: #222;
+}
+
+.subtitle {
+  margin: 4px 0 0;
+  color: #777;
+  font-size: 13px;
+}
+
+/* ============================================================
+   STATS
+============================================================ */
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.statCard {
+  background: #fff;
+  border: 1px solid #e5e5e5;
+  border-radius: 14px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 13px;
+}
+
+.statIcon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: #f1f1f1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.availableIcon {
+  background: #eef9f0;
+}
+
+.unavailableIcon {
+  background: #fff0f0;
+}
+
+.statLabel {
+  display: block;
+  font-size: 12px;
+  color: #777;
+  margin-bottom: 3px;
+}
+
+.statValue {
+  display: block;
+  font-size: 20px;
+  font-weight: 800;
+}
+
+/* ============================================================
+   TOOLBAR
+============================================================ */
+
+.toolbar {
+  margin-bottom: 14px;
+}
+
+.searchBox {
+  height: 46px;
+  max-width: 420px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 0 14px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 11px;
+  box-sizing: border-box;
+  color: #888;
+}
+
+.searchBox input {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  font-size: 14px;
+  color: #222;
+}
+
+/* ============================================================
+   CATEGORY
+============================================================ */
+
+.categoryTabs {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  margin-bottom: 18px;
+}
+
+.categoryTab {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 15px;
+  border: 1px solid #ddd;
+  border-radius: 999px;
+  background: #fff;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  color: #555;
+}
+
+.categoryTab span {
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #f1f1f1;
+  font-size: 11px;
+}
+
+.categoryTabActive {
+  background: #222;
+  border-color: #222;
+  color: #fff;
+}
+
+.categoryTabActive span {
+  background: rgba(255, 255, 255, 0.18);
+  color: #fff;
+}
+
+/* ============================================================
+   ITEMS
+============================================================ */
+
+.itemGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.itemCard {
+  min-width: 0;
+  background: #fff;
+  border: 1px solid #e3e3e3;
+  border-radius: 15px;
+  overflow: hidden;
+  display: flex;
+  transition: opacity 0.2s ease;
+}
+
+.itemUnavailable {
+  opacity: 0.68;
+}
+
+.imageWrapper {
+  width: 170px;
+  min-width: 170px;
+  height: 170px;
+  position: relative;
+  overflow: hidden;
+  background: #f0f0f0;
+}
+
+.itemImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.noImage {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #aaa;
+}
+
+.noImage span {
+  font-size: 40px;
+}
+
+.soldOutOverlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.soldOutOverlay span {
+  padding: 7px 14px;
+  border-radius: 999px;
+  background: #222;
+  color: #fff;
+  font-weight: 800;
+  font-size: 13px;
+}
+
+.itemContent {
+  min-width: 0;
+  flex: 1;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+}
+
+.itemTop {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.categoryName {
+  color: #888;
+  font-size: 11px;
+  margin-bottom: 4px;
+}
+
+.itemName {
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.3;
+  color: #222;
+}
+
+.itemNameVi {
+  margin-top: 3px;
+  color: #999;
+  font-size: 11px;
+}
+
+.itemPrice {
+  flex-shrink: 0;
+  font-size: 17px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.itemDescription {
+  margin: 9px 0;
+  color: #777;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.itemFooter {
+  margin-top: auto;
+  padding-top: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.statusLabel {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.statusAvailable {
+  color: #16803a;
+}
+
+.statusUnavailable {
+  color: #b42318;
+}
+
+.statusDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.statusDotAvailable {
+  background: #2eae57;
+}
+
+.statusDotUnavailable {
+  background: #d92d20;
+}
+
+.toggleButton {
+  min-height: 36px;
+  padding: 0 11px;
+  border-radius: 9px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 700;
+  border: 1px solid;
+}
+
+.toggleButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.soldOutButton {
+  color: #b42318;
+  background: #fff5f5;
+  border-color: #f1b5b1;
+}
+
+.availableButton {
+  color: #16803a;
+  background: #f0fbf3;
+  border-color: #b7dfc1;
+}
+
+.spinner {
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ============================================================
+   EMPTY
+============================================================ */
+
+.emptyState {
+  grid-column: 1 / -1;
+  min-height: 280px;
+  background: #fff;
+  border: 1px dashed #d5d5d5;
+  border-radius: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #aaa;
+}
+
+.emptyState h3 {
+  margin: 12px 0 5px;
+  color: #555;
+}
+
+.emptyState p {
+  margin: 0;
+  font-size: 13px;
+}
+
+/* ============================================================
+   TABLET
+============================================================ */
+
+@media (max-width: 1100px) {
+  .itemGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ============================================================
+   MOBILE
+============================================================ */
+
+@media (max-width: 700px) {
+  .page {
+    padding: 16px;
+  }
+
+  .title {
+    font-size: 20px;
+  }
+
+  .statsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .itemCard {
+    display: block;
+  }
+
+  .imageWrapper {
+    width: 100%;
+    height: 190px;
+  }
+
+  .itemContent {
+    padding: 14px;
+  }
+
+  .itemFooter {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .toggleButton {
+    width: 100%;
+  }
+
+  .statusLabel {
+    justify-content: center;
+  }
+}

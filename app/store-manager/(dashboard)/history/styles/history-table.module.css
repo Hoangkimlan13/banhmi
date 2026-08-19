@@ -1,0 +1,214 @@
+.cardListContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.orderCard {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
+.orderCard:hover {
+  border-color: #3b82f6;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.08);
+  transform: translateY(-1px);
+}
+
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.timeAndBadge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.orderTime {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.orderTime span {
+  font-size: 16px;
+  color: #94a3b8;
+}
+
+/* Nhãn ご予約 theo yêu cầu */
+.reservationBadge {
+  background-color: #fffbeb;
+  border: 2px solid #fde68a;
+  color: #b45309;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 1px 8px;
+  border-radius: 6px;
+  letter-spacing: 0.02em;
+}
+
+.cardBody {
+  margin-bottom: 12px;
+}
+
+.orderMainInfo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.orderNumber {
+  font-size: 16px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.customerName {
+  font-size: 13px;
+  color: #475569;
+  background: #f1f5f9;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+.cardFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid #f1f5f9;
+  padding-top: 10px;
+}
+
+.totalAmount {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.amountLabel {
+  font-size: 12px;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.amountValue {
+  font-size: 16px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.detailAction {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #3b82f6;
+  background: #eff6ff;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+
+.detailAction span {
+  font-size: 16px;
+}
+
+/* Các trạng thái (badges) gọn gàng */
+.statusDone {
+  background: #f0fdf4;
+  color: #16a34a;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.statusCancelled {
+  background: #fef2f2;
+  color: #dc2626;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.statusWaiting {
+  background: #fffbeb;
+  color: #d97706;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.statusDefault {
+  background: #f1f5f9;
+  color: #475569;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.emptyState {
+  text-align: center;
+  padding: 40px 0;
+  color: #64748b;
+  font-size: 14px;
+}
+
+/* Kiểu chung cho các badge trạng thái */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.badge span.material-symbols-outlined {
+  font-size: 15px !important;
+}
+
+/* Đã thanh toán / Hoàn thành */
+.badgePaid {
+  background: #f0fdf4;
+  color: #16a34a;
+}
+
+/* Đã hủy / Lỗi thanh toán */
+.badgeCancelled {
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+/* Đợi thanh toán / Chưa thanh toán */
+.badgeUnpaid {
+  background: #fffbeb;
+  color: #d97706;
+}
+
+/* Trạng thái mặc định khác */
+.badgeDefault {
+  background: #f1f5f9;
+  color: #475569;
+}
+
+
