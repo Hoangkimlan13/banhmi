@@ -10,7 +10,7 @@ type PrinterStatusData = {
 
 export default function PrinterStatus() {
   const [data, setData] = useState<PrinterStatusData>({
-    status: "ONLINE",
+    status: "OFFLINE",
   });
 
   useEffect(() => {
