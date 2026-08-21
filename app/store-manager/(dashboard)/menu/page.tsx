@@ -28,46 +28,45 @@ export default async function MenuPage() {
 
   try {
     // ============================================================
-    // CATEGORIES
+    // CATEGORIES - KIỂM TRA DỮ LIỆU THỰC TẾ TỪ DB
     // ============================================================
-
     const categories = await db.tbl_menu_category.findMany({
-      where: {
+      where: { 
         store_id: storeId,
-        is_active: true, // Sửa thành true vì Prisma định nghĩa là kiểu Boolean
       },
-      orderBy: [
-        {
-          display_order: "asc",
-        },
-        {
-          id: "asc",
-        },
-      ],
+      orderBy: [ 
+        { display_order: "asc" }, 
+        { id: "asc" }, 
+      ], 
+    });
+
+    // IN RA TERMINAL ĐỂ KIỂM TRA
+    console.log("=== DEBUG CATEGORIES ===", {
+      storeId,
+      count: categories.length,
+      data: categories,
     });
 
     // ============================================================
     // MENU ITEMS
     // ============================================================
-
     const items = await db.tbl_menu_item.findMany({
       where: {
         store_id: storeId,
       },
       orderBy: [
-        {
-          display_order: "asc",
-        },
-        {
-          id: "asc",
-        },
+        { display_order: "asc" },
+        { id: "asc" },
       ],
+    });
+
+    console.log("=== DEBUG ITEMS ===", {
+      count: items.length,
     });
 
     // ============================================================
     // SERIALIZE
     // ============================================================
-
     const serializedCategories = categories.map((category) => ({
       id: Number(category.id),
       menu_id: Number(category.menu_id),

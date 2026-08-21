@@ -36,6 +36,9 @@ interface CheckoutStoreInfo {
 
 interface CheckoutCartItem {
   totalPrice?: number | string;
+  menuItemId?: number | string;
+  name?: string;
+  foodNameSnapshot?: string;
   [key: string]: unknown;
 }
 
@@ -61,6 +64,51 @@ const translations = {
     subtitle: 'Complete your pickup details and secure payment',
   },
 };
+
+
+
+// ============================================================
+// HÀM DỊCH LỖI CỤ THỂ
+// ============================================================
+
+function getLocalizedItemUnavailableMessage(
+  locale: Locale,
+  itemName: string | null
+): string {
+  switch (locale) {
+    case 'ja':
+      return itemName
+        ? `「${itemName}」は現在ご注文いただけません。`
+        : '選択した商品は現在ご注文いただけません。';
+    case 'vi':
+      return itemName
+        ? `Món “${itemName}” hiện không thể đặt.`
+        : 'Sản phẩm bạn chọn hiện không thể đặt.';
+    case 'en':
+      return itemName
+        ? `“${itemName}” is currently unavailable.`
+        : 'The selected product is currently unavailable.';
+    case 'zh':
+      return itemName
+        ? `「${itemName}」目前无法订购。`
+        : '您选择的商品目前无法订购。';
+    default:
+      return 'The selected product is currently unavailable.';
+  }
+}
+
+
+// Thêm Record<Locale, string> hoặc bổ sung đầy đủ các key của hệ thống i18n
+const systemNotificationLabels: Record<string, string> = {
+  ja: 'システム通知',
+  en: 'System Notification',
+  zh: '系统通知',
+  vi: 'Thông báo hệ thống',
+  ko: '시스템 알림' 
+};
+
+
+
 
 function createOrderToken() {
   const randomBytes = new Uint8Array(32);
@@ -88,7 +136,7 @@ export default function CheckoutPage({ params }: Props) {
 
   /*
   ============================================================
-  PICKUP & CUSTOMER 
+  PICKUP & CUSTOMER
   ============================================================
   */
   const [orderType, setOrderType] = useState<'IMMEDIATE' | 'SCHEDULED_TIME'>(
@@ -186,7 +234,7 @@ export default function CheckoutPage({ params }: Props) {
 
   /*
   ============================================================
-  HANDLER: Bấm/Tự động tạo clientSecret
+  HANDLER: Bấm / Tự động tạo clientSecret
   ============================================================
   */
   const handlePaymentSubmit = async () => {
@@ -201,11 +249,9 @@ export default function CheckoutPage({ params }: Props) {
         storeId,
         locale,
         orderType,
-        scheduledTime: orderType === 'SCHEDULED_TIME' ? scheduledTime : null,
-        // Nếu là IMMEDIATE thì customer là null (hoặc không truyền), 
-        // ngược lại mới lấy name và phone từ state.
-        customer: orderType === 'IMMEDIATE' 
-          ? null 
+        scheduledTime, 
+        customer: orderType === 'IMMEDIATE'
+          ? null
           : {
               name: name.trim(),
               phone: phone.trim(),
@@ -214,7 +260,6 @@ export default function CheckoutPage({ params }: Props) {
         items: cart,
         orderToken,
       };
-      
 
       const res = await fetch('/api/checkout', {
         method: 'POST',
@@ -235,9 +280,23 @@ export default function CheckoutPage({ params }: Props) {
         return;
       }
 
-      setInitError(
-        data?.error?.message || 'Unable to initialize payment.'
-      );
+      // Xử lý lỗi (giữ nguyên)
+      if (data?.error) {
+        const { code, item } = data.error;
+        if (code === 'ITEM_UNAVAILABLE' && item?.menuItemId) {
+          const cartItem = cart.find(
+            (ci) => Number(ci.menuItemId) === Number(item.menuItemId)
+          );
+          const itemName = cartItem?.name || cartItem?.foodNameSnapshot || null;
+          const message = getLocalizedItemUnavailableMessage(locale, itemName);
+          setInitError(message);
+          console.log('[Checkout] ITEM_UNAVAILABLE:', { item, cartItem, message });
+        } else {
+          setInitError(data.error.message || 'Unable to initialize payment.');
+        }
+      } else {
+        setInitError('Unable to initialize payment.');
+      }
     } catch (error) {
       console.error('[Checkout] initialization error', error);
       setInitError(
@@ -250,14 +309,12 @@ export default function CheckoutPage({ params }: Props) {
     }
   };
 
-
   const t = translations[locale] || translations.ja;
 
   return (
     <>
-      {/* Thêm lại OrderHeader lên đầu trang */}
       <OrderHeader locale={locale} storeInfo={storeInfo} />
-      
+
       <CheckoutLayout
         locale={locale}
         title={t.title}
@@ -382,11 +439,35 @@ export default function CheckoutPage({ params }: Props) {
           locale={locale}
         />
 
+        {/* ③ ERROR BANNER */}
         {initError && (
-          <div className="checkout-error-banner" role="alert">
-            {initError}
+          <div className="error-banner animate-fade-in">
+            <div className="error-banner__icon">
+              {/* Sửa lại URL xmlns chuẩn của W3C */}
+              <svg xmlns="http://w3.org" viewBox="0 0 24 24" fill="currentColor" width="24" height="24">
+                <path fillRule="evenodd" d="M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.289 4.5-2.599 4.5H4.645c-2.31 0-3.753-2.5-2.599-4.5L9.401 3.003zM12 8.25a.75.75 0 01.75.75v3.75a.75.75 0 01-1.5 0V9a.75.75 0 01.75-.75zm0 8.25a.75.75 0 100-1.5.75.75 0 000 1.5z" clipRule="evenodd" />
+              </svg>
+            </div>
+            
+            <div className="error-banner__content">
+              {/* Tự động dịch tiêu đề, nếu lỗi hoặc trống sẽ fallback về tiếng Nhật 'ja' */}
+              <h4 className="error-banner__title">
+                {systemNotificationLabels[locale as string] || systemNotificationLabels['ja']}
+              </h4>
+              <p className="error-banner__message">{initError}</p>
+            </div>
+            
+            <button onClick={() => setInitError(null)} className="error-banner__close" aria-label="Close error">
+              {/* Sửa lại URL xmlns chuẩn của W3C */}
+              <svg xmlns="http://w3.org" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" width="18" height="18">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
           </div>
         )}
+
+
+
 
         {/* ③ お支払い方法 */}
         {!clientSecret ? (
@@ -402,10 +483,10 @@ export default function CheckoutPage({ params }: Props) {
                     ? 'Tiến hành thanh toán'
                     : locale === 'zh'
                       ? '前往支付结算'
-                        : 'Proceed to Payment'}
+                      : 'Proceed to Payment'}
               </h3>
             </div>
-            
+
             <p style={{ marginBottom: '16px', color: '#666', fontSize: '14px' }}>
               {locale === 'ja'
                 ? 'ボタンを押すと注文が確定され、決済画面へ進みます。'
@@ -413,7 +494,7 @@ export default function CheckoutPage({ params }: Props) {
                   ? 'Nhấn nút bên dưới để khởi tạo đơn hàng và chuyển đến trang thanh toán.'
                   : locale === 'zh'
                     ? '点击下方按钮确认订单并前往支付页面。'
-                      : 'Click the button below to initialize your order and proceed to payment.'}
+                    : 'Click the button below to initialize your order and proceed to payment.'}
             </p>
 
             <button
@@ -439,14 +520,14 @@ export default function CheckoutPage({ params }: Props) {
                       ? 'Đang xử lý...'
                       : locale === 'zh'
                         ? '处理中...'
-                          : 'Processing...')
+                        : 'Processing...')
                 : (locale === 'ja'
                     ? '決済に進む'
                     : locale === 'vi'
                       ? 'Tiến hành thanh toán'
                       : locale === 'zh'
                         ? '前往支付'
-                          : 'Proceed to Payment')}
+                        : 'Proceed to Payment')}
             </button>
           </div>
         ) : (
