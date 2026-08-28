@@ -1,0 +1,1406 @@
+/* ============================================================
+   OPTIONS MANAGEMENT
+   iOS 26 / Apple-style
+   ============================================================ */
+
+.page {
+  --bg: #f5f5f7;
+  --card: rgba(255, 255, 255, 0.88);
+  --card-solid: #ffffff;
+  --text: #1d1d1f;
+  --text-secondary: #6e6e73;
+  --text-tertiary: #86868b;
+  --border: rgba(0, 0, 0, 0.07);
+  --border-strong: rgba(0, 0, 0, 0.1);
+  --blue: #007aff;
+  --blue-soft: rgba(0, 122, 255, 0.1);
+  --green: #34c759;
+  --green-soft: rgba(52, 199, 89, 0.11);
+  --red: #ff3b30;
+  --red-soft: rgba(255, 59, 48, 0.1);
+  --orange: #ff9500;
+  --shadow:
+    0 1px 2px rgba(0, 0, 0, 0.04),
+    0 8px 30px rgba(0, 0, 0, 0.045);
+  --shadow-hover:
+    0 2px 4px rgba(0, 0, 0, 0.05),
+    0 14px 40px rgba(0, 0, 0, 0.08);
+
+  min-height: 100vh;
+  padding: 32px clamp(16px, 4vw, 48px) 60px;
+  background:
+    radial-gradient(
+      circle at top left,
+      rgba(255, 255, 255, 0.95),
+      transparent 35%
+    ),
+    var(--bg);
+  color: var(--text);
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "SF Pro Display",
+    "SF Pro Text",
+    "Helvetica Neue",
+    Arial,
+    sans-serif;
+}
+
+/* ============================================================
+   HEADER
+   ============================================================ */
+
+.pageHeader {
+  width: min(1400px, 100%);
+  margin: 0 auto 28px;
+
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.headerLeft {
+  min-width: 0;
+}
+
+.backButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+
+  margin-bottom: 16px;
+  padding: 7px 10px;
+
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+
+  color: var(--blue);
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.backButton:hover {
+  background: var(--blue-soft);
+}
+
+.backButton:active {
+  transform: scale(0.97);
+}
+
+.backIcon {
+  transform: rotate(180deg);
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+
+  margin-bottom: 8px;
+
+  color: var(--text-tertiary);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+.titleRow h1 {
+  margin: 0;
+
+  font-size: clamp(28px, 4vw, 42px);
+  line-height: 1.08;
+  font-weight: 750;
+  letter-spacing: -0.035em;
+}
+
+.titleRow p {
+  margin: 8px 0 0;
+
+  color: var(--text-secondary);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+
+.primaryButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  min-height: 44px;
+  padding: 0 18px;
+
+  border: 0;
+  border-radius: 14px;
+
+  background: var(--blue);
+  color: #fff;
+
+  font-size: 14px;
+  font-weight: 650;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 4px 12px rgba(0, 122, 255, 0.2);
+
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease,
+    opacity 0.18s ease;
+}
+
+.primaryButton:hover {
+  transform: translateY(-1px);
+  box-shadow:
+    0 7px 18px rgba(0, 122, 255, 0.25);
+}
+
+.primaryButton:active {
+  transform: scale(0.97);
+}
+
+.primaryButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ============================================================
+   STATS
+   ============================================================ */
+
+.stats {
+  width: min(1400px, 100%);
+  margin: 0 auto 20px;
+
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.statCard {
+  padding: 20px;
+
+  border: 1px solid var(--border);
+  border-radius: 20px;
+
+  background: var(--card);
+  box-shadow: var(--shadow);
+
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.statCard span {
+  color: var(--text-tertiary);
+  font-size: 10px;
+  font-weight: 750;
+  letter-spacing: 0.12em;
+}
+
+.statCard strong {
+  margin-top: 5px;
+
+  font-size: 30px;
+  line-height: 1;
+  font-weight: 750;
+  letter-spacing: -0.03em;
+}
+
+.statCard small {
+  margin-top: 7px;
+
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+
+/* ============================================================
+   TOOLBAR
+   ============================================================ */
+
+.toolbar {
+  width: min(1400px, 100%);
+  margin: 0 auto 20px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.searchBox {
+  flex: 1;
+  min-width: 220px;
+  max-width: 520px;
+  height: 44px;
+
+  display: flex;
+  align-items: center;
+  gap: 9px;
+
+  padding: 0 14px;
+  box-sizing: border-box; 
+
+  border: 1px solid var(--border);
+  border-radius: 13px;
+  background: rgba(255, 255, 255, 0.82);
+  box-shadow: var(--shadow);
+
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.searchBox:focus-within {
+  border-color: rgba(0, 122, 255, 0.35);
+  box-shadow:
+    0 0 0 4px rgba(0, 122, 255, 0.08);
+}
+
+.searchBox svg {
+  flex: 0 0 auto;
+  color: var(--text-tertiary);
+}
+
+.searchBox input {
+  width: 100%;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--text);
+  font-size: 16px;
+}
+
+.searchBox input::placeholder {
+  color: #a1a1a6;
+}
+
+.filters {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+
+  padding: 3px;
+
+  border-radius: 12px;
+  background: rgba(118, 118, 128, 0.12);
+}
+
+.filters button {
+  height: 36px;
+  padding: 0 14px;
+
+  border: 0;
+  border-radius: 9px;
+
+  background: transparent;
+  color: var(--text-secondary);
+
+  font-size: 13px;
+  font-weight: 600;
+
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.filters button:hover {
+  color: var(--text);
+}
+
+.filters .filterActive {
+  background: #fff;
+  color: var(--text);
+
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.12);
+}
+
+/* ============================================================
+   GROUP LIST
+   ============================================================ */
+
+.groupList {
+  width: min(1400px, 100%);
+  margin: 0 auto;
+
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.groupCard {
+  position: relative;
+
+  overflow: visible;
+
+  border: 1px solid var(--border);
+  border-radius: 22px;
+
+  background: var(--card);
+  box-shadow: var(--shadow);
+
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+
+  transition:
+    box-shadow 0.25s ease,
+    border-color 0.25s ease;
+}
+
+.groupCard:hover {
+  box-shadow: var(--shadow-hover);
+}
+
+.groupDisabled {
+  opacity: 0.7;
+}
+
+/* ============================================================
+   GROUP HEADER
+   ============================================================ */
+
+.groupHeader {
+  padding: 16px 18px;
+
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.expandButton {
+  flex: 0 0 auto;
+
+  width: 36px;
+  height: 36px;
+
+  display: grid;
+  place-items: center;
+
+  border: 0;
+  border-radius: 10px;
+
+  background: rgba(118, 118, 128, 0.08);
+  color: var(--text-secondary);
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.expandButton:hover {
+  background: rgba(118, 118, 128, 0.14);
+}
+
+.expandButton:active {
+  transform: scale(0.92);
+}
+
+.groupIdentity {
+  min-width: 0;
+  flex: 1;
+}
+
+.groupTitleRow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.groupTitleRow h2 {
+  margin: 0;
+
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+}
+
+.groupMeta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 7px;
+
+  margin-top: 6px;
+
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+
+.groupMeta code {
+  padding: 3px 7px;
+
+  border-radius: 6px;
+  background: rgba(118, 118, 128, 0.1);
+
+  font-size: 10px;
+  font-family:
+    ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    Monaco,
+    Consolas,
+    monospace;
+}
+
+/* ============================================================
+   STATUS
+   ============================================================ */
+
+.statusActive,
+.statusInactive {
+  display: inline-flex;
+  align-items: center;
+
+  min-height: 22px;
+  padding: 0 8px;
+
+  border-radius: 999px;
+
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.statusActive {
+  background: var(--green-soft);
+  color: #248a3d;
+}
+
+.statusInactive {
+  background: rgba(118, 118, 128, 0.12);
+  color: var(--text-secondary);
+}
+
+/* ============================================================
+   GROUP ACTIONS
+   ============================================================ */
+
+.groupActions {
+  flex: 0 0 auto;
+
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.groupActions button {
+  min-height: 34px;
+  padding: 0 10px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+
+  border: 0;
+  border-radius: 9px;
+
+  background: transparent;
+  color: var(--text-secondary);
+
+  font-size: 12px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.groupActions button:hover {
+  background: rgba(118, 118, 128, 0.1);
+  color: var(--text);
+}
+
+.groupActions .dangerButton {
+  color: var(--red);
+}
+
+.groupActions .dangerButton:hover {
+  background: var(--red-soft);
+  color: var(--red);
+}
+
+.groupActions button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+/* ============================================================
+   GROUP CONTENT
+   ============================================================ */
+
+.groupContent {
+  padding: 0 18px 18px;
+
+  border-top: 1px solid var(--border);
+}
+
+.itemHeader {
+  min-height: 58px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.itemHeader > div {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.itemHeader span {
+  color: var(--text-tertiary);
+  font-size: 10px;
+  font-weight: 750;
+  letter-spacing: 0.1em;
+}
+
+.itemHeader strong {
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+
+.addItemButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  min-height: 34px;
+  padding: 0 11px;
+
+  border: 0;
+  border-radius: 10px;
+
+  background: var(--blue-soft);
+  color: var(--blue);
+
+  font-size: 12px;
+  font-weight: 650;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.addItemButton:hover {
+  background: rgba(0, 122, 255, 0.16);
+}
+
+.addItemButton:active {
+  transform: scale(0.96);
+}
+
+/* ============================================================
+   ITEM LIST
+   ============================================================ */
+
+.itemList {
+  display: flex;
+  flex-direction: column;
+
+  border: 1px solid var(--border);
+  border-radius: 16px;
+
+  overflow: visible;
+  background: rgba(248, 248, 250, 0.65);
+}
+
+.itemRow {
+  position: relative;
+
+  min-height: 70px;
+  padding: 10px 12px;
+
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  background: rgba(255, 255, 255, 0.65);
+
+  transition:
+    background 0.18s ease;
+}
+
+.itemRow + .itemRow {
+  border-top: 1px solid var(--border);
+}
+
+.itemRow:hover {
+  background: rgba(255, 255, 255, 0.95);
+}
+
+.itemDisabled {
+  opacity: 0.55;
+}
+
+/* ============================================================
+   ITEM ICON
+   ============================================================ */
+
+.itemIcon {
+  flex: 0 0 auto;
+
+  width: 44px;
+  height: 44px;
+
+  display: grid;
+  place-items: center;
+
+  overflow: hidden;
+
+  border-radius: 12px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #f2f2f7,
+      #e5e5ea
+    );
+
+  color: var(--text-secondary);
+
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.itemIcon img {
+  width: 100%;
+  height: 100%;
+
+  display: block;
+
+  object-fit: cover;
+}
+
+/* ============================================================
+   ITEM INFO
+   ============================================================ */
+
+.itemInfo {
+  min-width: 0;
+  flex: 1;
+}
+
+.itemNameRow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.itemNameRow strong {
+  max-width: 100%;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  font-size: 14px;
+  font-weight: 650;
+}
+
+.itemMeta {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+
+  margin-top: 5px;
+
+  min-width: 0;
+
+  color: var(--text-secondary);
+  font-size: 11px;
+}
+
+.itemMeta code {
+  flex: 0 0 auto;
+
+  padding: 2px 6px;
+
+  border-radius: 5px;
+
+  background: rgba(118, 118, 128, 0.09);
+
+  font-size: 9px;
+  font-family:
+    ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    Monaco,
+    Consolas,
+    monospace;
+}
+
+.itemMeta span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ============================================================
+   PRICE
+   ============================================================ */
+
+.itemPrice {
+  flex: 0 0 auto;
+
+  min-width: 75px;
+
+  text-align: right;
+
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ============================================================
+   ITEM ACTIONS
+   IMPORTANT:
+   ONLY THE "..." BUTTON IS VISIBLE
+   ============================================================ */
+
+.itemActions {
+  position: relative;
+  flex: 0 0 auto;
+
+  display: flex;
+  align-items: center;
+}
+
+.moreButton {
+  width: 38px;
+  height: 38px;
+
+  display: grid;
+  place-items: center;
+
+  border: 0;
+  border-radius: 10px;
+
+  background: transparent;
+  color: var(--text-secondary);
+
+  cursor: pointer;
+
+  transition:
+    background 0.18s ease,
+    color 0.18s ease,
+    transform 0.18s ease;
+}
+
+.moreButton:hover,
+.moreButton[aria-expanded="true"] {
+  background: rgba(118, 118, 128, 0.12);
+  color: var(--text);
+}
+
+.moreButton:active {
+  transform: scale(0.9);
+}
+
+/* ============================================================
+   ACTION DROPDOWN
+   ============================================================ */
+
+.actionDropdown {
+  position: absolute;
+
+  z-index: 100;
+
+  top: calc(100% + 7px);
+  right: 0;
+
+  width: 190px;
+
+  padding: 6px;
+
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 14px;
+
+  background: rgba(255, 255, 255, 0.96);
+
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.14),
+    0 2px 8px rgba(0, 0, 0, 0.08);
+
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+
+  animation: menuIn 0.16s ease-out;
+  transform-origin: top right;
+}
+
+@keyframes menuIn {
+  from {
+    opacity: 0;
+    transform: scale(0.94) translateY(-4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.actionDropdown button {
+  width: 100%;
+  min-height: 38px;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 0 10px;
+
+  border: 0;
+  border-radius: 9px;
+
+  background: transparent;
+  color: var(--text);
+
+  text-align: left;
+
+  font-size: 13px;
+  font-weight: 550;
+
+  cursor: pointer;
+
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
+}
+
+.actionDropdown button:hover {
+  background: rgba(118, 118, 128, 0.1);
+}
+
+.actionDropdown button:active {
+  background: rgba(118, 118, 128, 0.16);
+}
+
+.actionDropdown button svg {
+  flex: 0 0 auto;
+  color: var(--text-secondary);
+}
+
+.actionDropdown .dropdownDanger {
+  color: var(--red);
+}
+
+.actionDropdown .dropdownDanger svg {
+  color: var(--red);
+}
+
+.actionDropdown .dropdownDanger:hover {
+  background: var(--red-soft);
+}
+
+.actionDivider {
+  height: 1px;
+
+  margin: 5px 4px;
+
+  background: var(--border);
+}
+
+/* ============================================================
+   EMPTY
+   ============================================================ */
+
+.emptyState,
+.emptyItems {
+  text-align: center;
+}
+
+.emptyState {
+  min-height: 260px;
+  padding: 50px 20px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  color: var(--text-tertiary);
+}
+
+.emptyState svg {
+  margin-bottom: 14px;
+  opacity: 0.5;
+}
+
+.emptyState h3 {
+  margin: 0;
+
+  color: var(--text);
+  font-size: 17px;
+}
+
+.emptyState p {
+  max-width: 420px;
+  margin: 7px 0 0;
+
+  color: var(--text-secondary);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.emptyItems {
+  padding: 30px 20px;
+
+  border: 1px dashed var(--border-strong);
+  border-radius: 14px;
+
+  background: rgba(248, 248, 250, 0.5);
+}
+
+.emptyItems p {
+  margin: 0 0 12px;
+
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+.emptyItems button {
+  min-height: 34px;
+  padding: 0 13px;
+
+  border: 0;
+  border-radius: 9px;
+
+  background: var(--blue-soft);
+  color: var(--blue);
+
+  font-size: 12px;
+  font-weight: 650;
+
+  cursor: pointer;
+}
+
+/* ============================================================
+   TOAST
+   ============================================================ */
+
+.toast {
+  position: fixed;
+
+  z-index: 9999;
+
+  right: 24px;
+  bottom: 24px;
+
+  max-width: min(420px, calc(100vw - 32px));
+
+  padding: 13px 16px;
+
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 14px;
+
+  background: rgba(255, 255, 255, 0.94);
+
+  box-shadow:
+    0 12px 35px rgba(0, 0, 0, 0.14);
+
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+
+  color: var(--text);
+
+  font-size: 13px;
+  font-weight: 600;
+
+  animation: toastIn 0.22s ease-out;
+}
+
+.toastSuccess {
+  border-left: 3px solid var(--green);
+}
+
+.toastError {
+  border-left: 3px solid var(--red);
+}
+
+@keyframes toastIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.97);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ============================================================
+   TABLET
+   ============================================================ */
+
+@media (max-width: 900px) {
+  .page {
+    padding: 24px 20px 48px;
+  }
+
+  .pageHeader {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .pageHeader > .primaryButton {
+    width: 100%;
+  }
+
+  .stats {
+    gap: 10px;
+  }
+
+  .statCard {
+    padding: 16px;
+  }
+
+  .groupActions {
+    gap: 2px;
+  }
+
+  .groupActions button {
+    width: 36px;
+    padding: 0;
+
+    font-size: 0;
+  }
+
+  .groupActions button svg {
+    width: 17px;
+    height: 17px;
+  }
+}
+
+/* ============================================================
+   MOBILE
+   ============================================================ */
+
+@media (max-width: 640px) {
+  .page {
+    padding:
+      18px
+      12px
+      calc(32px + env(safe-area-inset-bottom));
+  }
+
+  .pageHeader {
+    margin-bottom: 18px;
+  }
+
+  .backButton {
+    margin-bottom: 12px;
+    padding-left: 4px;
+  }
+
+  .titleRow h1 {
+    font-size: 28px;
+  }
+
+  .titleRow p {
+    font-size: 12px;
+  }
+
+  /* -------------------------
+     STATS
+     ------------------------- */
+
+  .stats {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 7px;
+    margin-bottom: 12px;
+  }
+
+  .statCard {
+    padding: 12px 10px;
+
+    border-radius: 15px;
+  }
+
+  .statCard span {
+    font-size: 8px;
+  }
+
+  .statCard strong {
+    font-size: 23px;
+  }
+
+  .statCard small {
+    margin-top: 5px;
+    font-size: 9px;
+  }
+
+  /* -------------------------
+     TOOLBAR
+     ------------------------- */
+
+  .toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    margin-bottom: 12px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .searchBox {
+    width: 100%;
+    max-width: 100%; 
+    height: 55px; 
+    box-sizing: border-box;
+  }
+
+  .filters {
+    width: 100%;
+    box-sizing: border-box;
+    display: flex; 
+  }
+
+  .filters button {
+    flex: 1;
+    padding: 0 8px;
+    white-space: nowrap; /* Tránh rớt chữ ở nút filter */
+  }
+
+  /* -------------------------
+     GROUP
+     ------------------------- */
+
+  .groupList {
+    gap: 10px;
+  }
+
+  .groupCard {
+    border-radius: 17px;
+  }
+
+  .groupHeader {
+    padding: 11px 10px;
+    gap: 8px;
+  }
+
+  .expandButton {
+    width: 32px;
+    height: 32px;
+  }
+
+  .groupTitleRow h2 {
+    font-size: 14px;
+  }
+
+  .groupMeta {
+    margin-top: 4px;
+    gap: 5px;
+    font-size: 10px;
+  }
+
+  .groupActions button {
+    width: 32px;
+    height: 32px;
+    min-height: 32px;
+  }
+
+  .groupActions button svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  /* -------------------------
+     GROUP CONTENT
+     ------------------------- */
+
+  .groupContent {
+    padding: 0 10px 10px;
+  }
+
+  .itemHeader {
+    min-height: 50px;
+  }
+
+  .itemHeader span {
+    font-size: 8px;
+  }
+
+  .itemHeader strong {
+    font-size: 11px;
+  }
+
+  .addItemButton {
+    min-height: 32px;
+    padding: 0 9px;
+
+    font-size: 11px;
+  }
+
+  .addItemButton svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  /* -------------------------
+     ITEMS
+     ------------------------- */
+
+  .itemList {
+    border-radius: 13px;
+  }
+
+  .itemRow {
+    min-height: 62px;
+    padding: 8px;
+    gap: 8px;
+  }
+
+  .itemIcon {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+
+    font-size: 13px;
+  }
+
+  .itemNameRow strong {
+    font-size: 12px;
+  }
+
+  .itemMeta {
+    margin-top: 3px;
+    gap: 5px;
+    font-size: 9px;
+  }
+
+  .itemMeta code {
+    font-size: 8px;
+  }
+
+  .itemPrice {
+    min-width: auto;
+
+    font-size: 11px;
+  }
+
+  .moreButton {
+    width: 34px;
+    height: 34px;
+  }
+
+  /* -------------------------
+     DROPDOWN
+     ------------------------- */
+
+  .actionDropdown {
+    width: 180px;
+    right: 0;
+
+    border-radius: 13px;
+  }
+
+  .actionDropdown button {
+    min-height: 38px;
+    font-size: 12px;
+  }
+
+  /* -------------------------
+     TOAST
+     ------------------------- */
+
+  .toast {
+    right: 12px;
+    bottom: calc(12px + env(safe-area-inset-bottom));
+
+    max-width: calc(100vw - 24px);
+  }
+}
+
+/* ============================================================
+   VERY SMALL MOBILE
+   ============================================================ */
+
+@media (max-width: 390px) {
+  .page {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+
+  .stats {
+    gap: 5px;
+  }
+
+  .statCard {
+    padding: 10px 7px;
+  }
+
+  .statCard strong {
+    font-size: 20px;
+  }
+
+  .statCard small {
+    font-size: 8px;
+  }
+
+  .groupHeader {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+
+  .groupMeta span {
+    display: none;
+  }
+
+  .groupContent {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+
+  .itemInfo {
+    min-width: 0;
+  }
+
+  .itemPrice {
+    display: none;
+  }
+
+  .actionDropdown {
+    width: 170px;
+  }
+}
+
+/* ============================================================
+   REDUCED MOTION
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .page *,
+  .page *::before,
+  .page *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

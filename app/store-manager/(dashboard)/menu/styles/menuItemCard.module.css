@@ -1,0 +1,585 @@
+/* ============================================================
+   MENU ITEM CARD
+   iOS 26 / Premium Store Manager UI
+   ============================================================ */
+
+.card {
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+
+  min-width: 0;
+  min-height: 210px;
+
+  padding: 18px;
+
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  border-radius: 22px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.94),
+      rgba(248, 249, 252, 0.86)
+    );
+
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.03),
+    0 8px 24px rgba(0, 0, 0, 0.045);
+
+  backdrop-filter: blur(22px);
+  -webkit-backdrop-filter: blur(22px);
+
+  overflow: hidden;
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease,
+    background 0.2s ease;
+}
+
+/* Subtle glass highlight */
+
+.card::before {
+  content: "";
+
+  position: absolute;
+  inset: 0;
+
+  pointer-events: none;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.42),
+      transparent 45%
+    );
+
+  opacity: 0.7;
+}
+
+/* ============================================================
+   HOVER
+   ============================================================ */
+
+@media (hover: hover) {
+  .card:hover {
+    transform: translateY(-2px);
+
+    border-color: rgba(0, 122, 255, 0.16);
+
+    box-shadow:
+      0 2px 4px rgba(0, 0, 0, 0.035),
+      0 14px 32px rgba(0, 0, 0, 0.07);
+  }
+}
+
+/* ============================================================
+   UNAVAILABLE
+   ============================================================ */
+
+.unavailable {
+  background:
+    linear-gradient(
+      145deg,
+      rgba(245, 245, 247, 0.94),
+      rgba(238, 238, 243, 0.9)
+    );
+
+  border-color: rgba(142, 142, 147, 0.18);
+}
+
+.unavailable .itemName {
+  color: #636366;
+}
+
+.unavailable .price {
+  color: #8e8e93;
+}
+
+.unavailable .statusIcon {
+  background: rgba(142, 142, 147, 0.1);
+  color: #8e8e93;
+}
+
+/* ============================================================
+   TOP ROW
+   ============================================================ */
+
+.topRow {
+  position: relative;
+  z-index: 1;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 12px;
+
+  min-width: 0;
+}
+
+.metaGroup {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+
+  gap: 7px;
+
+  min-width: 0;
+}
+
+/* ============================================================
+   CATEGORY
+   ============================================================ */
+
+.categoryBadge {
+  display: inline-flex;
+  align-items: center;
+
+  min-height: 25px;
+
+  padding: 0 9px;
+
+  border-radius: 8px;
+
+  background: rgba(118, 118, 128, 0.09);
+
+  color: #636366;
+
+  font-size: 11px;
+  font-weight: 600;
+
+  line-height: 1;
+
+  white-space: nowrap;
+}
+
+/* ============================================================
+   STATUS PILL
+   ============================================================ */
+
+.statusPill {
+  display: inline-flex;
+  align-items: center;
+
+  gap: 5px;
+
+  min-height: 25px;
+
+  padding: 0 9px;
+
+  border-radius: 999px;
+
+  font-size: 11px;
+  font-weight: 650;
+
+  line-height: 1;
+
+  white-space: nowrap;
+}
+
+.statusActive {
+  background: rgba(52, 199, 89, 0.1);
+  color: #248a3d;
+}
+
+.statusInactive {
+  background: rgba(255, 59, 48, 0.1);
+  color: #d70015;
+}
+
+.statusDot {
+  width: 6px;
+  height: 6px;
+
+  border-radius: 50%;
+
+  background: currentColor;
+
+  flex-shrink: 0;
+}
+
+/* ============================================================
+   STATUS ICON
+   ============================================================ */
+
+.statusIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 34px;
+  height: 34px;
+
+  flex-shrink: 0;
+
+  border-radius: 11px;
+
+  background: rgba(52, 199, 89, 0.1);
+
+  color: #248a3d;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+/* ============================================================
+   MAIN CONTENT
+   ============================================================ */
+
+.content {
+  position: relative;
+  z-index: 1;
+
+  display: flex;
+  flex-direction: column;
+
+  flex: 1;
+
+  min-width: 0;
+
+  padding-top: 18px;
+}
+
+/* ============================================================
+   ITEM NAME
+   ============================================================ */
+
+.itemName {
+  margin: 0;
+
+  color: #1c1c1e;
+
+  font-size: 18px;
+  font-weight: 700;
+
+  line-height: 1.3;
+
+  letter-spacing: -0.02em;
+
+  overflow-wrap: anywhere;
+}
+
+/* ============================================================
+   VIETNAMESE NAME
+   ============================================================ */
+
+.itemSubName {
+  margin-top: 5px;
+
+  color: #8e8e93;
+
+  font-size: 12px;
+  font-weight: 500;
+
+  line-height: 1.35;
+
+  overflow-wrap: anywhere;
+}
+
+/* ============================================================
+   DESCRIPTION
+   ============================================================ */
+
+.description {
+  margin: 9px 0 0;
+
+  color: #6e6e73;
+
+  font-size: 12px;
+  font-weight: 400;
+
+  line-height: 1.5;
+
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+
+  overflow: hidden;
+}
+
+/* ============================================================
+   BOTTOM ROW
+   ============================================================ */
+
+.bottomRow {
+  position: relative;
+  z-index: 1;
+
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+
+  gap: 14px;
+
+  margin-top: 20px;
+  padding-top: 14px;
+
+  border-top: 1px solid rgba(60, 60, 67, 0.09);
+}
+
+/* ============================================================
+   PRICE
+   ============================================================ */
+
+.priceBlock {
+  display: flex;
+  flex-direction: column;
+
+  min-width: 0;
+}
+
+.priceLabel {
+  margin-bottom: 2px;
+
+  color: #8e8e93;
+
+  font-size: 10px;
+  font-weight: 600;
+
+  letter-spacing: 0.02em;
+}
+
+.price {
+  color: #1c1c1e;
+
+  font-size: 21px;
+  font-weight: 750;
+
+  line-height: 1.15;
+
+  letter-spacing: -0.025em;
+
+  white-space: nowrap;
+}
+
+/* ============================================================
+   TOGGLE BUTTON
+   ============================================================ */
+
+.toggleButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 7px;
+
+  min-height: 38px;
+
+  padding: 0 13px;
+
+  border: 0;
+  border-radius: 12px;
+
+  font-family: inherit;
+
+  font-size: 12px;
+  font-weight: 650;
+
+  white-space: nowrap;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.15s ease,
+    background 0.15s ease,
+    box-shadow 0.15s ease,
+    opacity 0.15s ease;
+}
+
+.toggleButton:active:not(:disabled) {
+  transform: scale(0.96);
+}
+
+.toggleButton:disabled {
+  opacity: 0.55;
+
+  cursor: not-allowed;
+}
+
+/* ============================================================
+   STOP SELLING
+   ============================================================ */
+
+.soldOutBtn {
+  background: rgba(255, 59, 48, 0.1);
+
+  color: #d70015;
+}
+
+.soldOutBtn:hover:not(:disabled) {
+  background: rgba(255, 59, 48, 0.16);
+
+  box-shadow:
+    0 4px 12px rgba(255, 59, 48, 0.1);
+}
+
+/* ============================================================
+   RESTART SELLING
+   ============================================================ */
+
+.activeBtn {
+  background: rgba(52, 199, 89, 0.12);
+
+  color: #248a3d;
+}
+
+.activeBtn:hover:not(:disabled) {
+  background: rgba(52, 199, 89, 0.18);
+
+  box-shadow:
+    0 4px 12px rgba(52, 199, 89, 0.1);
+}
+
+/* ============================================================
+   LOADING
+   ============================================================ */
+
+.spinner {
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ============================================================
+   TABLET
+   ============================================================ */
+
+@media (max-width: 900px) {
+  .card {
+    min-height: 205px;
+
+    padding: 16px;
+
+    border-radius: 20px;
+  }
+
+  .itemName {
+    font-size: 17px;
+  }
+
+  .price {
+    font-size: 20px;
+  }
+}
+
+/* ============================================================
+   MOBILE
+   ============================================================ */
+
+@media (max-width: 640px) {
+  .card {
+    min-height: auto;
+
+    padding: 16px;
+
+    border-radius: 19px;
+  }
+
+  .topRow {
+    align-items: flex-start;
+  }
+
+  .statusIcon {
+    width: 32px;
+    height: 32px;
+  }
+
+  .content {
+    padding-top: 15px;
+  }
+
+  .itemName {
+    font-size: 17px;
+  }
+
+  .description {
+    -webkit-line-clamp: 3;
+  }
+
+  .bottomRow {
+    align-items: center;
+
+    margin-top: 17px;
+    padding-top: 13px;
+  }
+
+  .price {
+    font-size: 19px;
+  }
+
+  .toggleButton {
+    min-height: 38px;
+
+    padding: 0 12px;
+
+    border-radius: 11px;
+
+    font-size: 11px;
+  }
+}
+
+/* ============================================================
+   VERY SMALL DEVICES
+   ============================================================ */
+
+@media (max-width: 390px) {
+  .card {
+    padding: 14px;
+
+    border-radius: 17px;
+  }
+
+  .categoryBadge,
+  .statusPill {
+    font-size: 10px;
+  }
+
+  .itemName {
+    font-size: 16px;
+  }
+
+  .bottomRow {
+    gap: 8px;
+  }
+
+  .toggleButton {
+    padding: 0 10px;
+  }
+
+  .toggleButton span {
+    font-size: 10px;
+  }
+
+  .price {
+    font-size: 18px;
+  }
+}
+
+/* ============================================================
+   REDUCED MOTION
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .toggleButton,
+  .statusIcon {
+    transition: none;
+  }
+
+  .spinner {
+    animation: none;
+  }
+}

@@ -29,6 +29,8 @@ export default function OrderContainerPage({ params }: Props) {
 
   const [storeId, setStoreId] = useState<number | null>(null);
   const [storeInfo, setStoreInfo] = useState<any>(null);
+  const [menuId, setMenuId] =
+  useState<number | null>(null);
   const [menuItems, setMenuItems] = useState<any[]>([]);
   const [categories, setCategories] = useState<any[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
@@ -63,14 +65,31 @@ export default function OrderContainerPage({ params }: Props) {
         if (info) {
           setStoreId(info.id);
           setStoreInfo(info);
-          saveSelectedStore({ 
-            id: info.id, 
-            title: info.title, 
-            type: info.type, 
-            slug: info.slug ?? "" 
+
+          // ★★★ MENU ĐÚNG CỦA NGÀY HÔM NAY ★★★
+          setMenuId(info.menuId ?? null);
+
+          console.log(
+            "[OrderContainer] Store loaded:",
+            {
+              storeId: info.id,
+              storeType: info.type,
+              menuId: info.menuId,
+              storeName: info.name,
+              title: info.title,
+            }
+          );
+
+          saveSelectedStore({
+            id: info.id,
+            title: info.title,
+            type: info.type,
+            slug: info.slug ?? ""
           });
         } else {
-          router.replace(`/${locale}/store-select`);
+          router.replace(
+            `/${locale}/store-select`
+          );
         }
       });
     } else {
@@ -90,9 +109,67 @@ export default function OrderContainerPage({ params }: Props) {
       return;
     }
 
-    getMenuCategories(storeId ?? undefined).then((data) => setCategories(data));
-    getMenuItems(storeId ?? undefined).then((data) => setMenuItems(data));
-  }, [storeId]);
+    // ========================================================
+    // SHOP
+    // ========================================================
+
+    if (storeInfo?.type === "Shop") {
+      Promise.all([
+        getMenuCategories(storeId),
+        getMenuItems(storeId),
+      ]).then(([categoriesData, itemsData]) => {
+        setCategories(categoriesData);
+        setMenuItems(itemsData);
+      });
+
+      return;
+    }
+
+    // ========================================================
+    // TRUCK
+    // ========================================================
+
+    if (storeInfo?.type === "Truck") {
+      // Không có menu hôm nay
+      if (!menuId) {
+        console.warn(
+          "[OrderContainer] Truck has no menu for today's schedule:",
+          {
+            storeId,
+            storeName: storeInfo?.name,
+            title: storeInfo?.title,
+          }
+        );
+
+        setCategories([]);
+        setMenuItems([]);
+        return;
+      }
+
+      console.log(
+        "[OrderContainer] Loading truck menu:",
+        {
+          storeId,
+          menuId,
+          storeName: storeInfo?.name,
+          title: storeInfo?.title,
+        }
+      );
+
+      Promise.all([
+        getMenuCategories(storeId, menuId),
+        getMenuItems(storeId, menuId),
+      ]).then(([categoriesData, itemsData]) => {
+        setCategories(categoriesData);
+        setMenuItems(itemsData);
+      });
+    }
+  }, [
+    storeId,
+    menuId,
+    storeInfo?.type,
+    storeInfo?.locationName,
+  ]);
 
   const activeCategories = categories.filter((cat) => {
     const items = menuItems.filter((i) => i.category_id === cat.id);
@@ -250,7 +327,11 @@ export default function OrderContainerPage({ params }: Props) {
         </div>
       </header>
 
-      <OrderHeader locale={locale} storeInfo={storeInfo} />
+      <OrderHeader
+        locale={locale}
+        storeName={storeInfo?.name}
+        storeInfo={storeInfo}
+      />
 
       {storeId && (
         <>

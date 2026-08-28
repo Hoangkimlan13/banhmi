@@ -1,0 +1,244 @@
+/* Container Glassmorphism iOS 26 */
+.container {
+  width: 100%;
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", sans-serif;
+  color: #1d1d1f;
+  margin-bottom: 20px;
+}
+
+/* Header Section */
+.header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.iconWrapper {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: rgba(0, 122, 255, 0.1);
+  color: #007aff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.iconWrapper .material-symbols-outlined {
+  font-size: 20px;
+}
+
+.headerText {
+  flex: 1;
+  min-width: 0;
+}
+
+.headerText h3 {
+  margin: 0;
+  font-size: 0.98rem;
+  font-weight: 700;
+  letter-spacing: -0.2px;
+}
+
+.headerText p {
+  margin: 2px 0 0;
+  font-size: 0.78rem;
+  color: #86868b;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Hidden input */
+.hiddenFileInput {
+  display: none;
+}
+
+/* Dropzone (When Image is Empty) */
+.dropzone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 28px 16px;
+  border: 2px dashed rgba(0, 122, 255, 0.25);
+  background: rgba(245, 245, 247, 0.6);
+  border-radius: 14px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  text-align: center;
+}
+
+.dropzone:hover {
+  background: rgba(0, 122, 255, 0.04);
+  border-color: rgba(0, 122, 255, 0.5);
+  transform: translateY(-1px);
+}
+
+.dropzone.dragging {
+  background: rgba(0, 122, 255, 0.08);
+  border-color: #007aff;
+  transform: scale(0.99);
+}
+
+.dropzoneIconWrapper {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #007aff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.dropzoneIconWrapper .material-symbols-outlined {
+  font-size: 24px;
+}
+
+.dropzoneText strong {
+  display: block;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #1d1d1f;
+  margin-bottom: 2px;
+}
+
+.dropzoneText p {
+  margin: 0;
+  font-size: 0.75rem;
+  color: #86868b;
+}
+
+/* Preview Card (When Image Exists) */
+.previewCard {
+  position: relative;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #f5f5f7;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+
+  max-width: 360px; 
+  margin: 0 auto; /* Căn giữa card */
+}
+.imageWrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3; 
+  background: #e5e5ea;
+  overflow: hidden;
+}
+
+.previewImage {
+  object-fit: cover;
+}
+
+.previewCard:hover .previewImage {
+  transform: scale(1.02);
+}
+
+.previewActions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+/* Action Buttons */
+.changeButton,
+.removeButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.16s ease;
+}
+
+.changeButton {
+  background: rgba(0, 122, 255, 0.1);
+  color: #007aff;
+}
+
+.changeButton:hover:not(:disabled) {
+  background: rgba(0, 122, 255, 0.18);
+}
+
+.removeButton {
+  background: rgba(255, 59, 48, 0.1);
+  color: #ff3b30;
+}
+
+.removeButton:hover:not(:disabled) {
+  background: rgba(255, 59, 48, 0.18);
+}
+
+.changeButton:disabled,
+.removeButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.changeButton .material-symbols-outlined,
+.removeButton .material-symbols-outlined {
+  font-size: 16px;
+}
+
+/* Error Banner */
+.errorMessage {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  background: rgba(255, 59, 48, 0.1);
+  color: #ff3b30;
+  border-radius: 10px;
+  font-size: 0.8rem;
+  margin-top: 10px;
+}
+
+.errorMessage .material-symbols-outlined {
+  font-size: 16px;
+}
+
+/* Spin Animation */
+.spin {
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive Media Queries */
+@media (max-width: 640px) {
+
+  .dropzone {
+    padding: 20px 12px;
+  }
+
+  .previewActions {
+    padding: 8px 10px;
+  }
+
+  .changeButton,
+  .removeButton {
+    padding: 6px 10px;
+    font-size: 0.75rem;
+  }
+}

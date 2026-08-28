@@ -19,7 +19,7 @@ export default async function StoreOrdersPage() {
     <StoreManagerShell
       store={store}
       initialOrders={orders}
-      initialSchedule={null}
+      initialSchedule={store.schedule}
     />
   );
 }

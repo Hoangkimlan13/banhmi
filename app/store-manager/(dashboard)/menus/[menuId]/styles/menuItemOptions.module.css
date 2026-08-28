@@ -1,0 +1,1228 @@
+/* ============================================================
+   CONTAINER
+   ============================================================ */
+
+.container {
+  width: 100%;
+  min-width: 0;
+  padding: 20px;
+  border: 1px solid #e5e7eb;
+  border-radius: 20px;
+  box-sizing: border-box;
+}
+
+
+/* ============================================================
+   HEADER
+   ============================================================ */
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.iconBadge {
+  width: 42px;
+  height: 42px;
+  flex: 0 0 42px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #007aff;
+  background: #eaf3ff;
+  border-radius: 12px;
+}
+
+.header h3 {
+  margin: 0;
+  color: #111827;
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.4;
+  letter-spacing: -0.02em;
+}
+
+.header p {
+  margin: 3px 0 0;
+  color: #6b7280;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+
+/* ============================================================
+   EMPTY / ERROR STATE
+   ============================================================ */
+
+.emptyState {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  min-height: 52px;
+  padding: 13px 15px;
+
+  color: #6b7280;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+
+  font-size: 13px;
+  line-height: 1.5;
+  box-sizing: border-box;
+}
+
+.emptyState svg {
+  flex: 0 0 auto;
+  color: #9ca3af;
+}
+
+
+/* ============================================================
+   GROUP LIST
+   ============================================================ */
+
+.groupList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+
+/* ============================================================
+   GROUP CARD
+   ============================================================ */
+
+.groupCard {
+  overflow: hidden;
+
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.groupCard:hover {
+  border-color: #d1d5db;
+}
+
+.groupActive {
+  border-color: #b9d7ff;
+  box-shadow:
+    0 2px 8px rgba(0, 122, 255, 0.06),
+    0 1px 2px rgba(0, 0, 0, 0.03);
+}
+
+
+/* ============================================================
+   GROUP HEADER
+   ============================================================ */
+
+.groupHeader {
+  min-height: 62px;
+  padding: 12px 15px;
+
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  cursor: pointer;
+  user-select: none;
+
+  box-sizing: border-box;
+}
+
+.groupActive .groupHeader {
+  background: #f8fbff;
+}
+
+.groupTitleInfo {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  flex: 1;
+}
+
+.groupTitleInfo strong {
+  min-width: 0;
+
+  color: #111827;
+  font-size: 14px;
+  font-weight: 700;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.groupCode {
+  flex: 0 0 auto;
+
+  padding: 3px 7px;
+
+  color: #6b7280;
+  background: #f3f4f6;
+  border-radius: 6px;
+
+  font-family:
+    ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    Monaco,
+    Consolas,
+    monospace;
+
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.selectedBadge {
+  flex: 0 0 auto;
+
+  padding: 4px 8px;
+
+  color: #007aff;
+  background: #eaf3ff;
+  border-radius: 999px;
+
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+
+/* ============================================================
+   CUSTOM CHECKBOX - GROUP
+   ============================================================ */
+
+.checkboxContainer {
+  position: relative;
+
+  width: 22px;
+  height: 22px;
+  flex: 0 0 22px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+}
+
+.checkboxContainer input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.customCheckbox {
+  width: 20px;
+  height: 20px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 6px;
+
+  box-sizing: border-box;
+
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    transform 0.15s ease;
+}
+
+.checkboxContainer input:checked + .customCheckbox {
+  background: #007aff;
+  border-color: #007aff;
+}
+
+.checkIcon {
+  color: #ffffff;
+  opacity: 0;
+
+  transition: opacity 0.15s ease;
+}
+
+.checkboxContainer input:checked + .customCheckbox .checkIcon {
+  opacity: 1;
+}
+
+.checkboxContainer input:disabled + .customCheckbox {
+  opacity: 0.5;
+}
+
+
+/* ============================================================
+   ITEMS CONTAINER
+   ============================================================ */
+
+.itemsContainer {
+  padding: 0 12px 12px;
+}
+
+.itemsList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+
+/* ============================================================
+   OPTION ITEM ROW
+   ============================================================ */
+
+.optionItemRow {
+  overflow: hidden;
+
+  background: #fafafa;
+  border: 1px solid #edf0f3;
+  border-radius: 13px;
+
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.optionItemRow:hover {
+  border-color: #d9dee5;
+  background: #ffffff;
+}
+
+.optionItemRowActive {
+  background: #ffffff;
+  border-color: #c9defa;
+  box-shadow:
+    0 2px 7px rgba(0, 0, 0, 0.035);
+}
+
+
+/* ============================================================
+   ITEM SELECTOR
+   ============================================================ */
+
+.itemSelector {
+  min-height: 62px;
+  padding: 11px 13px;
+
+  display: flex;
+  align-items: center;
+  gap: 11px;
+
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.itemSelector input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.itemCheckbox {
+  width: 19px;
+  height: 19px;
+  flex: 0 0 19px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 5px;
+
+  color: #ffffff;
+
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.itemSelector input:checked + .itemCheckbox {
+  background: #007aff;
+  border-color: #007aff;
+}
+
+.itemSelector input:not(:checked) + .itemCheckbox svg {
+  opacity: 0;
+}
+
+.itemSelector input:checked + .itemCheckbox svg {
+  opacity: 1;
+}
+
+
+/* ============================================================
+   ITEM MAIN
+   ============================================================ */
+
+.itemMain {
+  min-width: 0;
+  flex: 1;
+
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.itemName {
+  color: #1f2937;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.4;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.itemMeta {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+
+  color: #9ca3af;
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.itemPrice {
+  color: #374151;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.freePrice {
+  color: #16a34a;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.selectedMark {
+  flex: 0 0 auto;
+
+  padding: 4px 8px;
+
+  color: #007aff;
+  background: #edf6ff;
+  border-radius: 999px;
+
+  font-size: 10px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+
+/* ============================================================
+   VARIANT PRICE TOGGLE
+   ============================================================ */
+
+.variantPriceToggleWrapper {
+  padding: 0 12px 12px;
+}
+
+.variantPriceToggle {
+  width: 100%;
+  min-height: 48px;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 8px 11px;
+
+  color: #374151;
+  background: #f7f9fc;
+  border: 1px solid #e3e8ef;
+  border-radius: 11px;
+
+  cursor: pointer;
+  text-align: left;
+
+  transition:
+    background-color 0.18s ease,
+    border-color 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+.variantPriceToggle:hover {
+  background: #f0f6ff;
+  border-color: #c9ddf7;
+}
+
+.variantPriceToggleActive {
+  color: #005fcc;
+  background: #edf6ff;
+  border-color: #b9d8fb;
+}
+
+.variantPriceToggle:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.variantPriceToggleIcon {
+  width: 29px;
+  height: 29px;
+  flex: 0 0 29px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #007aff;
+  background: #ffffff;
+  border: 1px solid #d7e6f8;
+  border-radius: 8px;
+
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.variantPriceToggleText {
+  min-width: 0;
+  flex: 1;
+
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.variantPriceToggleText strong {
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.variantPriceToggleText small {
+  color: #8a94a3;
+  font-size: 10px;
+  line-height: 1.35;
+}
+
+
+/* ============================================================
+   VARIANT PRICE PANEL
+   ============================================================ */
+
+.variantPricePanel {
+  margin: 0 12px 12px;
+
+  overflow: hidden;
+
+  background: #f8fbff;
+  border: 1px solid #cfe2fa;
+  border-radius: 13px;
+
+  animation: variantPanelIn 0.2s ease;
+}
+
+@keyframes variantPanelIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* ============================================================
+   VARIANT PRICE HEADER
+   ============================================================ */
+
+.variantPriceHeader {
+  padding: 13px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+
+  border-bottom: 1px solid #e0ecfa;
+}
+
+.variantPriceTitle {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.variantPriceIcon {
+  width: 30px;
+  height: 30px;
+  flex: 0 0 30px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #007aff;
+  background: #e6f2ff;
+  border-radius: 8px;
+
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.variantPriceTitle > div {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.variantPriceTitle strong {
+  color: #1f2937;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.variantPriceTitle span {
+  color: #7b8794;
+  font-size: 10px;
+}
+
+.variantPriceHint {
+  flex: 0 0 auto;
+
+  padding: 5px 8px;
+
+  color: #6b7280;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 7px;
+
+  font-size: 10px;
+  white-space: nowrap;
+}
+
+
+/* ============================================================
+   VARIANT PRICE GRID
+   ============================================================ */
+
+.variantPriceGrid {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(150px, 1fr)
+  );
+
+  gap: 8px;
+
+  padding: 12px;
+}
+
+
+/* ============================================================
+   VARIANT PRICE CARD
+   ============================================================ */
+
+.variantPriceCard {
+  min-width: 0;
+
+  padding: 10px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+
+  background: #ffffff;
+  border: 1px solid #e4ebf3;
+  border-radius: 10px;
+
+  box-sizing: border-box;
+}
+
+.variantInfo {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.variantName {
+  color: #374151;
+  font-size: 12px;
+  font-weight: 700;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.variantCode {
+  color: #9ca3af;
+
+  font-family:
+    ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    Monaco,
+    Consolas,
+    monospace;
+
+  font-size: 9px;
+}
+
+
+/* ============================================================
+   PRICE INPUT
+   ============================================================ */
+
+.priceInputWrapper {
+  position: relative;
+
+  width: 92px;
+  flex: 0 0 92px;
+}
+
+.pricePrefix {
+  position: absolute;
+  left: 8px;
+  top: 50%;
+
+  transform: translateY(-50%);
+
+  color: #8a94a3;
+  font-size: 11px;
+  font-weight: 600;
+
+  pointer-events: none;
+}
+
+.variantPriceInput {
+  width: 100%;
+  height: 34px;
+
+  padding: 0 7px 0 27px;
+
+  color: #1f2937;
+  background: #ffffff;
+
+  border: 1px solid #d8e0e9;
+  border-radius: 8px;
+
+  outline: none;
+
+  font-size: 12px;
+  font-weight: 600;
+
+  box-sizing: border-box;
+
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.variantPriceInput:focus {
+  border-color: #80bfff;
+
+  box-shadow:
+    0 0 0 3px rgba(0, 122, 255, 0.1);
+}
+
+.variantPriceInput::placeholder {
+  color: #c4cbd4;
+}
+
+.variantPriceInput:disabled {
+  background: #f3f4f6;
+  cursor: not-allowed;
+}
+
+
+/* Chrome / Edge / Safari */
+.variantPriceInput::-webkit-inner-spin-button,
+.variantPriceInput::-webkit-outer-spin-button {
+  margin: 0;
+}
+
+
+/* ============================================================
+   VARIANT PRICE FOOTER
+   ============================================================ */
+
+.variantPriceFooter {
+  display: flex;
+  justify-content: flex-end;
+
+  padding: 0 12px 12px;
+}
+
+.variantPriceCloseButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+
+  padding: 6px 9px;
+
+  color: #6b7280;
+  background: transparent;
+  border: 0;
+  border-radius: 7px;
+
+  font-size: 10px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.variantPriceCloseButton:hover {
+  color: #374151;
+  background: #eaf2fb;
+}
+
+.variantPriceCloseButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+
+/* ============================================================
+   NO VARIANT WARNING
+   ============================================================ */
+
+.noVariantWarning {
+  margin: 0 12px 12px;
+  padding: 9px 11px;
+
+  display: flex;
+  align-items: center;
+  gap: 7px;
+
+  color: #92400e;
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  border-radius: 9px;
+
+  font-size: 10px;
+  line-height: 1.4;
+}
+
+.noVariantWarning svg {
+  flex: 0 0 auto;
+}
+
+
+/* ============================================================
+   NO ITEMS
+   ============================================================ */
+
+.noItemsText {
+  margin: 0;
+  padding: 15px;
+
+  color: #9ca3af;
+
+  font-size: 12px;
+  text-align: center;
+}
+
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+
+.footerInfo {
+  margin-top: 18px;
+  padding-top: 16px;
+
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  border-top: 1px solid #e5e7eb;
+}
+
+.footerInfo > span {
+  margin-right: auto;
+
+  color: #6b7280;
+  font-size: 12px;
+}
+
+.footerInfo > span strong {
+  color: #111827;
+  font-weight: 700;
+}
+
+
+/* ============================================================
+   SUCCESS
+   ============================================================ */
+
+.successMessage {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  padding: 7px 10px;
+
+  color: #15803d;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 8px;
+
+  font-size: 11px;
+  font-weight: 600;
+}
+
+
+/* ============================================================
+   ERROR
+   ============================================================ */
+
+.error {
+  max-width: 420px;
+
+  display: flex;
+  align-items: center;
+  gap: 7px;
+
+  padding: 7px 10px;
+
+  color: #b91c1c;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.error svg {
+  flex: 0 0 auto;
+}
+
+
+/* ============================================================
+   SAVE BUTTON
+   ============================================================ */
+
+.saveButton {
+  min-width: 126px;
+  height: 40px;
+
+  padding: 0 16px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+
+  color: #ffffff;
+  background: #007aff;
+
+  border: 0;
+  border-radius: 10px;
+
+  font-size: 12px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 2px 5px rgba(0, 122, 255, 0.18);
+
+  transition:
+    background-color 0.15s ease,
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.saveButton:hover:not(:disabled) {
+  background: #006fe6;
+
+  box-shadow:
+    0 4px 10px rgba(0, 122, 255, 0.22);
+}
+
+.saveButton:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.saveButton:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+
+/* ============================================================
+   LOADING
+   ============================================================ */
+
+.spin {
+  animation: spin 0.9s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+/* ============================================================
+   TABLET
+   ============================================================ */
+
+@media (max-width: 768px) {
+  .container {
+    padding: 15px;
+    border-radius: 16px;
+  }
+
+  .header {
+    margin-bottom: 15px;
+  }
+
+  .header p {
+    font-size: 12px;
+  }
+
+  .groupHeader {
+    min-height: 58px;
+    padding: 10px 12px;
+  }
+
+  .itemsContainer {
+    padding: 0 9px 9px;
+  }
+
+  .variantPriceHeader {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .variantPriceHint {
+    margin-left: 39px;
+  }
+
+  .footerInfo {
+    flex-wrap: wrap;
+  }
+
+  .footerInfo > span {
+    width: 100%;
+    margin-right: 0;
+  }
+
+  .successMessage,
+  .error {
+    order: 2;
+  }
+
+  .saveButton {
+    margin-left: auto;
+  }
+}
+
+
+/* ============================================================
+   MOBILE
+   ============================================================ */
+
+@media (max-width: 480px) {
+  .container {
+    padding: 11px;
+    border-radius: 14px;
+  }
+
+  .header {
+    gap: 10px;
+  }
+
+  .iconBadge {
+    width: 36px;
+    height: 36px;
+    flex-basis: 36px;
+    border-radius: 10px;
+  }
+
+  .iconBadge svg {
+    width: 17px;
+    height: 17px;
+  }
+
+  .header h3 {
+    font-size: 15px;
+  }
+
+  .header p {
+    font-size: 11px;
+  }
+
+  .groupList {
+    gap: 9px;
+  }
+
+  .groupHeader {
+    min-height: 54px;
+    padding: 9px 10px;
+    gap: 8px;
+  }
+
+  .groupTitleInfo {
+    gap: 5px;
+  }
+
+  .groupTitleInfo strong {
+    font-size: 12px;
+  }
+
+  .groupCode {
+    display: none;
+  }
+
+  .selectedBadge {
+    padding: 3px 6px;
+    font-size: 9px;
+  }
+
+  .itemsContainer {
+    padding: 0 7px 7px;
+  }
+
+  .itemsList {
+    gap: 6px;
+  }
+
+  .optionItemRow {
+    border-radius: 10px;
+  }
+
+  .itemSelector {
+    min-height: 55px;
+    padding: 9px 10px;
+    gap: 8px;
+  }
+
+  .itemName {
+    font-size: 12px;
+  }
+
+  .itemMeta {
+    font-size: 10px;
+  }
+
+  .selectedMark {
+    padding: 3px 6px;
+    font-size: 9px;
+  }
+
+  .variantPriceToggleWrapper {
+    padding: 0 8px 8px;
+  }
+
+  .variantPriceToggle {
+    min-height: 44px;
+    padding: 7px 8px;
+  }
+
+  .variantPriceToggleIcon {
+    width: 26px;
+    height: 26px;
+    flex-basis: 26px;
+  }
+
+  .variantPriceToggleText strong {
+    font-size: 11px;
+  }
+
+  .variantPriceToggleText small {
+    font-size: 9px;
+  }
+
+  .variantPricePanel {
+    margin: 0 8px 8px;
+  }
+
+  .variantPriceHeader {
+    padding: 10px;
+  }
+
+  .variantPriceGrid {
+    grid-template-columns: 1fr;
+    padding: 9px;
+    gap: 6px;
+  }
+
+  .variantPriceCard {
+    padding: 8px;
+  }
+
+  .variantPriceFooter {
+    padding: 0 9px 9px;
+  }
+
+  .footerInfo {
+    gap: 8px;
+  }
+
+  .successMessage,
+  .error {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .saveButton {
+    width: 100%;
+    margin-left: 0;
+  }
+}
+
+
+/* ============================================================
+   REDUCED MOTION
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .groupCard,
+  .optionItemRow,
+  .variantPriceToggle,
+  .saveButton,
+  .variantPriceInput,
+  .customCheckbox,
+  .checkIcon {
+    transition: none;
+  }
+
+  .variantPricePanel {
+    animation: none;
+  }
+
+  .spin {
+    animation: none;
+  }
+}

@@ -1,0 +1,666 @@
+/* ============================================================
+   SCHEDULE CALENDAR
+   iOS 26 / Apple-style UI
+   ============================================================ */
+
+.calendarCard {
+  width: 100%;
+  overflow: hidden;
+
+  background: rgba(255, 255, 255, 0.84);
+
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 24px;
+
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.03),
+    0 8px 30px rgba(0, 0, 0, 0.06);
+
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+}
+
+
+/* ============================================================
+   HEADER
+   ============================================================ */
+
+.calendarHeader {
+  display: grid;
+  grid-template-columns: 42px 1fr 42px;
+
+  align-items: center;
+
+  min-height: 68px;
+  padding: 10px 14px;
+
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.calendarHeader h2 {
+  margin: 0;
+
+  color: #1d1d1f;
+
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.2;
+
+  text-align: center;
+  letter-spacing: -0.025em;
+}
+
+.calendarHeader button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 38px;
+  height: 38px;
+  padding: 0;
+
+  color: #007aff;
+  background: rgba(0, 122, 255, 0.08);
+
+  border: 0;
+  border-radius: 50%;
+
+  cursor: pointer;
+
+  transition:
+    background 160ms ease,
+    transform 160ms ease;
+}
+
+.calendarHeader button:hover {
+  background: rgba(0, 122, 255, 0.14);
+}
+
+.calendarHeader button:active {
+  transform: scale(0.92);
+}
+
+.calendarHeader button .material-symbols-outlined {
+  font-size: 22px;
+}
+
+
+/* ============================================================
+   WEEK
+   ============================================================ */
+
+.weekHeader {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+
+  padding: 10px 10px 6px;
+
+  background: rgba(248, 248, 250, 0.72);
+}
+
+.weekHeader > div {
+  min-width: 0;
+
+  color: #8e8e93;
+
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 20px;
+
+  text-align: center;
+}
+
+.weekHeader > div:first-child {
+  color: #ff3b30;
+}
+
+.weekHeader > div:last-child {
+  color: #007aff;
+}
+
+
+/* ============================================================
+   GRID
+   ============================================================ */
+
+.calendarGrid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+
+  gap: 1px;
+
+  padding: 6px 10px 12px;
+
+  background: rgba(248, 248, 250, 0.72);
+}
+
+
+/* ============================================================
+   DAY
+   ============================================================ */
+
+.day {
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  min-width: 0;
+  min-height: 108px;
+
+  padding: 7px 4px 6px;
+
+  color: #1d1d1f;
+  background: rgba(255, 255, 255, 0.92);
+
+  border: 0;
+  border-radius: 14px;
+
+  cursor: pointer;
+
+  transition:
+    background 160ms ease,
+    transform 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.day:hover {
+  background: #ffffff;
+
+  box-shadow:
+    inset 0 0 0 1px rgba(0, 122, 255, 0.12),
+    0 2px 8px rgba(0, 0, 0, 0.04);
+
+  z-index: 1;
+}
+
+.day:active {
+  transform: scale(0.97);
+}
+
+.day:focus-visible {
+  outline: 3px solid rgba(0, 122, 255, 0.24);
+  outline-offset: 2px;
+}
+
+
+/* ============================================================
+   DAY NUMBER
+   ============================================================ */
+
+.dayNumber {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 30px;
+  height: 30px;
+
+  margin-bottom: 5px;
+
+  color: #1d1d1f;
+
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 30px;
+
+  border-radius: 50%;
+}
+
+
+/* ============================================================
+   TODAY
+   ============================================================ */
+
+.today .dayNumber {
+  color: #007aff;
+
+  background: rgba(0, 122, 255, 0.10);
+
+  box-shadow:
+    inset 0 0 0 1.5px rgba(0, 122, 255, 0.18);
+}
+
+
+/* ============================================================
+   SELECTED
+   ============================================================ */
+
+.selectedDay {
+  background: rgba(0, 122, 255, 0.075);
+
+  box-shadow:
+    inset 0 0 0 1.5px rgba(0, 122, 255, 0.22);
+}
+
+.selectedDay .dayNumber {
+  color: #ffffff;
+  background: #007aff;
+
+  box-shadow:
+    0 2px 6px rgba(0, 122, 255, 0.25);
+}
+
+
+/* ============================================================
+   TODAY + SELECTED
+   ============================================================ */
+
+.today.selectedDay .dayNumber {
+  color: #ffffff;
+  background: #007aff;
+}
+
+
+/* ============================================================
+   OTHER MONTH
+   ============================================================ */
+
+.otherMonth {
+  background: rgba(255, 255, 255, 0.42);
+}
+
+.otherMonth .dayNumber {
+  color: #c7c7cc;
+}
+
+.otherMonth .scheduleContent {
+  opacity: 0.42;
+}
+
+
+/* ============================================================
+   SCHEDULE CONTENT
+   ============================================================ */
+
+.scheduleContent {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+
+  width: 100%;
+  min-width: 0;
+
+  gap: 3px;
+}
+
+
+/* ============================================================
+   STATUS BADGE
+   ============================================================ */
+
+.statusBadge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  min-width: 0;
+
+  box-sizing: border-box;
+
+  padding: 4px 5px;
+
+  border-radius: 7px;
+
+  font-size: 9px;
+  font-weight: 700;
+  line-height: 1.25;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.statusBadge .material-symbols-outlined {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 11px;
+  height: 11px;
+
+  margin: 0 3px 0 0;
+  padding: 0;
+
+  flex: 0 0 11px;
+
+  font-size: 11px;
+  line-height: 11px;
+
+  font-variation-settings:
+    "FILL" 1,
+    "wght" 600,
+    "GRAD" 0,
+    "opsz" 12;
+}
+
+/* ============================================================
+   予定
+   ============================================================ */
+
+.statusScheduled {
+  color: #007aff;
+  background: rgba(0, 122, 255, 0.10);
+}
+
+
+/* ============================================================
+   営業中
+   ============================================================ */
+
+.statusOpen {
+  color: #248a3d;
+  background: rgba(52, 199, 89, 0.12);
+}
+
+
+/* ============================================================
+   休業
+   ============================================================ */
+
+.statusClosed {
+  color: #8e8e93;
+  background: rgba(142, 142, 147, 0.12);
+}
+
+
+/* ============================================================
+   中止
+   ============================================================ */
+
+.statusCancelled {
+  color: #ff3b30;
+  background: rgba(255, 59, 48, 0.12);
+
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+}
+
+
+/* ============================================================
+   営業終了
+   ============================================================ */
+
+.statusCompleted {
+  color: #5856d6;
+  background: rgba(88, 86, 214, 0.10);
+}
+
+
+/* ============================================================
+   CANCELLED DAY
+   Ngày bị hủy có nền rất nhẹ màu đỏ
+   ============================================================ */
+
+.cancelledDay {
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255, 59, 48, 0.045),
+      rgba(255, 255, 255, 0.92)
+    );
+}
+
+.cancelledDay:hover {
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255, 59, 48, 0.08),
+      #ffffff
+    );
+}
+
+
+/* ============================================================
+   LOCATION / EVENT
+   ============================================================ */
+
+.locationName {
+  display: block;
+
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+
+  overflow: hidden;
+
+  color: #3a3a3c;
+
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text",
+    "Helvetica Neue", Arial, sans-serif;
+
+  font-size: 9px;
+  font-weight: 600;
+  line-height: 1.2;
+
+  text-align: center;
+
+  white-space: nowrap;
+  text-overflow: ellipsis;
+
+  /* Quan trọng trên mobile */
+  -webkit-text-size-adjust: none;
+  text-size-adjust: none;
+}
+
+/* ============================================================
+   TIME
+   ============================================================ */
+
+.scheduleTime {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  min-width: 0;
+
+  gap: 2px;
+
+  color: #8e8e93;
+
+  font-size: 8px;
+  font-weight: 500;
+  line-height: 1.3;
+
+  white-space: nowrap;
+}
+
+.scheduleTime .material-symbols-outlined {
+  font-size: 10px;
+
+  flex-shrink: 0;
+}
+
+
+/* ============================================================
+   CANCELLED TIME
+   ============================================================ */
+
+.cancelledDay .scheduleTime,
+.cancelledDay .locationName {
+  color: #a1a1a6;
+
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+}
+
+
+/* ============================================================
+   TABLET
+   ============================================================ */
+
+@media (max-width: 900px) {
+  .calendarCard {
+    border-radius: 20px;
+  }
+
+  .day {
+    min-height: 96px;
+  }
+
+  .statusBadge {
+    font-size: 8px;
+  }
+
+
+
+  .locationName {
+    font-size: 8px;
+  }
+
+  .scheduleTime {
+    font-size: 7px;
+  }
+}
+
+
+/* ============================================================
+   MOBILE
+   ============================================================ */
+
+@media (max-width: 640px) {
+  .calendarCard {
+    border-radius: 18px;
+  }
+
+  .calendarHeader {
+    grid-template-columns: 38px 1fr 38px;
+
+    min-height: 58px;
+
+    padding: 8px 10px;
+  }
+
+  .calendarHeader h2 {
+    font-size: 18px;
+  }
+
+  .calendarHeader button {
+    width: 34px;
+    height: 34px;
+  }
+
+  .weekHeader {
+    padding: 8px 5px 5px;
+  }
+
+  .calendarGrid {
+    gap: 1px;
+    padding: 5px 5px 8px;
+  }
+
+  .day {
+    min-height: 82px;
+
+    padding: 5px 2px;
+
+    border-radius: 10px;
+  }
+
+  .dayNumber {
+    width: 27px;
+    height: 27px;
+
+    margin-bottom: 4px;
+
+    font-size: 13px;
+    line-height: 27px;
+  }
+
+  .statusBadge {
+    padding: 3px 3px;
+
+    font-size: 7px;
+
+    border-radius: 5px;
+  }
+
+  .statusBadge .material-symbols-outlined {
+    width: 9px;
+    height: 9px;
+
+    flex: 0 0 9px;
+
+    margin: 0 2px 0 0;
+
+    font-size: 9px;
+    line-height: 9px;
+
+    font-variation-settings:
+        "FILL" 1,
+        "wght" 600,
+        "GRAD" 0,
+        "opsz" 10;
+    }
+
+  .locationName {
+    font-size: 7px;
+    line-height: 1.1;
+
+    -webkit-text-size-adjust: none;
+    text-size-adjust: none;
+  }
+
+  .scheduleTime {
+    font-size: 6.5px;
+  }
+
+  .scheduleTime .material-symbols-outlined {
+    font-size: 8px;
+  }
+}
+
+
+/* ============================================================
+   SMALL MOBILE
+   ============================================================ */
+
+@media (max-width: 400px) {
+  .calendarHeader h2 {
+    font-size: 17px;
+  }
+
+  .day {
+    min-height: 74px;
+  }
+
+  .dayNumber {
+    width: 25px;
+    height: 25px;
+
+    font-size: 12px;
+    line-height: 25px;
+  }
+
+  .statusBadge {
+    font-size: 6.5px;
+  }
+
+  .locationName {
+    font-size: 6px;
+    line-height: 1;
+
+    -webkit-text-size-adjust: none;
+    text-size-adjust: none;
+  }
+
+  .scheduleTime {
+    font-size: 6px;
+  }
+}
+
+
+/* ============================================================
+   REDUCED MOTION
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .day,
+  .calendarHeader button {
+    transition: none;
+  }
+}

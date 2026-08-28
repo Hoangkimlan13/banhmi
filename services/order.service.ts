@@ -19,53 +19,29 @@ import { paymentRepository } from '@/repositories/payment.repository';
  */
 
 interface PricedOrderOption {
-  menuOptionItemId: number;
-  optionItemTemplateId: number;
-
+  menuOptionItemId: number;      // id trong tbl_menu_option_items
+  groupId: number;               // id của tbl_menu_option_groups
   groupCode: string;
-
-  // Tên theo ngôn ngữ khách đặt
-  groupNameSnapshot: string;
-
-  // Tên tiếng Nhật dành cho printer
-  groupNameJaSnapshot: string;
-
+  groupNameSnapshot: string;     // tên group theo locale khách
+  groupNameJaSnapshot: string;   // tên group tiếng Nhật cho printer
   optionCode: string;
-
-  // Tên theo ngôn ngữ khách đặt
-  optionNameSnapshot: string;
-
-  // Tên tiếng Nhật dành cho printer
-  optionNameJaSnapshot: string;
-
+  optionNameSnapshot: string;    // tên option theo locale khách
+  optionNameJaSnapshot: string;  // tên option tiếng Nhật cho printer
   additionalPrice: number;
 }
 
 interface PricedOrderItem {
   input: NormalizedCheckoutItem;
-
   menuItemId: number;
-
-  // Snapshot theo ngôn ngữ khách đặt
   foodNameSnapshot: string;
-
-  // Snapshot tiếng Nhật dành cho printer
   foodNameJaSnapshot: string;
-
   imageSnapshot: string | null;
-
-  // Giá món + variant
-  basePrice: number;
-
+  basePrice: number;             // giá món + variant (nếu có)
   variantCode: string | null;
-
   variantNameSnapshot: string | null;
   variantNameJaSnapshot: string | null;
-
   options: PricedOrderOption[];
-
   optionTotal: number;
-
   lineTotal: number;
 }
 
@@ -78,7 +54,6 @@ export interface CheckoutOrderPaymentContext {
     currency: string;
     status: string | null;
   };
-
   payment: {
     id: bigint;
     status: string | null;
@@ -87,7 +62,6 @@ export interface CheckoutOrderPaymentContext {
     amount: number;
     currency: string;
   };
-
   shouldCreatePaymentIntent: boolean;
   createdNewPayment: boolean;
 }
@@ -99,7 +73,6 @@ export interface CheckoutOrderPaymentContext {
  */
 
 const DEFAULT_CURRENCY = 'JPY';
-
 const MIN_ORDER_NUMBER = 300;
 const MAX_ORDER_NUMBER = 999;
 
@@ -113,44 +86,17 @@ function createOrderToken(): string {
   return crypto.randomBytes(32).toString('hex');
 }
 
-/**
- * Convert Prisma Decimal / bigint / number safely.
- *
- * Không âm thầm biến NaN thành 0.
- * Nếu DB trả dữ liệu không hợp lệ -> throw.
- */
 function toNumber(value: unknown): number {
-  if (value === null || value === undefined) {
-    return 0;
-  }
-
+  if (value === null || value === undefined) return 0;
   let result: number;
-
-  if (
-    typeof value === 'object' &&
-    value !== null &&
-    'toNumber' in value &&
-    typeof (value as { toNumber?: unknown }).toNumber === 'function'
-  ) {
-    result = (
-      value as {
-        toNumber: () => number;
-      }
-    ).toNumber();
+  if (typeof value === 'object' && value !== null && 'toNumber' in value && typeof (value as any).toNumber === 'function') {
+    result = (value as any).toNumber();
   } else {
-    result = Number(
-      typeof value === 'string' ||
-        typeof value === 'number' ||
-        typeof value === 'bigint'
-        ? value
-        : String(value)
-    );
+    result = Number(typeof value === 'string' || typeof value === 'number' || typeof value === 'bigint' ? value : String(value));
   }
-
   if (!Number.isFinite(result)) {
     throw new Error(`Invalid numeric database value: ${String(value)}`);
   }
-
   return result;
 }
 
@@ -169,21 +115,13 @@ function normalizeLocale(locale: string): SupportedLocale {
     case 'en':
     case 'zh':
       return locale;
-
     default:
       return 'ja';
   }
 }
 
 /**
- * Lấy tên theo locale khách đang sử dụng.
- *
- * Fallback:
- * current locale
- * -> Japanese
- * -> English
- * -> Vietnamese
- * -> Chinese
+ * Lấy tên theo locale từ object có các trường name_ja, name_vi, name_en, name_zh
  */
 function getLocalizedName(
   obj: {
@@ -195,72 +133,39 @@ function getLocalizedName(
   locale: string
 ): string | null {
   const currentLocale = normalizeLocale(locale);
-
-  const names: Record<
-    SupportedLocale,
-    string | null | undefined
-  > = {
+  const names: Record<SupportedLocale, string | null | undefined> = {
     ja: obj.name_ja,
     vi: obj.name_vi,
     en: obj.name_en,
     zh: obj.name_zh,
   };
-
-  return (
-    names[currentLocale] ??
-    obj.name_ja ??
-    obj.name_en ??
-    obj.name_vi ??
-    obj.name_zh ??
-    null
-  );
+  return names[currentLocale] ?? obj.name_ja ?? obj.name_en ?? obj.name_vi ?? obj.name_zh ?? null;
 }
 
 /**
- * Lấy tên option group theo locale.
+ * Lấy tên group từ mapping (display_name_*) hoặc từ group info (name_*)
  */
-function getLocalizedGroupName(
-  obj: {
-    display_name_ja?: string | null;
-    display_name_vi?: string | null;
-    display_name_en?: string | null;
-    display_name_zh?: string | null;
-  },
+function getGroupDisplayName(
+  mapping: { display_name_ja?: string | null; display_name_vi?: string | null; display_name_en?: string | null; display_name_zh?: string | null },
+  groupInfo: { name_ja?: string | null; name_vi?: string | null; name_en?: string | null; name_zh?: string | null },
   locale: string
-): string | null {
+): string {
   const currentLocale = normalizeLocale(locale);
-
-  const names: Record<
-    SupportedLocale,
-    string | null | undefined
-  > = {
-    ja: obj.display_name_ja,
-    vi: obj.display_name_vi,
-    en: obj.display_name_en,
-    zh: obj.display_name_zh,
+  const names: Record<SupportedLocale, string | null | undefined> = {
+    ja: mapping.display_name_ja ?? groupInfo.name_ja,
+    vi: mapping.display_name_vi ?? groupInfo.name_vi,
+    en: mapping.display_name_en ?? groupInfo.name_en,
+    zh: mapping.display_name_zh ?? groupInfo.name_zh,
   };
-
-  return (
-    names[currentLocale] ??
-    obj.display_name_ja ??
-    obj.display_name_en ??
-    obj.display_name_vi ??
-    obj.display_name_zh ??
-    null
-  );
+  return names[currentLocale] ?? mapping.display_name_ja ?? groupInfo.name_ja ?? mapping.display_name_en ?? groupInfo.name_en ?? mapping.display_name_vi ?? groupInfo.name_vi ?? mapping.display_name_zh ?? groupInfo.name_zh ?? 'Option';
 }
 
 /**
  * ============================================================
  * JAPAN DATE
  * ============================================================
- *
- * 注文番号 reset theo:
- *
- * store_id + Asia/Tokyo date
- *
- * Không dùng UTC date.
  */
+
 function getJapanDateString(): string {
   return new Intl.DateTimeFormat('en-CA', {
     timeZone: 'Asia/Tokyo',
@@ -274,947 +179,389 @@ function getJapanDateString(): string {
  * ============================================================
  * ORDER NUMBER
  * ============================================================
- *
- * IMPORTANT:
- *
- * Bảng:
- *
- * tbl_daily_order_numbers
- *
- * phải có UNIQUE:
- *
- * (store_id, order_date)
- *
- * Logic:
- *
- * first order:
- *   300
- *
- * next:
- *   301
- *   302
- *   ...
- *
- * Transaction giữ lock chỉ trong thời gian cực ngắn.
  */
+
 async function getNextOrderNumber(
   tx: Prisma.TransactionClient,
   storeId: number
 ): Promise<number> {
   const orderDate = getJapanDateString();
-
   await tx.$executeRaw`
     INSERT INTO tbl_daily_order_numbers
-      (
-        store_id,
-        order_date,
-        last_number
-      )
+      (store_id, order_date, last_number)
     VALUES
-      (
-        ${storeId},
-        ${orderDate},
-        ${MIN_ORDER_NUMBER}
-      )
+      (${storeId}, ${orderDate}, ${MIN_ORDER_NUMBER})
     ON DUPLICATE KEY UPDATE
       last_number = last_number + 1
   `;
-
-  const rows = await tx.$queryRaw<
-    Array<{
-      last_number: number | bigint;
-    }>
-  >`
+  const rows = await tx.$queryRaw<Array<{ last_number: number | bigint }>>`
     SELECT last_number
     FROM tbl_daily_order_numbers
     WHERE store_id = ${storeId}
       AND order_date = ${orderDate}
     FOR UPDATE
   `;
-
   if (rows.length !== 1) {
-    throw new Error(
-      `Unable to generate order number for store ${storeId}`
-    );
+    throw new Error(`Unable to generate order number for store ${storeId}`);
   }
-
   const orderNumber = Number(rows[0].last_number);
-
-  if (
-    !Number.isInteger(orderNumber) ||
-    orderNumber < MIN_ORDER_NUMBER ||
-    orderNumber > MAX_ORDER_NUMBER
-  ) {
-    throw new ValidationError(
-      `Daily order number limit exceeded for store ${storeId}`,
-      {
-        code: 'ORDER_NUMBER_LIMIT_REACHED',
-      }
-    );
+  if (!Number.isInteger(orderNumber) || orderNumber < MIN_ORDER_NUMBER || orderNumber > MAX_ORDER_NUMBER) {
+    throw new ValidationError(`Daily order number limit exceeded for store ${storeId}`, {
+      code: 'ORDER_NUMBER_LIMIT_REACHED',
+    });
   }
-
   return orderNumber;
 }
 
 /**
  * ============================================================
- * PRICE ONE ITEM
+ * PRICE ONE ITEM (sửa toàn bộ để dùng schema mới)
  * ============================================================
  *
- * IMPORTANT:
- *
- * Hàm này KHÔNG chạy trong transaction.
- *
- * Đây là phần quan trọng nhất để tránh:
- *
- * "A query cannot be executed on an expired transaction."
- *
- * Tất cả:
- *
- * - menu
- * - variant
- * - option groups
- * - options
- * - variant option prices
- *
- * được đọc trước transaction.
+ * Chạy hoàn toàn ngoài transaction.
  */
 async function priceItem(
   storeId: number,
   input: NormalizedCheckoutItem,
   locale: string
 ): Promise<PricedOrderItem> {
-  /**
-   * ----------------------------------------------------------
-   * Basic quantity validation
-   * ----------------------------------------------------------
-   */
-
-  if (
-    !Number.isInteger(input.quantity) ||
-    input.quantity <= 0
-  ) {
-    throw new ValidationError(
-      'Invalid item quantity',
-      {
-        code: 'INVALID_QUANTITY',
-
-        item: {
-          menuItemId: input.menuItemId,
-          name: 'Item',
-        },
-
-        details: {
-          quantity: input.quantity,
-        },
-      }
-    );
+  // ----------------------------------------------------------
+  // Quantity validation
+  // ----------------------------------------------------------
+  if (!Number.isInteger(input.quantity) || input.quantity <= 0) {
+    throw new ValidationError('Invalid item quantity', {
+      code: 'INVALID_QUANTITY',
+      item: { menuItemId: input.menuItemId, name: 'Item' },
+      details: { quantity: input.quantity },
+    });
   }
 
-  /**
-   * ----------------------------------------------------------
-   * MENU ITEM
-   * ----------------------------------------------------------
-   */
-
-  const menuItem =
-    await db.tbl_menu_item.findFirst({
-      where: {
-        id: input.menuItemId,
-        store_id: storeId,
-        is_available: true,
-      },
-    });
-
+  // ----------------------------------------------------------
+  // 1. Lấy menu item
+  // ----------------------------------------------------------
+  const menuItem = await db.tbl_menu_item.findFirst({
+    where: {
+      id: input.menuItemId,
+      // tbl_menu_item không có is_available.
+      // Món còn bán được xác định bằng status = ACTIVE.
+      status: 'ACTIVE',
+      discontinued_at: null,
+    },
+  });
   if (!menuItem) {
-    throw new ValidationError(
-      `Menu item ${input.menuItemId} is invalid or unavailable`,
-      {
-        code: 'ITEM_UNAVAILABLE',
-
-        item: {
-         menuItemId: input.menuItemId,
-        },
-      }
-    );
+    throw new ValidationError(`Menu item ${input.menuItemId} is invalid or unavailable`, {
+      code: 'ITEM_UNAVAILABLE',
+      item: { menuItemId: input.menuItemId },
+    });
   }
 
-  const foodNameSnapshot =
-    getLocalizedName(
-      menuItem,
-      locale
-    ) ??
-    menuItem.name_ja ??
-    menuItem.name_en ??
-    menuItem.name_vi ??
-    menuItem.name_zh ??
-    'Item';
+  const foodNameSnapshot = getLocalizedName(menuItem, locale) ?? menuItem.name_ja ?? 'Item';
+  const foodNameJaSnapshot = menuItem.name_ja ?? foodNameSnapshot;
 
-  const foodNameJaSnapshot =
-    menuItem.name_ja ??
-    foodNameSnapshot;
+  // ----------------------------------------------------------
+  // 2. Lấy các option groups mapping cho menu item này
+  //    Bao gồm thông tin của group (tbl_menu_option_groups)
+  // ----------------------------------------------------------
+  const groupsMapping = await db.tbl_menu_item_option_groups.findMany({
+    where: {
+      menu_item_id: menuItem.id,
+      is_available: true,
+    },
+    include: {
+      tbl_menu_option_groups: true, // lấy thông tin group (code, name, ...)
+    },
+    orderBy: {
+      sort_order: 'asc',
+    },
+  });
 
-  /**
-   * ----------------------------------------------------------
-   * OPTION GROUPS
-   * ----------------------------------------------------------
-   */
-
-  const groups =
-    await db.tbl_menu_item_option_groups.findMany({
-      where: {
-        menu_item_id: menuItem.id,
-        is_available: true,
-      },
-
-      include: {
-        tbl_option_group_templates: true,
-      },
+  // Tạo map groupId -> mapping + groupInfo
+  const groupMap = new Map<
+    number,
+    {
+      mapping: typeof groupsMapping[0];
+      groupInfo: typeof groupsMapping[0]['tbl_menu_option_groups'];
+    }
+  >();
+  for (const gm of groupsMapping) {
+    groupMap.set(gm.option_group_id, {
+      mapping: gm,
+      groupInfo: gm.tbl_menu_option_groups,
     });
+  }
 
-  /**
-   * ----------------------------------------------------------
-   * VARIANT
-   * ----------------------------------------------------------
-   */
-
-  let variantId: number | null =
-    input.variantId ?? null;
-
-  let variantCode: string | null =
-    input.variantCode ?? null;
-
-  let variantNameSnapshot: string | null =
-    null;
-
-  let variantNameJaSnapshot: string | null =
-    null;
-
+  // ----------------------------------------------------------
+  // 3. Xử lý variant (nếu có)
+  // ----------------------------------------------------------
+  let variantId: number | null = input.variantId ?? null;
+  let variantCode: string | null = input.variantCode ?? null;
+  let variantNameSnapshot: string | null = null;
+  let variantNameJaSnapshot: string | null = null;
   let variantPrice = 0;
 
   if (variantId !== null || variantCode !== null) {
-    const variant =
-      await db.tbl_menu_item_variants.findFirst({
-        where: {
-          menu_item_id: menuItem.id,
-
-          is_available: true,
-
-          deleted_at: null,
-
-          ...(variantId !== null
-            ? {
-                id: variantId,
-              }
-            : {}),
-
-          ...(variantCode !== null
-            ? {
-                code: variantCode,
-              }
-            : {}),
-        },
-      });
-
+    const variant = await db.tbl_menu_item_variants.findFirst({
+      where: {
+        menu_item_id: menuItem.id,
+        is_available: true,
+        deleted_at: null,
+        ...(variantId !== null ? { id: variantId } : {}),
+        ...(variantCode !== null ? { code: variantCode } : {}),
+      },
+    });
     if (!variant) {
-      throw new ValidationError(
-        'Selected variant is invalid',
-        {
-          code: 'INVALID_VARIANT',
-
-          item: {
-            menuItemId: menuItem.id,
-            name: foodNameSnapshot,
-          },
-
-          details: {
-            variantCode,
-            variantId,
-          },
-        }
-      );
+      throw new ValidationError('Selected variant is invalid', {
+        code: 'INVALID_VARIANT',
+        item: { menuItemId: menuItem.id, name: foodNameSnapshot },
+        details: { variantCode, variantId },
+      });
     }
-
     variantId = variant.id;
     variantCode = variant.code;
-
-    variantNameSnapshot =
-      getLocalizedName(
-        variant,
-        locale
-      );
-
-    variantNameJaSnapshot =
-      variant.name_ja ?? null;
-
-    variantPrice =
-      toNumber(variant.price);
+    variantNameSnapshot = getLocalizedName(variant, locale);
+    variantNameJaSnapshot = variant.name_ja ?? null;
+    variantPrice = toNumber(variant.price);
   }
 
-  /**
-   * ----------------------------------------------------------
-   * SELECTED OPTIONS
-   * ----------------------------------------------------------
-   */
+  // ----------------------------------------------------------
+  // 4. Lấy các option items được chọn
+  //    Lọc theo option_group_id thuộc danh sách groupId của menu item
+  // ----------------------------------------------------------
+  const groupIds = Array.from(groupMap.keys());
+  const selectedOptionIds = Array.from(new Set(input.selectedOptionIds ?? []));
 
-  const selectedOptionIds =
-    Array.from(
-      new Set(
-        input.selectedOptionIds
-      )
-    );
+  let selectedOptions: Array<{
+    id: number;
+    option_group_id: number;
+    code: string;
+    name_ja: string | null;
+    name_vi: string | null;
+    name_en: string | null;
+    name_zh: string | null;
+    price: Prisma.Decimal;
+    icon_url: string | null;
+    is_available: boolean;
+    tbl_menu_option_groups: {
+      id: number;
+      code: string;
+      name_ja: string | null;
+      name_vi: string | null;
+      name_en: string | null;
+      name_zh: string | null;
+    };
+  }> = [];
 
-  const groupIds =
-    groups.map(
-      (group) => group.id
-    );
-
-  const selectedOptions =
-    selectedOptionIds.length > 0
-      ? await db.tbl_menu_item_option_items.findMany(
-          {
-            where: {
-              id: {
-                in: selectedOptionIds,
-              },
-
-              is_available: true,
-
-              menu_option_group_id: {
-                in: groupIds,
-              },
-            },
-
-            include: {
-              tbl_menu_item_option_groups: {
-                include: {
-                  tbl_option_group_templates: true,
-                },
-              },
-
-              tbl_option_item_templates: true,
-
-              tbl_variant_option_prices:
-                variantId !== null
-                  ? {
-                      where: {
-                        variant_id:
-                          variantId,
-
-                        is_available:
-                          true,
-                      },
-                    }
-                  : false,
-            },
-          }
-        )
-      : [];
-
-  /**
-   * ----------------------------------------------------------
-   * VERIFY ALL OPTION IDS
-   * ----------------------------------------------------------
-   */
-
-  if (
-    selectedOptions.length !==
-    selectedOptionIds.length
-  ) {
-    throw new ValidationError(
-      'One or more selected options are invalid',
-      {
-        code: 'INVALID_OPTION',
-
-        item: {
-          menuItemId: menuItem.id,
-          name: foodNameSnapshot,
+  if (selectedOptionIds.length > 0 && groupIds.length > 0) {
+    selectedOptions = await db.tbl_menu_option_items.findMany({
+      where: {
+        id: { in: selectedOptionIds },
+        is_available: true,
+        option_group_id: { in: groupIds },
+      },
+      include: {
+        tbl_menu_option_groups: {
+          select: {
+            id: true,
+            code: true,
+            name_ja: true,
+            name_vi: true,
+            name_en: true,
+            name_zh: true,
+          },
         },
+      },
+    });
+  }
 
+  // Kiểm tra tất cả option ids được chọn đều tồn tại
+  if (selectedOptions.length !== selectedOptionIds.length) {
+    throw new ValidationError('One or more selected options are invalid', {
+      code: 'INVALID_OPTION',
+      item: { menuItemId: menuItem.id, name: foodNameSnapshot },
+      details: { selectedOptionIds },
+    });
+  }
+
+  // ----------------------------------------------------------
+  // 5. Validate rules cho từng group (required, max_choices)
+  //    Dùng thông tin từ mapping (groupMap)
+  // ----------------------------------------------------------
+  for (const [groupId, { mapping, groupInfo }] of groupMap) {
+    const selectedForGroup = selectedOptions.filter((opt) => opt.option_group_id === groupId);
+    const groupDisplayName = getGroupDisplayName(mapping, groupInfo, locale);
+
+    // Required
+    if (mapping.is_required && selectedForGroup.length === 0) {
+      throw new ValidationError('Required option is missing', {
+        code: 'REQUIRED_OPTION_MISSING',
+        item: { menuItemId: menuItem.id, name: foodNameSnapshot },
         details: {
-          selectedOptionIds,
+          groupCode: groupInfo.code,
+          groupName: groupDisplayName,
         },
-      }
-    );
-  }
-
-  /**
-   * ----------------------------------------------------------
-   * OPTION GROUP RULES
-   * ----------------------------------------------------------
-   */
-
-  for (const group of groups) {
-    const template =
-      group.tbl_option_group_templates;
-
-    const selectedForGroup =
-      selectedOptions.filter(
-        (option) =>
-          option.menu_option_group_id ===
-          group.id
-      );
-
-    const groupName =
-      getLocalizedGroupName(
-        group,
-        locale
-      ) ??
-      (template
-        ? getLocalizedName(
-            template,
-            locale
-          )
-        : null) ??
-      group.display_name_ja ??
-      template?.name_ja ??
-      'Option';
-
-    /**
-     * Required
-     */
-    if (
-      template?.is_required &&
-      selectedForGroup.length === 0
-    ) {
-      throw new ValidationError(
-        'Required option is missing',
-        {
-          code: 'REQUIRED_OPTION_MISSING',
-
-          item: {
-            menuItemId: menuItem.id,
-            name: foodNameSnapshot,
-          },
-
-          details: {
-            groupCode:
-              template.code,
-
-            groupName,
-          },
-        }
-      );
+      });
     }
 
-    /**
-     * Maximum choices
-     */
-    if (
-      template?.max_choices !== null &&
-      template?.max_choices !== undefined &&
-      selectedForGroup.length >
-        template.max_choices
-    ) {
-      throw new ValidationError(
-        'Too many options selected',
-        {
-          code: 'TOO_MANY_OPTIONS',
-
-          item: {
-            menuItemId: menuItem.id,
-            name: foodNameSnapshot,
-          },
-
-          details: {
-            groupCode:
-              template.code,
-
-            groupName,
-
-            maxChoices:
-              template.max_choices,
-
-            selectedCount:
-              selectedForGroup.length,
-          },
-        }
-      );
+    // max_choices
+    const maxChoices = mapping.max_choices ?? null;
+    if (maxChoices !== null && selectedForGroup.length > maxChoices) {
+      throw new ValidationError('Too many options selected', {
+        code: 'TOO_MANY_OPTIONS',
+        item: { menuItemId: menuItem.id, name: foodNameSnapshot },
+        details: {
+          groupCode: groupInfo.code,
+          groupName: groupDisplayName,
+          maxChoices,
+          selectedCount: selectedForGroup.length,
+        },
+      });
     }
-
-    /**
-     * Minimum choices
-     *
-     * Nếu schema/template của bạn sau này có:
-     *
-     * min_choices
-     *
-     * thì bổ sung ở đây.
-     */
+    // Có thể thêm min_choices nếu cần
   }
 
-  /**
-   * ----------------------------------------------------------
-   * PRICE OPTIONS
-   * ----------------------------------------------------------
-   */
+  // ----------------------------------------------------------
+  // 6. Xây dựng pricedOptions
+  // ----------------------------------------------------------
+  const pricedOptions: PricedOrderOption[] = selectedOptions.map((option) => {
+    const groupId = option.option_group_id;
+    const { mapping, groupInfo } = groupMap.get(groupId)!;
 
-  const pricedOptions: PricedOrderOption[] =
-    selectedOptions.map(
-      (option) => {
-        const group =
-          option.tbl_menu_item_option_groups;
+    const groupDisplayName = getGroupDisplayName(mapping, groupInfo, locale);
+    const groupJaName = mapping.display_name_ja ?? groupInfo.name_ja ?? '';
 
-        const groupTemplate =
-          group.tbl_option_group_templates;
+    const optionNameSnapshot = getLocalizedName(option, locale) ?? option.name_ja ?? '';
+    const optionNameJaSnapshot = option.name_ja ?? '';
 
-        const optionTemplate =
-          option.option_item_template_id
-            ? option.tbl_option_item_templates
-            : null;
+    // Giá của option (không có variant override trong schema mới)
+    const additionalPrice = toNumber(option.price);
 
-        const variantPrices =
-          variantId !== null &&
-          Array.isArray(
-            option.tbl_variant_option_prices
-          )
-            ? option.tbl_variant_option_prices
-            : [];
+    return {
+      menuOptionItemId: option.id,
+      groupId: groupId,
+      groupCode: groupInfo.code,
+      groupNameSnapshot: groupDisplayName,
+      groupNameJaSnapshot: groupJaName,
+      optionCode: option.code,
+      optionNameSnapshot,
+      optionNameJaSnapshot,
+      additionalPrice,
+    };
+  });
 
-        const variantOverride =
-          variantPrices.length > 0
-            ? variantPrices[0]
-            : null;
+  // ----------------------------------------------------------
+  // 7. Tính giá
+  // ----------------------------------------------------------
+  const basePrice = toNumber(menuItem.price) + variantPrice;
+  const optionTotal = pricedOptions.reduce((sum, opt) => sum + opt.additionalPrice, 0);
+  const unitPrice = basePrice + optionTotal;
+  const lineTotal = unitPrice * input.quantity;
 
-        const additionalPrice =
-          toNumber(
-            variantOverride?.additional_price ??
-              option.additional_price
-          );
-
-        const groupNameSnapshot =
-          getLocalizedGroupName(
-            group,
-            locale
-          ) ??
-          (groupTemplate
-            ? getLocalizedName(
-                groupTemplate,
-                locale
-              )
-            : null) ??
-          group.display_name_ja ??
-          groupTemplate?.name_ja ??
-          '';
-
-        const groupNameJaSnapshot =
-          group.display_name_ja ??
-          groupTemplate?.name_ja ??
-          '';
-
-        const optionNameSnapshot =
-          optionTemplate
-            ? getLocalizedName(
-                optionTemplate,
-                locale
-              ) ?? ''
-            : '';
-
-        const optionNameJaSnapshot =
-          optionTemplate?.name_ja ??
-          '';
-
-        return {
-          menuOptionItemId:
-            option.id,
-
-          optionItemTemplateId:
-            option.option_item_template_id,
-
-          groupCode:
-            groupTemplate?.code ??
-            '',
-
-          groupNameSnapshot,
-
-          groupNameJaSnapshot,
-
-          optionCode:
-            optionTemplate?.code ??
-            '',
-
-          optionNameSnapshot,
-
-          optionNameJaSnapshot,
-
-          additionalPrice,
-        };
-      }
-    );
-
-  /**
-   * ----------------------------------------------------------
-   * FINAL PRICE
-   * ----------------------------------------------------------
-   */
-
-  const basePrice =
-    toNumber(menuItem.price);
-
-  const optionTotal =
-    pricedOptions.reduce(
-      (
-        sum,
-        option
-      ) =>
-        sum +
-        option.additionalPrice,
-      0
-    );
-
-  const unitPrice =
-    basePrice +
-    variantPrice +
-    optionTotal;
-
-  const lineTotal =
-    unitPrice *
-    input.quantity;
-
-  if (
-    !Number.isFinite(unitPrice) ||
-    unitPrice < 0
-  ) {
-    throw new ValidationError(
-      'Invalid item price',
-      {
-        code: 'INVALID_ITEM_PRICE',
-
-        item: {
-          menuItemId: menuItem.id,
-          name: foodNameSnapshot,
-        },
-      }
-    );
+  if (!Number.isFinite(unitPrice) || unitPrice < 0) {
+    throw new ValidationError('Invalid item price', {
+      code: 'INVALID_ITEM_PRICE',
+      item: { menuItemId: menuItem.id, name: foodNameSnapshot },
+    });
   }
-
-  if (
-    !Number.isFinite(lineTotal) ||
-    lineTotal < 0
-  ) {
-    throw new ValidationError(
-      'Invalid item total',
-      {
-        code: 'INVALID_ITEM_TOTAL',
-
-        item: {
-          menuItemId: menuItem.id,
-          name: foodNameSnapshot,
-        },
-      }
-    );
+  if (!Number.isFinite(lineTotal) || lineTotal < 0) {
+    throw new ValidationError('Invalid item total', {
+      code: 'INVALID_ITEM_TOTAL',
+      item: { menuItemId: menuItem.id, name: foodNameSnapshot },
+    });
   }
-
-  /**
-   * ----------------------------------------------------------
-   * SNAPSHOT
-   * ----------------------------------------------------------
-   */
 
   return {
     input,
-
-    menuItemId:
-      menuItem.id,
-
+    menuItemId: menuItem.id,
     foodNameSnapshot,
-
     foodNameJaSnapshot,
-
-    imageSnapshot:
-      menuItem.image_url,
-
-    basePrice:
-      basePrice +
-      variantPrice,
-
+    imageSnapshot: menuItem.image_url,
+    basePrice,
     variantCode,
-
     variantNameSnapshot,
-
     variantNameJaSnapshot,
-
-    options:
-      pricedOptions,
-
+    options: pricedOptions,
     optionTotal,
-
     lineTotal,
   };
 }
 
 /**
  * ============================================================
- * CREATE ORDER + ITEMS
+ * CREATE ORDER + ITEMS (transaction ngắn)
  * ============================================================
- *
- * IMPORTANT:
- *
- * Hàm này chạy trong transaction.
- *
- * Tuyệt đối KHÔNG:
- *
- * - query menu
- * - query option
- * - gọi Stripe
- * - gọi HTTP API
- * - gọi external service
- *
- * Chỉ INSERT/atomic DB operation.
+ * Chạy trong transaction, chỉ INSERT/UPDATE, không query menu/option.
  */
 async function createOrderAndItemsInShortTx(
   tx: Prisma.TransactionClient,
-
   input: NormalizedCheckoutInput,
-
   pricedItems: PricedOrderItem[],
-
   providedToken?: string | null
 ) {
-  /**
-   * ----------------------------------------------------------
-   * TOTAL
-   * ----------------------------------------------------------
-   */
-
-  const subtotal =
-    pricedItems.reduce(
-      (
-        sum,
-        item
-      ) =>
-        sum +
-        item.lineTotal,
-      0
-    );
-
+  // Tính tổng
+  const subtotal = pricedItems.reduce((sum, item) => sum + item.lineTotal, 0);
   const discount = 0;
-
   const tax = 0;
+  const total = subtotal - discount + tax;
 
-  const total =
-    subtotal -
-    discount +
-    tax;
+  if (!Number.isFinite(subtotal) || subtotal < 0) throw new Error('Invalid subtotal calculated');
+  if (!Number.isFinite(total) || total < 0) throw new Error('Invalid total calculated');
 
-  if (
-    !Number.isFinite(subtotal) ||
-    subtotal < 0
-  ) {
-    throw new Error(
-      'Invalid subtotal calculated'
-    );
-  }
+  // Order number
+  const orderNumber = await getNextOrderNumber(tx, input.storeId);
 
-  if (
-    !Number.isFinite(total) ||
-    total < 0
-  ) {
-    throw new Error(
-      'Invalid total calculated'
-    );
-  }
+  // Tạo order
+  const order = await tx.tbl_customer_orders.create({
+    data: {
+      order_token: providedToken || createOrderToken(),
+      order_number: orderNumber,
+      store_id: input.storeId,
+      customer_name: input.customer.name,
+      customer_phone: input.customer.phone,
+      customer_email: input.customer.email,
+      customer_locale: normalizeLocale(input.locale),
+      order_type: input.orderType,
+      scheduled_for: input.scheduledTime,
+      subtotal: new Prisma.Decimal(subtotal),
+      discount_amount: new Prisma.Decimal(discount),
+      tax_amount: new Prisma.Decimal(tax),
+      total_amount: new Prisma.Decimal(total),
+      currency: DEFAULT_CURRENCY,
+      status: 'WAITING_PAYMENT',
+    },
+  });
 
-  /**
-   * ----------------------------------------------------------
-   * ORDER NUMBER
-   * ----------------------------------------------------------
-   */
-
-  const orderNumber =
-    await getNextOrderNumber(
-      tx,
-      input.storeId
-    );
-
-  /**
-   * ----------------------------------------------------------
-   * ORDER
-   * ----------------------------------------------------------
-   */
-
-  const order =
-    await tx.tbl_customer_orders.create({
+  // Tạo order items và options
+  for (const item of pricedItems) {
+    const orderItem = await tx.tbl_customer_order_items.create({
       data: {
-        order_token:
-          providedToken ||
-          createOrderToken(),
-
-        order_number:
-          orderNumber,
-
-        store_id:
-          input.storeId,
-
-        customer_name:
-          input.customer.name,
-
-        customer_phone:
-          input.customer.phone,
-
-        customer_email:
-          input.customer.email,
-
-        customer_locale:
-          normalizeLocale(
-            input.locale
-          ),
-
-        order_type:
-          input.orderType,
-
-        scheduled_for:
-          input.scheduledTime,
-
-        subtotal:
-          new Prisma.Decimal(
-            subtotal
-          ),
-
-        discount_amount:
-          new Prisma.Decimal(
-            discount
-          ),
-
-        tax_amount:
-          new Prisma.Decimal(
-            tax
-          ),
-
-        total_amount:
-          new Prisma.Decimal(
-            total
-          ),
-
-        currency:
-          DEFAULT_CURRENCY,
-
-        status:
-          'WAITING_PAYMENT',
+        order_id: order.id,
+        menu_item_id: item.menuItemId,
+        food_name_snap: item.foodNameSnapshot,
+        food_name_ja_snap: item.foodNameJaSnapshot,
+        quantity: item.input.quantity,
+        price_at_time: new Prisma.Decimal(item.basePrice),
+        discount_amount: new Prisma.Decimal(0),
+        note: item.input.note,
+        image_snap: item.imageSnapshot,
+        option_total: new Prisma.Decimal(item.optionTotal),
       },
     });
 
-  /**
-   * ----------------------------------------------------------
-   * ORDER ITEMS
-   * ----------------------------------------------------------
-   */
-
-  for (const item of pricedItems) {
-    const orderItem =
-      await tx.tbl_customer_order_items.create(
-        {
-          data: {
-            order_id:
-              order.id,
-
-            menu_item_id:
-              item.menuItemId,
-
-            /**
-             * Customer language
-             */
-            food_name_snap:
-              item.foodNameSnapshot,
-
-            /**
-             * Japanese printer snapshot
-             */
-            food_name_ja_snap:
-              item.foodNameJaSnapshot,
-
-            quantity:
-              item.input.quantity,
-
-            /**
-             * Base + variant.
-             *
-             * Option total lưu riêng.
-             */
-            price_at_time:
-              new Prisma.Decimal(
-                item.basePrice
-              ),
-
-            discount_amount:
-              new Prisma.Decimal(0),
-
-            note:
-              item.input.note,
-
-            image_snap:
-              item.imageSnapshot,
-
-            option_total:
-              new Prisma.Decimal(
-                item.optionTotal
-              ),
-          },
-        }
-      );
-
-    /**
-     * --------------------------------------------------------
-     * OPTIONS
-     * --------------------------------------------------------
-     *
-     * createMany:
-     *
-     * 1 query thay vì N queries.
-     */
-    if (
-      item.options.length > 0
-    ) {
-      const optionRows =
-        item.options.map(
-          (option) => ({
-            order_item_id:
-              orderItem.id,
-
-            option_item_id:
-              option.menuOptionItemId,
-
-            group_name_snap:
-              option.groupNameSnapshot,
-
-            option_name_snap:
-              option.optionNameSnapshot,
-
-            group_name_ja_snap:
-              option.groupNameJaSnapshot,
-
-            option_name_ja_snap:
-              option.optionNameJaSnapshot,
-
-            price_snap:
-              new Prisma.Decimal(
-                option.additionalPrice
-              ),
-          })
-        );
-
-      await tx.tbl_customer_order_item_options.createMany(
-        {
-          data:
-            optionRows,
-        }
-      );
+    if (item.options.length > 0) {
+      const optionRows = item.options.map((opt) => ({
+        order_item_id: orderItem.id,
+        option_item_id: opt.menuOptionItemId,
+        group_name_snap: opt.groupNameSnapshot,
+        group_name_ja_snap: opt.groupNameJaSnapshot,
+        option_name_snap: opt.optionNameSnapshot,
+        option_name_ja_snap: opt.optionNameJaSnapshot,
+        price_snap: new Prisma.Decimal(opt.additionalPrice),
+      }));
+      await tx.tbl_customer_order_item_options.createMany({ data: optionRows });
     }
   }
 
-  return {
-    order,
-
-    orderNumber,
-
-    subtotal,
-
-    discount,
-
-    tax,
-
-    total,
-  };
+  return { order, orderNumber, subtotal, discount, tax, total };
 }
 
 /**
@@ -1222,45 +569,15 @@ async function createOrderAndItemsInShortTx(
  * FIND EXISTING ORDER
  * ============================================================
  */
-async function findExistingOrder(
-  input: NormalizedCheckoutInput
-) {
-  /**
-   * orderId ưu tiên.
-   */
+async function findExistingOrder(input: NormalizedCheckoutInput) {
   if (input.orderId) {
-    const order =
-      await orderRepository.findOrderById(
-        BigInt(input.orderId)
-      );
-
-    if (!order) {
-      throw new ValidationError(
-        'Order not found',
-        {
-          code:
-            'ORDER_NOT_FOUND',
-        }
-      );
-    }
-
+    const order = await orderRepository.findOrderById(BigInt(input.orderId));
+    if (!order) throw new ValidationError('Order not found', { code: 'ORDER_NOT_FOUND' });
     return order;
   }
-
-  /**
-   * Fallback orderToken.
-   */
   if (input.orderToken) {
-    return db.tbl_customer_orders.findUnique(
-      {
-        where: {
-          order_token:
-            input.orderToken,
-        },
-      }
-    );
+    return db.tbl_customer_orders.findUnique({ where: { order_token: input.orderToken } });
   }
-
   return null;
 }
 
@@ -1269,57 +586,24 @@ async function findExistingOrder(
  * BUILD ORDER CONTEXT
  * ============================================================
  */
-function buildOrderContext(
-  order: {
-    id: bigint;
-    order_token: string;
-    order_number: number | bigint | null;
-    total_amount: unknown;
-    currency: string | null;
-    status: string | null;
+function buildOrderContext(order: {
+  id: bigint;
+  order_token: string;
+  order_number: number | bigint | null;
+  total_amount: unknown;
+  currency: string | null;
+  status: string | null;
+}) {
+  if (order.order_number === null || order.order_number === undefined) {
+    throw new ValidationError('Order does not have an order number', { code: 'ORDER_NUMBER_MISSING' });
   }
-) {
-  if (
-    order.order_number ===
-      null ||
-    order.order_number ===
-      undefined
-  ) {
-    throw new ValidationError(
-      'Order does not have an order number',
-      {
-        code:
-          'ORDER_NUMBER_MISSING',
-      }
-    );
-  }
-
   return {
-    id:
-      order.id,
-
-    orderToken:
-      order.order_token,
-
-    orderNumber:
-      Number(
-        order.order_number
-      ),
-
-    totalAmount:
-      toNumber(
-        order.total_amount
-      ),
-
-    currency:
-      (
-        order.currency ??
-        DEFAULT_CURRENCY
-      ).toLowerCase(),
-
-    status:
-      order.status ??
-      null,
+    id: order.id,
+    orderToken: order.order_token,
+    orderNumber: Number(order.order_number),
+    totalAmount: toNumber(order.total_amount),
+    currency: (order.currency ?? DEFAULT_CURRENCY).toLowerCase(),
+    status: order.status ?? null,
   };
 }
 
@@ -1327,449 +611,134 @@ function buildOrderContext(
  * ============================================================
  * MAIN CHECKOUT PREPARATION
  * ============================================================
- *
- * Flow:
- *
- * 1. Validate store
- * 2. Check existing order
- * 3. Existing order:
- *      reuse pending payment
- *      OR create payment record
- *
- * 4. New order:
- *      price/validate OUTSIDE transaction
- *      short transaction
- *      create payment record
- *
- * Stripe PaymentIntent:
- *
- * KHÔNG tạo ở đây.
- *
- * payment.service.ts xử lý Stripe.
  */
 export async function prepareCheckoutPayment(
   input: NormalizedCheckoutInput
 ): Promise<CheckoutOrderPaymentContext> {
-  console.log(
-    '[Checkout] Preparing payment',
-    {
-      locale:
-        input.locale,
+  console.log('[Checkout] Preparing payment', {
+    locale: input.locale,
+    storeId: input.storeId,
+    orderId: input.orderId,
+    orderToken: input.orderToken,
+  });
 
-      storeId:
-        input.storeId,
-
-      orderId:
-        input.orderId,
-
-      orderToken:
-        input.orderToken,
-    }
-  );
-
-  /**
-   * ==========================================================
-   * 1. STORE
-   * ==========================================================
-   */
-
-  const store =
-    await orderRepository.findStore(
-      input.storeId
-    );
-
+  // ----------------------------------------------------------
+  // 1. Kiểm tra store
+  // ----------------------------------------------------------
+  const store = await orderRepository.findStore(input.storeId);
   if (!store) {
-    throw new ValidationError(
-      'Store not found',
-      {
-        code:
-          'STORE_NOT_FOUND',
-      }
-    );
+    throw new ValidationError('Store not found', { code: 'STORE_NOT_FOUND' });
   }
 
-  /**
-   * ==========================================================
-   * 2. EXISTING ORDER
-   * ==========================================================
-   */
-
-  const existingOrder =
-    await findExistingOrder(
-      input
-    );
-
+  // ----------------------------------------------------------
+  // 2. Kiểm tra order đã tồn tại?
+  // ----------------------------------------------------------
+  const existingOrder = await findExistingOrder(input);
   if (existingOrder) {
-    /**
-     * --------------------------------------------------------
-     * Already paid
-     * --------------------------------------------------------
-     */
-
-    if (
-      existingOrder.status ===
-      'PAID'
-    ) {
-      throw new ValidationError(
-        'Order is already paid',
-        {
-          code:
-            'ORDER_ALREADY_PAID',
-        }
-      );
+    // Nếu order đã PAID
+    if (existingOrder.status === 'PAID') {
+      throw new ValidationError('Order is already paid', { code: 'ORDER_ALREADY_PAID' });
     }
 
-    /**
-     * --------------------------------------------------------
-     * Existing order must have order number.
-     * --------------------------------------------------------
-     */
+    const order = buildOrderContext(existingOrder);
+    const latestPayment = await paymentRepository.findLatestPaymentForOrder(existingOrder.id);
 
-    const order =
-      buildOrderContext(
-        existingOrder
-      );
-
-    /**
-     * --------------------------------------------------------
-     * Find latest payment
-     * --------------------------------------------------------
-     */
-
-    const latestPayment =
-      await paymentRepository.findLatestPaymentForOrder(
-        existingOrder.id
-      );
-
-    /**
-     * --------------------------------------------------------
-     * Existing pending payment
-     *
-     * IMPORTANT:
-     *
-     * Không tạo payment record mới.
-     * --------------------------------------------------------
-     */
-
-    if (
-      latestPayment &&
-      latestPayment.status ===
-        'PENDING'
-    ) {
+    // Nếu có pending payment
+    if (latestPayment && latestPayment.status === 'PENDING') {
       return {
         order,
-
         payment: {
-          id:
-            latestPayment.id,
-
-          status:
-            latestPayment.status ??
-            null,
-
-          transactionId:
-            latestPayment.transaction_id ??
-            null,
-
-          clientSecret:
-            latestPayment.client_secret ??
-            null,
-
-          amount:
-            toNumber(
-              latestPayment.amount
-            ),
-
-          currency:
-            (
-              latestPayment.currency ??
-              DEFAULT_CURRENCY
-            ).toLowerCase(),
+          id: latestPayment.id,
+          status: latestPayment.status ?? null,
+          transactionId: latestPayment.transaction_id ?? null,
+          clientSecret: latestPayment.client_secret ?? null,
+          amount: toNumber(latestPayment.amount),
+          currency: (latestPayment.currency ?? DEFAULT_CURRENCY).toLowerCase(),
         },
-
-        /**
-         * PaymentIntent chỉ được tạo nếu
-         * payment record chưa có transaction ID.
-         */
-        shouldCreatePaymentIntent:
-          !latestPayment.transaction_id,
-
-        createdNewPayment:
-          false,
+        shouldCreatePaymentIntent: !latestPayment.transaction_id,
+        createdNewPayment: false,
       };
     }
 
-    /**
-     * --------------------------------------------------------
-     * Existing order nhưng chưa có pending payment.
-     *
-     * Transaction cực ngắn:
-     * chỉ INSERT payment.
-     * --------------------------------------------------------
-     */
-
-    const payment =
-      await db.$transaction(
-        (tx) =>
-          paymentRepository.createPendingPayment(
-            tx,
-            {
-              orderId:
-                existingOrder.id,
-
-              amount:
-                existingOrder.total_amount,
-
-              currency:
-                existingOrder.currency ??
-                DEFAULT_CURRENCY,
-
-              paymentMethod:
-                input.paymentMethod,
-            }
-          ),
-        {
-          maxWait:
-            3000,
-
-          timeout:
-            5000,
-        }
-      );
+    // Tạo payment mới cho order cũ
+    const payment = await db.$transaction(
+      (tx) =>
+        paymentRepository.createPendingPayment(tx, {
+          orderId: existingOrder.id,
+          amount: existingOrder.total_amount,
+          currency: existingOrder.currency ?? DEFAULT_CURRENCY,
+          paymentMethod: input.paymentMethod,
+        }),
+      { maxWait: 3000, timeout: 5000 }
+    );
 
     return {
       order,
-
       payment: {
-        id:
-          payment.id,
-
-        status:
-          payment.status ??
-          null,
-
-        transactionId:
-          payment.transaction_id ??
-          null,
-
-        clientSecret:
-          payment.client_secret ??
-          null,
-
-        amount:
-          toNumber(
-            payment.amount
-          ),
-
-        currency:
-          (
-            payment.currency ??
-            DEFAULT_CURRENCY
-          ).toLowerCase(),
+        id: payment.id,
+        status: payment.status ?? null,
+        transactionId: payment.transaction_id ?? null,
+        clientSecret: payment.client_secret ?? null,
+        amount: toNumber(payment.amount),
+        currency: (payment.currency ?? DEFAULT_CURRENCY).toLowerCase(),
       },
-
-      shouldCreatePaymentIntent:
-        true,
-
-      createdNewPayment:
-        true,
+      shouldCreatePaymentIntent: true,
+      createdNewPayment: true,
     };
   }
 
-  /**
-   * ==========================================================
-   * 3. NEW ORDER
-   * ==========================================================
-   *
-   * IMPORTANT:
-   *
-   * Toàn bộ pricing/validation nằm NGOÀI transaction.
-   *
-   * Đây là điểm fix chính cho:
-   *
-   * "A query cannot be executed on an expired transaction."
-   * ==========================================================
-   */
+  // ----------------------------------------------------------
+  // 3. Order mới: pricing OUTSIDE transaction
+  // ----------------------------------------------------------
+  const pricedItems = await Promise.all(
+    input.items.map((item) => priceItem(input.storeId, item, input.locale))
+  );
 
-  const pricedItems =
-    await Promise.all(
-      input.items.map(
-        (item) =>
-          priceItem(
-            input.storeId,
-            item,
-            input.locale
-          )
-      )
-    );
-
-  /**
-   * ----------------------------------------------------------
-   * Safety check
-   * ----------------------------------------------------------
-   */
-
-  if (
-    pricedItems.length === 0
-  ) {
-    throw new ValidationError(
-      'Cart is empty',
-      {
-        code:
-          'EMPTY_CART',
-      }
-    );
+  if (pricedItems.length === 0) {
+    throw new ValidationError('Cart is empty', { code: 'EMPTY_CART' });
   }
 
-  /**
-   * ==========================================================
-   * 4. SHORT TRANSACTION
-   * ==========================================================
-   *
-   * Chỉ:
-   *
-   * - order number
-   * - order
-   * - order items
-   * - options
-   *
-   * Không query menu.
-   * Không Stripe.
-   * Không HTTP.
-   */
+  // ----------------------------------------------------------
+  // 4. Short transaction: chỉ INSERT order + items
+  // ----------------------------------------------------------
+  const { order, orderNumber, total } = await db.$transaction(
+    (tx) => createOrderAndItemsInShortTx(tx, input, pricedItems, input.orderToken),
+    { maxWait: 5000, timeout: 10000 }
+  );
 
-  const {
-    order,
-    orderNumber,
-    total,
-  } =
-    await db.$transaction(
-      (tx) =>
-        createOrderAndItemsInShortTx(
-          tx,
-          input,
-          pricedItems,
-          input.orderToken
-        ),
-      {
-        maxWait:
-          5000,
-
-        /**
-         * 10 seconds là safety net,
-         * KHÔNG phải cách chữa transaction chậm.
-         *
-         * Transaction thực tế phải rất ngắn.
-         */
-        timeout:
-          10000,
-      }
-    );
-
-  /**
-   * ==========================================================
-   * 5. CREATE PAYMENT RECORD
-   * ==========================================================
-   *
-   * Tách khỏi transaction order.
-   *
-   * Stripe chưa được gọi ở đây.
-   */
-
-  const payment =
-    await db.$transaction(
-      (tx) =>
-        paymentRepository.createPendingPayment(
-          tx,
-          {
-            orderId:
-              order.id,
-
-            amount:
-              new Prisma.Decimal(
-                total
-              ),
-
-            currency:
-              DEFAULT_CURRENCY,
-
-            paymentMethod:
-              input.paymentMethod,
-          }
-        ),
-      {
-        maxWait:
-          3000,
-
-        timeout:
-          5000,
-      }
-    );
-
-  /**
-   * ==========================================================
-   * 6. RETURN
-   * ==========================================================
-   */
+  // ----------------------------------------------------------
+  // 5. Tạo payment record (ngoài transaction order)
+  // ----------------------------------------------------------
+  const payment = await db.$transaction(
+    (tx) =>
+      paymentRepository.createPendingPayment(tx, {
+        orderId: order.id,
+        amount: new Prisma.Decimal(total),
+        currency: DEFAULT_CURRENCY,
+        paymentMethod: input.paymentMethod,
+      }),
+    { maxWait: 3000, timeout: 5000 }
+  );
 
   return {
     order: {
-      id:
-        order.id,
-
-      orderToken:
-        order.order_token,
-
+      id: order.id,
+      orderToken: order.order_token,
       orderNumber,
-
-      totalAmount:
-        total,
-
-      currency:
-        DEFAULT_CURRENCY.toLowerCase(),
-
-      status:
-        order.status ??
-        null,
+      totalAmount: total,
+      currency: DEFAULT_CURRENCY.toLowerCase(),
+      status: order.status ?? null,
     },
-
     payment: {
-      id:
-        payment.id,
-
-      status:
-        payment.status ??
-        null,
-
-      transactionId:
-        payment.transaction_id ??
-        null,
-
-      clientSecret:
-        payment.client_secret ??
-        null,
-
-      amount:
-        toNumber(
-          payment.amount
-        ),
-
-      currency:
-        (
-          payment.currency ??
-          DEFAULT_CURRENCY
-        ).toLowerCase(),
+      id: payment.id,
+      status: payment.status ?? null,
+      transactionId: payment.transaction_id ?? null,
+      clientSecret: payment.client_secret ?? null,
+      amount: toNumber(payment.amount),
+      currency: (payment.currency ?? DEFAULT_CURRENCY).toLowerCase(),
     },
-
-    /**
-     * payment.service.ts sẽ quyết định
-     * có tạo Stripe PaymentIntent hay không.
-     */
-    shouldCreatePaymentIntent:
-      true,
-
-    createdNewPayment:
-      true,
+    shouldCreatePaymentIntent: true,
+    createdNewPayment: true,
   };
 }
 
@@ -1778,10 +747,6 @@ export async function prepareCheckoutPayment(
  * ORDER STATUS
  * ============================================================
  */
-export async function getOrderStatusByToken(
-  orderToken: string
-) {
-  return orderRepository.findOrderSummaryByToken(
-    orderToken
-  );
+export async function getOrderStatusByToken(orderToken: string) {
+  return orderRepository.findOrderSummaryByToken(orderToken);
 }

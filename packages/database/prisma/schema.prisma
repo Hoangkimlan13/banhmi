@@ -45,12 +45,24 @@ model tbl_admin {
   tbl_shifts_complete tbl_shifts_complete[]
 }
 
-/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model tbl_allergen {
-  id          Int       @id @default(autoincrement())
-  name        String    @unique(map: "name") @db.VarChar(100)
-  description String?   @db.Text
-  created_at  DateTime? @default(now()) @db.Timestamp(0)
+  id                     Int                      @id @default(autoincrement())
+  code                   String                   @unique(map: "code_UNIQUE") @db.VarChar(50)
+  name_ja                String                   @unique(map: "name") @db.VarChar(100)
+  name_vi                String?                  @db.VarChar(100)
+  name_en                String?                  @db.VarChar(100)
+  name_zh                String?                  @db.VarChar(100)
+  description_ja         String?                  @db.Text
+  description_vi         String?                  @db.Text
+  description_en         String?                  @db.Text
+  description_zh         String?                  @db.Text
+  is_active              Boolean?                 @default(true)
+  sort_order             Int?                     @default(0)
+  created_at             DateTime                 @default(now()) @db.Timestamp(0)
+  tbl_menu_item_allergen tbl_menu_item_allergen[]
+
+  @@index([is_active], map: "idx_is_active")
+  @@index([sort_order], map: "idx_sort_order")
 }
 
 model tbl_campaign_products {
@@ -69,7 +81,7 @@ model tbl_campaigns {
   start_at       DateTime?                   @db.DateTime(0)
   end_at         DateTime?                   @db.DateTime(0)
   is_active      Boolean?                    @default(true)
-  created_at     DateTime?                   @default(now()) @db.Timestamp(0)
+  created_at     DateTime                    @default(now()) @db.Timestamp(0)
 }
 
 model tbl_category {
@@ -93,38 +105,35 @@ model tbl_congthuc {
 }
 
 model tbl_customer_order_item_options {
-  id                  Int     @id @default(autoincrement())
-  order_item_id       Int
-  option_item_id      Int?    @db.UnsignedInt
-  group_name_snap     String? @db.VarChar(100)
-  group_name_ja_snap  String? @db.VarChar(100)
-  option_name_snap    String  @db.VarChar(100)
-  option_name_ja_snap String? @db.VarChar(100)
-  price_snap          Decimal @default(0.00) @db.Decimal(10, 2)
-  
-  tbl_customer_order_item tbl_customer_order_items @relation(fields: [order_item_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "fk_order_item_id")
-  
+  id                       Int                      @id @default(autoincrement())
+  order_item_id            Int
+  option_item_id           Int?                     @db.UnsignedInt
+  group_name_snap          String?                  @db.VarChar(100)
+  group_name_ja_snap       String?                  @db.VarChar(100)
+  option_name_snap         String                   @db.VarChar(100)
+  option_name_ja_snap      String?                  @db.VarChar(100)
+  price_snap               Decimal                  @default(0.00) @db.Decimal(10, 2)
+  tbl_customer_order_items tbl_customer_order_items @relation(fields: [order_item_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "fk_customer_order_item_options_order_item")
+
   @@index([option_item_id], map: "fk_option_item_id")
   @@index([order_item_id], map: "fk_order_item_id")
 }
 
 model tbl_customer_order_items {
-  id                  Int                 @id @default(autoincrement())
-  order_id            BigInt              @db.UnsignedBigInt
-  menu_item_id        Int?
-  food_name_snap      String              @db.VarChar(255)
-  food_name_ja_snap   String?             @db.VarChar(255)
-  quantity            Int
-  price_at_time       Decimal             @db.Decimal(10, 2)
-  discount_amount     Decimal             @default(0.00) @db.Decimal(10, 2)
-  note                String?             @db.VarChar(255)
-  image_snap          String?             @db.VarChar(500)
-  option_total        Decimal?            @default(0.00) @db.Decimal(10, 2)
-  tbl_menu_item       tbl_menu_item?      @relation(fields: [menu_item_id], references: [id], onDelete: Restrict, map: "fk_order_item_menu_item")
-  tbl_customer_orders tbl_customer_orders @relation(fields: [order_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "fk_order_item_order")
-
+  id                              Int                               @id @default(autoincrement())
+  order_id                        BigInt                            @db.UnsignedBigInt
+  menu_item_id                    Int?
+  food_name_snap                  String                            @db.VarChar(255)
+  food_name_ja_snap               String?                           @db.VarChar(255)
+  quantity                        Int
+  price_at_time                   Decimal                           @db.Decimal(10, 2)
+  discount_amount                 Decimal                           @default(0.00) @db.Decimal(10, 2)
+  note                            String?                           @db.VarChar(255)
+  image_snap                      String?                           @db.VarChar(500)
+  option_total                    Decimal?                          @default(0.00) @db.Decimal(10, 2)
   tbl_customer_order_item_options tbl_customer_order_item_options[]
-
+  tbl_menu_item                   tbl_menu_item?                    @relation(fields: [menu_item_id], references: [id], onDelete: Restrict, map: "fk_order_item_menu_item")
+  tbl_customer_orders             tbl_customer_orders               @relation(fields: [order_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "fk_order_item_order")
 
   @@index([order_id], map: "fk_order_item_order")
   @@index([menu_item_id], map: "idx_order_item_menu_item")
@@ -151,7 +160,7 @@ model tbl_customer_orders {
   paid_at                  DateTime?                      @db.DateTime(0)
   completed_at             DateTime?                      @db.DateTime(0)
   cancel_reason            String?                        @db.MediumText
-  created_at               DateTime?                      @default(now()) @db.Timestamp(0)
+  created_at               DateTime                       @default(now()) @db.Timestamp(0)
   updated_at               DateTime                       @default(now()) @db.Timestamp(0)
   tbl_customer_order_items tbl_customer_order_items[]
   tbl_store_daily_schedule tbl_store_daily_schedule?      @relation(fields: [daily_schedule_id], references: [id], onUpdate: Restrict, map: "fk_customer_order_schedule")
@@ -161,9 +170,18 @@ model tbl_customer_orders {
   @@index([daily_schedule_id], map: "fk_customer_order_schedule")
   @@index([store_id], map: "fk_customer_order_store")
   @@index([created_at], map: "idx_created")
+  @@index([order_number, created_at], map: "idx_order_number_created_at")
   @@index([order_token], map: "idx_order_token")
   @@index([store_id, status], map: "idx_store_status")
-  @@index([order_number, created_at], map: "idx_order_number_created_at")
+}
+
+model tbl_daily_order_numbers {
+  id          BigInt   @id @default(autoincrement()) @db.UnsignedBigInt
+  store_id    Int
+  order_date  DateTime @db.Date
+  last_number Int      @default(299) @db.UnsignedInt
+
+  @@unique([store_id, order_date], map: "uk_store_order_date")
 }
 
 model tbl_demdo {
@@ -229,18 +247,17 @@ model tbl_expense_rules {
 }
 
 model tbl_food {
-  id                     Int                      @id @default(autoincrement()) @db.UnsignedInt
-  title                  String                   @db.VarChar(100)
-  description            String                   @db.Text
-  description_1          String                   @db.Text
-  price                  Int
-  price_1                Int
-  regular                Int
-  image_name             String                   @db.VarChar(255)
-  category_id            Int                      @db.UnsignedInt
-  featured               String                   @db.VarChar(10)
-  active                 String                   @db.VarChar(10)
-  tbl_schedule_menu_item tbl_schedule_menu_item[]
+  id            Int    @id @default(autoincrement()) @db.UnsignedInt
+  title         String @db.VarChar(100)
+  description   String @db.Text
+  description_1 String @db.Text
+  price         Int
+  price_1       Int
+  regular       Int
+  image_name    String @db.VarChar(255)
+  category_id   Int    @db.UnsignedInt
+  featured      String @db.VarChar(10)
+  active        String @db.VarChar(10)
 }
 
 model tbl_kho {
@@ -271,41 +288,44 @@ model tbl_koguchi {
 }
 
 model tbl_menu {
-  id            Int             @id @default(autoincrement()) @db.UnsignedInt
-  store_id      Int             @db.UnsignedInt
-  name          String          @db.VarChar(100)
-  is_default    Boolean?        @default(false)
-  is_active     Boolean?        @default(true)
-  tbl_store     tbl_store       @relation(fields: [store_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "fk_menu_store")
-  tbl_menu_item tbl_menu_item[]
+  id                       Int                        @id @default(autoincrement()) @db.UnsignedInt
+  store_id                 Int                        @db.UnsignedInt
+  name                     String                     @db.VarChar(100)
+  is_default               Boolean?                   @default(false)
+  is_active                Boolean?                   @default(true)
+  tbl_store                tbl_store                  @relation(fields: [store_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "fk_menu_store")
+  tbl_menu_category        tbl_menu_category[]
+  tbl_menu_item            tbl_menu_item[]
+  tbl_menu_option_groups   tbl_menu_option_groups[]
+  tbl_store_daily_schedule tbl_store_daily_schedule[]
+  tbl_store_schedule       tbl_store_schedule[]
 
   @@index([store_id], map: "fk_menu_store")
 }
 
 model tbl_menu_category {
-  id             Int       @id @default(autoincrement()) @db.UnsignedInt
-  menu_id        Int       @db.UnsignedInt
-  store_id       Int       @db.UnsignedInt
-  name_ja        String    @db.VarChar(255)
-  name_vi        String?   @db.VarChar(255)
-  name_en        String?   @db.VarChar(255)
-  name_zh        String?   @db.VarChar(255)
-  description_ja String?   @db.MediumText
-  description_vi String?   @db.MediumText
-  image_url      String?   @db.VarChar(500)
-  display_order  Int?      @default(0)
-  is_active      Boolean?  @default(true)
-  created_at     DateTime? @default(now()) @db.Timestamp(0)
+  id             Int             @id @default(autoincrement()) @db.UnsignedInt
+  menu_id        Int             @db.UnsignedInt
+  name_ja        String          @db.VarChar(255)
+  name_vi        String?         @db.VarChar(255)
+  name_en        String?         @db.VarChar(255)
+  name_zh        String?         @db.VarChar(255)
+  description_ja String?         @db.MediumText
+  description_vi String?         @db.MediumText
+  image_url      String?         @db.VarChar(500)
+  display_order  Int?            @default(0)
+  is_active      Boolean?        @default(true)
+  created_at     DateTime        @default(now()) @db.Timestamp(0)
+  tbl_menu       tbl_menu        @relation(fields: [menu_id], references: [id], onDelete: Cascade, map: "fk_menu_category_menu")
+  tbl_menu_item  tbl_menu_item[]
 
   @@index([menu_id], map: "menu_id")
-  @@index([store_id], map: "store_id")
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model tbl_menu_item {
   id                          Int                           @id @default(autoincrement())
   menu_id                     Int                           @db.UnsignedInt
-  store_id                    Int                           @db.UnsignedInt
   category_id                 Int                           @db.UnsignedInt
   name_ja                     String                        @db.VarChar(255)
   name_vi                     String?                       @db.VarChar(255)
@@ -318,10 +338,16 @@ model tbl_menu_item {
   image_url                   String?                       @db.VarChar(500)
   price                       Decimal                       @db.Decimal(10, 2)
   display_order               Int?                          @default(0)
-  is_available                Boolean?                      @default(true)
+  status                      tbl_menu_item_status          @default(ACTIVE)
+  discontinued_at             DateTime?                     @db.DateTime(0)
+  created_at                  DateTime                      @default(now()) @db.DateTime(0)
+  updated_at                  DateTime                      @default(now()) @db.DateTime(0)
   tbl_customer_order_items    tbl_customer_order_items[]
   tbl_menu                    tbl_menu                      @relation(fields: [menu_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "fk_menu_item_menu")
+  tbl_menu_category           tbl_menu_category             @relation(fields: [category_id], references: [id], onDelete: Cascade, map: "fk_mi_category_2026")
+  tbl_menu_item_allergen      tbl_menu_item_allergen[]
   tbl_menu_item_option_groups tbl_menu_item_option_groups[]
+  tbl_menu_item_option_items  tbl_menu_item_option_items[]
   tbl_menu_item_tag           tbl_menu_item_tag[]
   tbl_menu_item_variants      tbl_menu_item_variants[]
   tbl_menu_section_item       tbl_menu_section_item[]
@@ -329,67 +355,62 @@ model tbl_menu_item {
   tbl_store_menu              tbl_store_menu[]
 
   @@index([category_id], map: "idx_category")
-  @@index([store_id], map: "store_id")
   @@index([menu_id], map: "idx_menu_id")
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model tbl_menu_item_allergen {
-  menu_item_id Int
-  allergen_id  Int
+  menu_item_id  Int
+  allergen_id   Int
+  tbl_allergen  tbl_allergen  @relation(fields: [allergen_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "fk_menu_item_allergen_allergen")
+  tbl_menu_item tbl_menu_item @relation(fields: [menu_item_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "fk_menu_item_allergen_item")
 
   @@id([menu_item_id, allergen_id])
   @@index([allergen_id], map: "fk_allergen")
 }
 
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model tbl_menu_item_option_groups {
-  id                         Int                          @id @default(autoincrement())
-  menu_item_id               Int
-  group_template_id          Int                          @db.UnsignedInt
-  display_name_ja            String?                      @db.VarChar(100)
-  display_name_vi            String?                      @db.VarChar(100)
-  display_name_en            String?                      @db.VarChar(100)
-  display_name_zh            String?                      @db.VarChar(100)
-  is_available               Boolean                      @default(true)
-  sort_order                 Int                          @default(0)
-  created_at                 DateTime                     @default(now()) @db.Timestamp(0)
-  updated_at                 DateTime                     @default(now()) @db.Timestamp(0)
-  tbl_menu_item              tbl_menu_item                @relation(fields: [menu_item_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "fk_menu_option_group_item")
-  tbl_option_group_templates tbl_option_group_templates   @relation(fields: [group_template_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "fk_menu_option_group_template")
-  tbl_menu_item_option_items tbl_menu_item_option_items[]
+  id                     Int                                        @id @default(autoincrement()) @db.UnsignedInt
+  menu_item_id           Int
+  option_group_id        Int                                        @db.UnsignedInt
+  display_name_ja        String?                                    @db.VarChar(100)
+  display_name_vi        String?                                    @db.VarChar(100)
+  display_name_en        String?                                    @db.VarChar(100)
+  display_name_zh        String?                                    @db.VarChar(100)
+  selection_type         tbl_menu_item_option_groups_selection_type @default(single)
+  is_required            Boolean                                    @default(false)
+  min_choices            Int                                        @default(0)
+  max_choices            Int?
+  is_available           Boolean                                    @default(true)
+  sort_order             Int                                        @default(0)
+  created_at             DateTime                                   @default(now()) @db.Timestamp(0)
+  updated_at             DateTime                                   @default(now()) @db.Timestamp(0)
+  tbl_menu_option_groups tbl_menu_option_groups                     @relation(fields: [option_group_id], references: [id], onDelete: Cascade, map: "fk_menu_item_option_group")
+  tbl_menu_item          tbl_menu_item                              @relation(fields: [menu_item_id], references: [id], onDelete: Cascade, map: "fk_menu_item_option_menu")
 
-  @@unique([menu_item_id, group_template_id], map: "uk_menu_group")
-  @@index([group_template_id], map: "idx_group_template")
-  @@index([menu_item_id], map: "idx_menu_option_group")
+  @@unique([menu_item_id, option_group_id], map: "uk_menu_item_option_group")
+  @@index([option_group_id], map: "idx_menu_item_option_group")
+  @@index([menu_item_id], map: "idx_menu_item_option_menu")
 }
 
 model tbl_menu_item_option_items {
-  id                          Int                         @id @default(autoincrement())
-  menu_option_group_id        Int
-  option_item_template_id     Int                         @db.UnsignedInt
-  additional_price            Decimal                     @default(0.00) @db.Decimal(10, 2)
-  is_available                Boolean                     @default(true)
-  sort_order                  Int                         @default(0)
-  created_at                  DateTime                    @default(now()) @db.Timestamp(0)
-  updated_at                  DateTime                    @default(now()) @db.Timestamp(0)
-  tbl_menu_item_option_groups tbl_menu_item_option_groups @relation(fields: [menu_option_group_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "fk_menu_option_item_group")
-  tbl_option_item_templates   tbl_option_item_templates   @relation(fields: [option_item_template_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "fk_menu_option_item_template")
-  tbl_variant_option_prices   tbl_variant_option_prices[]
+  id                     Int                    @id @default(autoincrement()) @db.UnsignedInt
+  menu_item_id           Int
+  option_group_id        Int                    @db.UnsignedInt
+  option_item_id         Int                    @db.UnsignedInt
+  is_available           Boolean                @default(true)
+  sort_order             Int                    @default(0)
+  created_at             DateTime               @default(now()) @db.Timestamp(0)
+  updated_at             DateTime               @default(now()) @db.Timestamp(0)
+  tbl_menu_option_groups tbl_menu_option_groups @relation(fields: [option_group_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "fk_menu_item_option_item_group")
+  tbl_menu_item          tbl_menu_item          @relation(fields: [menu_item_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "fk_menu_item_option_item_item")
+  tbl_menu_option_items  tbl_menu_option_items  @relation(fields: [option_item_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "fk_menu_item_option_item_option")
 
-  @@unique([menu_option_group_id, option_item_template_id], map: "uk_menu_option_item")
-  @@index([menu_option_group_id], map: "idx_menu_option_group_id")
-  @@index([option_item_template_id], map: "idx_option_item_template")
-}
-
-/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
-model tbl_menu_item_option_overrides {
-  id             Int      @id @default(autoincrement()) @db.UnsignedInt
-  store_menu_id  Int
-  option_item_id Int      @db.UnsignedInt
-  is_available   Boolean? @default(true)
-
-  @@index([option_item_id], map: "option_item_id")
-  @@index([store_menu_id], map: "store_menu_id")
+  @@unique([menu_item_id, option_item_id], map: "uk_menu_item_option_item")
+  @@index([option_group_id], map: "idx_menu_item_option_item_group")
+  @@index([menu_item_id], map: "idx_menu_item_option_item_menu_item")
+  @@index([option_item_id], map: "idx_menu_item_option_item_option")
 }
 
 model tbl_menu_item_tag {
@@ -404,34 +425,93 @@ model tbl_menu_item_tag {
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model tbl_menu_item_variants {
-  id                        Int                                 @id @default(autoincrement())
-  menu_item_id              Int
-  code                      String                              @db.VarChar(50)
-  sku                       String?                             @db.VarChar(100)
-  name_ja                   String                              @db.VarChar(100)
-  name_vi                   String?                             @db.VarChar(100)
-  name_en                   String?                             @db.VarChar(100)
-  name_zh                   String?                             @db.VarChar(100)
-  price                     Decimal                             @default(0.00) @db.Decimal(10, 2)
-  is_default                Boolean                             @default(false)
-  is_available              Boolean                             @default(true)
-  stock_status              tbl_menu_item_variants_stock_status @default(available)
-  sort_order                Int                                 @default(0)
-  deleted_at                DateTime?                           @db.Timestamp(0)
-  created_at                DateTime                            @default(now()) @db.Timestamp(0)
-  updated_at                DateTime                            @default(now()) @db.Timestamp(0)
-  tbl_menu_item             tbl_menu_item                       @relation(fields: [menu_item_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "fk_variant_menu_item")
-  tbl_variant_option_prices tbl_variant_option_prices[]
+  id                                  Int                                   @id @default(autoincrement())
+  menu_item_id                        Int
+  code                                String                                @db.VarChar(50)
+  sku                                 String?                               @db.VarChar(100)
+  name_ja                             String                                @db.VarChar(100)
+  name_vi                             String?                               @db.VarChar(100)
+  name_en                             String?                               @db.VarChar(100)
+  name_zh                             String?                               @db.VarChar(100)
+  price                               Decimal                               @default(0.00) @db.Decimal(10, 2)
+  is_default                          Boolean                               @default(false)
+  is_available                        Boolean                               @default(true)
+  stock_status                        tbl_menu_item_variants_stock_status   @default(available)
+  sort_order                          Int                                   @default(0)
+  deleted_at                          DateTime?                             @db.Timestamp(0)
+  created_at                          DateTime                              @default(now()) @db.Timestamp(0)
+  updated_at                          DateTime                              @default(now()) @db.Timestamp(0)
+  active_code                         String?                               @db.VarChar(50)
+  tbl_menu_item                       tbl_menu_item                         @relation(fields: [menu_item_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "fk_variant_menu_item")
+  tbl_menu_option_item_variant_prices tbl_menu_option_item_variant_prices[]
 
-  @@unique([menu_item_id, code], map: "uk_variant_code")
   @@index([menu_item_id], map: "idx_variant_menu")
 }
 
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model tbl_menu_option_groups {
-  store_menu_id   Int
-  option_group_id Int @db.UnsignedInt
+  id                          Int                           @id @default(autoincrement()) @db.UnsignedInt
+  menu_id                     Int?                          @db.UnsignedInt
+  code                        String                        @unique(map: "uk_option_group_code") @db.VarChar(50)
+  name_ja                     String                        @db.VarChar(100)
+  name_vi                     String?                       @db.VarChar(100)
+  name_en                     String?                       @db.VarChar(100)
+  name_zh                     String?                       @db.VarChar(100)
+  description                 String?                       @db.Text
+  is_available                Boolean                       @default(true)
+  is_required                 Boolean                       @default(false)
+  type                        String                        @default("single") @db.VarChar(20)
+  max_choices                 Int                           @default(1)
+  sort_order                  Int                           @default(0)
+  created_at                  DateTime                      @default(now()) @db.Timestamp(0)
+  updated_at                  DateTime                      @default(now()) @db.Timestamp(0)
+  tbl_menu_item_option_groups tbl_menu_item_option_groups[]
+  tbl_menu_item_option_items  tbl_menu_item_option_items[]
+  tbl_menu                    tbl_menu?                     @relation(fields: [menu_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "fk_menu_option_group_menu")
+  tbl_menu_option_items       tbl_menu_option_items[]
 
-  @@id([store_menu_id, option_group_id])
+  @@index([menu_id], map: "idx_menu_option_group_menu")
+  @@index([is_available], map: "idx_option_group_available")
+  @@index([sort_order], map: "idx_option_group_sort")
+}
+
+model tbl_menu_option_item_variant_prices {
+  id                     Int                    @id @default(autoincrement()) @db.UnsignedInt
+  option_item_id         Int                    @db.UnsignedInt
+  variant_id             Int
+  price                  Decimal                @default(0.00) @db.Decimal(10, 2)
+  created_at             DateTime               @default(now()) @db.Timestamp(0)
+  updated_at             DateTime               @default(now()) @db.Timestamp(0)
+  tbl_menu_option_items  tbl_menu_option_items  @relation(fields: [option_item_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "fk_option_variant_price_option_item")
+  tbl_menu_item_variants tbl_menu_item_variants @relation(fields: [variant_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "fk_option_variant_price_variant")
+
+  @@unique([option_item_id, variant_id], map: "uk_option_item_variant")
+  @@index([option_item_id], map: "idx_option_item")
+  @@index([variant_id], map: "idx_variant")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model tbl_menu_option_items {
+  id                                  Int                                   @id @default(autoincrement()) @db.UnsignedInt
+  option_group_id                     Int                                   @db.UnsignedInt
+  code                                String                                @db.VarChar(50)
+  name_ja                             String                                @db.VarChar(100)
+  name_vi                             String?                               @db.VarChar(100)
+  name_en                             String?                               @db.VarChar(100)
+  name_zh                             String?                               @db.VarChar(100)
+  icon_url                            String?                               @db.VarChar(500)
+  price                               Decimal                               @default(0.00) @db.Decimal(10, 2)
+  is_available                        Boolean                               @default(true)
+  sort_order                          Int                                   @default(0)
+  created_at                          DateTime                              @default(now()) @db.Timestamp(0)
+  updated_at                          DateTime                              @default(now()) @db.Timestamp(0)
+  tbl_menu_item_option_items          tbl_menu_item_option_items[]
+  tbl_menu_option_item_variant_prices tbl_menu_option_item_variant_prices[]
+  tbl_menu_option_groups              tbl_menu_option_groups                @relation(fields: [option_group_id], references: [id], onDelete: Cascade, map: "fk_option_item_group")
+
+  @@unique([option_group_id, code], map: "uk_option_item_group_code")
+  @@index([is_available], map: "idx_option_item_available")
+  @@index([option_group_id], map: "idx_option_item_group")
 }
 
 model tbl_menu_section {
@@ -465,79 +545,6 @@ model tbl_nhap {
   sanpham_id Int      @db.UnsignedInt
   store_id   Int      @db.UnsignedInt
   full_name  String   @db.VarChar(100)
-}
-
-/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
-model tbl_option_group_templates {
-  id                          Int                             @id @default(autoincrement()) @db.UnsignedInt
-  code                        String                          @unique(map: "code") @db.VarChar(50)
-  name_ja                     String                          @db.VarChar(100)
-  name_vi                     String?                         @db.VarChar(100)
-  name_en                     String?                         @db.VarChar(100)
-  name_zh                     String?                         @db.VarChar(100)
-  description                 String?                         @db.Text
-  type                        tbl_option_group_templates_type @default(single)
-  is_required                 Boolean                         @default(false)
-  min_choices                 Int                             @default(0)
-  max_choices                 Int?
-  sort_order                  Int                             @default(0)
-  deleted_at                  DateTime?                       @db.Timestamp(0)
-  created_at                  DateTime                        @default(now()) @db.Timestamp(0)
-  updated_at                  DateTime                        @default(now()) @db.Timestamp(0)
-  tbl_menu_item_option_groups tbl_menu_item_option_groups[]
-  tbl_option_item_templates   tbl_option_item_templates[]
-}
-
-/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
-model tbl_option_groups {
-  id          Int                    @id @default(autoincrement()) @db.UnsignedInt
-  store_id    Int                    @db.UnsignedInt
-  name_ja     String                 @db.VarChar(100)
-  name_vi     String?                @db.VarChar(100)
-  name_en     String?                @db.VarChar(100)
-  name_zh     String?                @db.VarChar(100)
-  type        tbl_option_groups_type @default(single)
-  is_required Boolean?               @default(false)
-  max_choices Int?                   @default(1)
-  min_choices Int                    @default(0)
-  sort_order  Int?                   @default(0)
-}
-
-/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
-model tbl_option_item_templates {
-  id                         Int                          @id @default(autoincrement()) @db.UnsignedInt
-  group_template_id          Int                          @db.UnsignedInt
-  code                       String                       @db.VarChar(50)
-  name_ja                    String                       @db.VarChar(100)
-  name_vi                    String?                      @db.VarChar(100)
-  name_en                    String?                      @db.VarChar(100)
-  name_zh                    String?                      @db.VarChar(100)
-  icon_url                   String?                      @db.VarChar(255)
-  is_available               Boolean                      @default(true)
-  sort_order                 Int                          @default(0)
-  deleted_at                 DateTime?                    @db.Timestamp(0)
-  created_at                 DateTime                     @default(now()) @db.Timestamp(0)
-  updated_at                 DateTime                     @default(now()) @db.Timestamp(0)
-  tbl_menu_item_option_items tbl_menu_item_option_items[]
-  tbl_option_group_templates tbl_option_group_templates   @relation(fields: [group_template_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "fk_option_item_group")
-
-  @@unique([group_template_id, code], map: "uk_option_group_code")
-  @@index([group_template_id], map: "idx_group_template")
-}
-
-/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
-model tbl_option_items {
-  id               Int      @id @default(autoincrement()) @db.UnsignedInt
-  group_id         Int      @db.UnsignedInt
-  name_ja          String   @db.VarChar(100)
-  name_vi          String?  @db.VarChar(100)
-  name_en          String?  @db.VarChar(100)
-  name_zh          String?  @db.VarChar(100)
-  price_adjustment Decimal  @default(0.00) @db.Decimal(10, 2)
-  is_available     Boolean? @default(true)
-  sort_order       Int?     @default(0)
-
-  @@index([group_id], map: "fk_group_id")
 }
 
 model tbl_order {
@@ -643,25 +650,38 @@ model tbl_print_jobs {
   tbl_store           tbl_store               @relation(fields: [store_id], references: [id], map: "fk_print_jobs_store")
 
   @@unique([order_id, job_type], map: "uk_print_jobs_order_type")
-  @@index([status], map: "status")
-  @@index([store_id], map: "store_id")
   @@index([status, created_at], map: "idx_print_jobs_status_created_at")
   @@index([store_id, status], map: "idx_print_jobs_store_status")
+  @@index([status], map: "status")
+  @@index([store_id], map: "store_id")
+}
+
+model tbl_printer_status {
+  id                BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
+  store_id          Int       @unique(map: "uq_printer_store") @db.UnsignedInt
+  printer_ip        String?   @db.VarChar(45)
+  printer_port      Int?      @db.UnsignedInt
+  status            String    @default("OFFLINE") @db.VarChar(20)
+  last_heartbeat    DateTime? @db.DateTime(0)
+  last_print_at     DateTime? @db.DateTime(0)
+  last_error        String?   @db.Text
+  worker_started_at DateTime? @db.DateTime(0)
+  updated_at        DateTime  @default(now()) @db.DateTime(0)
+  tbl_store         tbl_store @relation(fields: [store_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "fk_printer_status_store")
+
+  @@index([store_id], map: "idx_printer_status_store")
 }
 
 model tbl_schedule_menu_item {
   id                       Int                      @id @default(autoincrement())
   daily_schedule_id        Int
   menu_item_id             Int?
-  food_id                  Int                      @db.UnsignedInt
   price                    Decimal?                 @db.Decimal(10, 2)
   is_available             Boolean?
   tbl_menu_item            tbl_menu_item?           @relation(fields: [menu_item_id], references: [id], onDelete: Restrict, map: "fk_schedule_menu_item_menu_item")
-  tbl_food                 tbl_food                 @relation(fields: [food_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "fk_schedule_override_food")
   tbl_store_daily_schedule tbl_store_daily_schedule @relation(fields: [daily_schedule_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "fk_schedule_override_schedule")
 
-  @@unique([daily_schedule_id, food_id], map: "uk_schedule_food")
-  @@index([food_id], map: "fk_schedule_override_food")
+  @@unique([daily_schedule_id, menu_item_id], map: "uk_schedule_menu_item")
   @@index([menu_item_id], map: "idx_schedule_menu_item")
 }
 
@@ -698,35 +718,38 @@ model tbl_shifts_complete {
 }
 
 model tbl_store {
-  id                       Int                        @id @default(autoincrement()) @db.UnsignedInt
-  title                    String                     @db.VarChar(100)
-  slug                     String?                    @unique @db.VarChar(100)
-  type                     tbl_store_type             @default(Shop)
-  sort_order               Int?                       @default(0)
-  username                 String                     @db.VarChar(100)
-  password                 String                     @db.VarChar(255)
-  color                    String?                    @default("#cccccc") @db.VarChar(20)
-  address                  String?                    @db.VarChar(255)
-  google_map_url           String?                    @db.VarChar(500)
-  phone                    String?                    @db.VarChar(30)
-  open_time                DateTime?                  @db.Time(0)
-  close_time               DateTime?                  @db.Time(0)
-  accepting_orders         Boolean                    @default(true)
-  order_status_date        DateTime?                  @db.Date
-  order_stop_reason        String?                    @db.VarChar(100)
-  order_stopped_at         DateTime?                  @db.DateTime(0)
-  order_reopen_at          DateTime?                  @db.DateTime(0)
-  latitude                 Decimal?                   @db.Decimal(10, 8)
-  longitude                Decimal?                   @db.Decimal(11, 8)
-  pickup_note              String?                    @db.Text
-  tbl_customer_orders      tbl_customer_orders[]
-  tbl_menu                 tbl_menu[]
-  tbl_print_jobs           tbl_print_jobs[]
-  tbl_printer_status       tbl_printer_status?
-  tbl_shifts               tbl_shifts[]
-  tbl_shifts_complete      tbl_shifts_complete[]
-  tbl_store_daily_schedule tbl_store_daily_schedule[]
-  tbl_store_menu           tbl_store_menu[]
+  id                         Int                          @id @default(autoincrement()) @db.UnsignedInt
+  title                      String                       @db.VarChar(100)
+  slug                       String?                      @unique @db.VarChar(100)
+  type                       tbl_store_type               @default(Shop)
+  sort_order                 Int?                         @default(0)
+  username                   String                       @db.VarChar(100)
+  password                   String                       @db.VarChar(255)
+  color                      String?                      @default("#cccccc") @db.VarChar(20)
+  address                    String?                      @db.VarChar(255)
+  google_map_url             String?                      @db.VarChar(500)
+  phone                      String?                      @db.VarChar(30)
+  open_time                  DateTime?                    @db.Time(0)
+  close_time                 DateTime?                    @db.Time(0)
+  latitude                   Decimal?                     @db.Decimal(10, 8)
+  longitude                  Decimal?                     @db.Decimal(11, 8)
+  pickup_note                String?                      @db.Text
+  accepting_orders           Boolean                      @default(true)
+  order_status_date          DateTime?                    @db.Date
+  order_stop_reason          String?                      @db.VarChar(100)
+  order_stopped_at           DateTime?                    @db.DateTime(0)
+  order_reopen_at            DateTime?                    @db.DateTime(0)
+  tbl_customer_orders        tbl_customer_orders[]
+  tbl_menu                   tbl_menu[]
+  tbl_print_jobs             tbl_print_jobs[]
+  tbl_printer_status         tbl_printer_status?
+  tbl_shifts                 tbl_shifts[]
+  tbl_shifts_complete        tbl_shifts_complete[]
+  tbl_store_daily_schedule   tbl_store_daily_schedule[]
+  tbl_store_location         tbl_store_location[]
+  tbl_store_menu             tbl_store_menu[]
+  tbl_store_schedule         tbl_store_schedule[]
+  tbl_store_special_schedule tbl_store_special_schedule[]
 }
 
 model tbl_store_daily_schedule {
@@ -751,9 +774,11 @@ model tbl_store_daily_schedule {
   longitude              Decimal?                         @db.Decimal(11, 8)
   tbl_customer_orders    tbl_customer_orders[]
   tbl_schedule_menu_item tbl_schedule_menu_item[]
+  tbl_menu               tbl_menu?                        @relation(fields: [menu_id], references: [id], map: "fk_schedule_menu")
   tbl_store              tbl_store                        @relation(fields: [store_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "fk_store_schedule")
 
   @@unique([store_id, work_date], map: "uk_store_date")
+  @@index([menu_id], map: "idx_schedule_menu_id")
 }
 
 model tbl_store_expenses {
@@ -763,11 +788,34 @@ model tbl_store_expenses {
   amount      Int
   month       String    @db.VarChar(7)
   note        String?   @db.VarChar(255)
-  created_at  DateTime? @default(now()) @db.Timestamp(0)
+  created_at  DateTime  @default(now()) @db.Timestamp(0)
   date        DateTime? @db.Date
 
   @@index([category_id], map: "category_id")
   @@index([store_id], map: "store_id")
+}
+
+model tbl_store_location {
+  id                      Int                  @id @default(autoincrement()) @db.UnsignedInt
+  store_id                Int                  @db.UnsignedInt
+  name                    String               @db.VarChar(255)
+  address                 String?              @db.VarChar(255)
+  google_map_url          String?              @db.VarChar(500)
+  latitude                Decimal?             @db.Decimal(10, 8)
+  longitude               Decimal?             @db.Decimal(11, 8)
+  default_open_time       DateTime?            @db.Time(0)
+  default_close_time      DateTime?            @db.Time(0)
+  default_last_order_time DateTime?            @db.Time(0)
+  pickup_note             String?              @db.Text
+  note                    String?              @db.Text
+  is_active               Boolean              @default(true)
+  created_at              DateTime             @default(now()) @db.DateTime(0)
+  updated_at              DateTime             @default(now()) @db.DateTime(0)
+  tbl_store               tbl_store            @relation(fields: [store_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "fk_store_location_store")
+  tbl_store_schedule      tbl_store_schedule[]
+
+  @@index([store_id, is_active], map: "idx_store_location_active")
+  @@index([store_id], map: "idx_store_location_store")
 }
 
 model tbl_store_menu {
@@ -794,6 +842,58 @@ model tbl_store_printers {
   status         tbl_store_printers_status? @default(OFFLINE)
   last_heartbeat DateTime?                  @db.DateTime(0)
   created_at     DateTime                   @default(now()) @db.Timestamp(0)
+}
+
+model tbl_store_schedule {
+  id                 Int                              @id @default(autoincrement()) @db.UnsignedInt
+  store_id           Int                              @db.UnsignedInt
+  location_id        Int?                             @db.UnsignedInt
+  menu_id            Int?                             @db.UnsignedInt
+  work_date          DateTime                         @db.Date
+  schedule_type      tbl_store_schedule_schedule_type @default(LOCATION)
+  location_name      String?                          @db.VarChar(255)
+  address            String?                          @db.VarChar(255)
+  google_map_url     String?                          @db.VarChar(500)
+  open_time          DateTime?                        @db.Time(0)
+  close_time         DateTime?                        @db.Time(0)
+  last_order_time    DateTime?                        @db.Time(0)
+  accepting_orders   Boolean                          @default(true)
+  status             tbl_store_schedule_status        @default(SCHEDULED)
+  close_reason       String?                          @db.VarChar(255)
+  closed_at          DateTime?                        @db.DateTime(0)
+  reopen_at          DateTime?                        @db.DateTime(0)
+  note               String?                          @db.Text
+  pickup_note        String?                          @db.Text
+  latitude           Decimal?                         @db.Decimal(10, 8)
+  longitude          Decimal?                         @db.Decimal(11, 8)
+  created_at         DateTime                         @default(now()) @db.DateTime(0)
+  updated_at         DateTime                         @default(now()) @db.DateTime(0)
+  tbl_store_location tbl_store_location?              @relation(fields: [location_id], references: [id], onUpdate: Restrict, map: "fk_store_schedule_location")
+  tbl_menu           tbl_menu?                        @relation(fields: [menu_id], references: [id], onUpdate: Restrict, map: "fk_store_schedule_menu")
+  tbl_store          tbl_store                        @relation(fields: [store_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "fk_store_schedule_store")
+
+  @@unique([store_id, work_date], map: "uk_store_schedule_date")
+  @@index([store_id, work_date], map: "idx_store_schedule_date")
+  @@index([location_id], map: "idx_store_schedule_location")
+  @@index([menu_id], map: "idx_store_schedule_menu")
+  @@index([store_id, status], map: "idx_store_schedule_status")
+}
+
+model tbl_store_special_schedule {
+  id         Int                             @id @default(autoincrement()) @db.UnsignedInt
+  store_id   Int                             @db.UnsignedInt
+  start_date DateTime                        @db.Date
+  end_date   DateTime                        @db.Date
+  type       tbl_store_special_schedule_type @default(CLOSED)
+  open_time  DateTime?                       @db.Time(0)
+  close_time DateTime?                       @db.Time(0)
+  reason     String?                         @db.VarChar(100)
+  note       String?                         @db.Text
+  created_at DateTime                        @default(now()) @db.DateTime(0)
+  updated_at DateTime                        @default(now()) @db.DateTime(0)
+  tbl_store  tbl_store                       @relation(fields: [store_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "fk_store_special_schedule_store")
+
+  @@index([store_id, start_date, end_date], map: "idx_store_special_schedule_store_date")
 }
 
 model tbl_tag {
@@ -825,22 +925,6 @@ model tbl_transactions {
   transaction_type tbl_transactions_transaction_type
 
   @@index([store_id], map: "store_id")
-}
-
-model tbl_variant_option_prices {
-  id                         Int                        @id @default(autoincrement())
-  variant_id                 Int
-  menu_option_item_id        Int
-  additional_price           Decimal                    @default(0.00) @db.Decimal(10, 2)
-  is_available               Boolean                    @default(true)
-  created_at                 DateTime                   @default(now()) @db.Timestamp(0)
-  updated_at                 DateTime                   @default(now()) @db.Timestamp(0)
-  tbl_menu_item_option_items tbl_menu_item_option_items @relation(fields: [menu_option_item_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "fk_variant_option_price_item")
-  tbl_menu_item_variants     tbl_menu_item_variants     @relation(fields: [variant_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "fk_variant_option_price_variant")
-
-  @@unique([variant_id, menu_option_item_id], map: "uk_variant_option_price")
-  @@index([menu_option_item_id], map: "idx_option_price")
-  @@index([variant_id], map: "idx_variant_price")
 }
 
 model tbl_vending_cash_logs {
@@ -878,31 +962,6 @@ model tbl_xuatkho {
   total_amount Float    @db.Float
 }
 
-model tbl_daily_order_numbers {
-  id          BigInt   @id @default(autoincrement()) @db.UnsignedBigInt
-  store_id    Int
-  order_date  DateTime @db.Date
-  last_number Int      @default(299) @db.UnsignedInt
-
-  @@unique([store_id, order_date], map: "uk_store_order_date")
-}
-
-model tbl_printer_status {
-  id                BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
-  store_id          Int       @unique(map: "uq_printer_store") @db.UnsignedInt
-  printer_ip        String?   @db.VarChar(45)
-  printer_port      Int?      @db.UnsignedInt
-  status            String    @default("OFFLINE") @db.VarChar(20)
-  last_heartbeat    DateTime? @db.DateTime(0)
-  last_print_at     DateTime? @db.DateTime(0)
-  last_error        String?   @db.Text
-  worker_started_at DateTime? @db.DateTime(0)
-  updated_at        DateTime  @default(now()) @db.DateTime(0)
-  tbl_store         tbl_store @relation(fields: [store_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "fk_printer_status_store")
-
-  @@index([store_id], map: "idx_printer_status_store")
-}
-
 enum tbl_expense_categories_type {
   monthly
   daily
@@ -914,13 +973,6 @@ enum tbl_order_payments_provider {
   PAYPAY
   APPLE_PAY
   GOOGLE_PAY
-}
-
-enum tbl_store_type {
-  Shop
-  Truck
-  Factory
-  Customer
 }
 
 enum tbl_vending_cash_logs_type {
@@ -946,6 +998,13 @@ enum tbl_print_jobs_job_type {
   CUSTOMER
 }
 
+enum tbl_store_type {
+  Shop
+  Truck
+  Factory
+  Customer
+}
+
 enum tbl_expense_rules_type {
   monthly
   daily
@@ -964,14 +1023,20 @@ enum tbl_print_jobs_status {
   FAILED
 }
 
+enum tbl_store_special_schedule_type {
+  CLOSED
+  SPECIAL_OPEN
+}
+
 enum tbl_transactions_transaction_type {
   deposit
   withdraw
 }
 
-enum tbl_option_groups_type {
-  single
-  multiple
+enum tbl_store_schedule_schedule_type {
+  LOCATION
+  EVENT
+  CLOSED
 }
 
 enum tbl_store_printers_status {
@@ -979,13 +1044,7 @@ enum tbl_store_printers_status {
   OFFLINE
 }
 
-enum tbl_customer_orders_order_type {
-  IMMEDIATE
-  SCHEDULED_TIME
-  SCHEDULED_DATE
-}
-
-enum tbl_option_group_templates_type {
+enum tbl_menu_item_option_groups_selection_type {
   single
   multiple
 }
@@ -1009,12 +1068,10 @@ enum tbl_vending_reconcile_status {
   over
 }
 
-enum tbl_store_daily_schedule_status {
-  SCHEDULED
-  OPEN
-  CLOSED_MANUAL
-  CLOSED_WEATHER
-  COMPLETED
+enum tbl_customer_orders_order_type {
+  IMMEDIATE
+  SCHEDULED_TIME
+  SCHEDULED_DATE
 }
 
 enum tbl_admin_role {
@@ -1023,9 +1080,26 @@ enum tbl_admin_role {
   staff
 }
 
-enum tbl_menu_item_variants_stock_status {
-  available
-  soldout
+enum tbl_store_daily_schedule_status {
+  SCHEDULED
+  OPEN
+  CLOSED_MANUAL
+  CLOSED_WEATHER
+  COMPLETED
+}
+
+enum tbl_store_schedule_status {
+  SCHEDULED
+  OPEN
+  CLOSED
+  CANCELLED
+  COMPLETED
+}
+
+enum tbl_menu_item_status {
+  ACTIVE
+  PAUSED
+  DISCONTINUED
 }
 
 enum tbl_customer_orders_status {
@@ -1033,4 +1107,11 @@ enum tbl_customer_orders_status {
   PAYMENT_FAILED
   PAID
   CANCELED
+}
+
+enum tbl_menu_item_variants_stock_status {
+  available
+  out_of_stock
+  sold_out
+  preorder
 }

@@ -1,0 +1,460 @@
+/* ============================================================
+   iOS GLASSMORPHIC CATEGORY PANEL
+   ============================================================ */
+
+.categoryPanel {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(25px) saturate(200%);
+  -webkit-backdrop-filter: blur(25px) saturate(200%);
+  border-right: 1px solid rgba(229, 231, 235, 0.8);
+  box-sizing: border-box;
+  /* Tránh bị cắt popup khi đổ bóng hoặc tràn nhẹ */
+  position: relative;
+}
+
+/* HEADER */
+.panelHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.titleGroup {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.panelHeader h2 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  color: #1c1c1e;
+  letter-spacing: -0.3px;
+}
+
+.countBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 7px;
+  border-radius: 12px;
+  background: rgba(120, 120, 128, 0.12);
+  color: #636366;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.addButton {
+  width: 30px;
+  height: 30px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 50%;
+  background: #007aff;
+  color: #ffffff;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 122, 255, 0.25);
+  transition: transform 0.15s ease, background-color 0.15s ease;
+}
+
+.addButton:hover {
+  background: #0062cc;
+}
+
+.addButton:active {
+  transform: scale(0.92);
+}
+
+.addButton span {
+  font-size: 20px;
+}
+
+/* CATEGORY LIST */
+.categoryList {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* ITEM CARD */
+.categoryItem {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
+}
+
+.categoryItem:hover {
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+}
+
+.selected {
+  background: #ffffff !important;
+  border-color: rgba(0, 122, 255, 0.2);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04) !important;
+}
+
+.selected::before {
+  content: "";
+  position: absolute;
+  left: 3px;
+  top: 18%;
+  bottom: 18%;
+  width: 4px;
+  border-radius: 4px;
+  background: #007aff;
+}
+
+.inactive {
+  opacity: 0.5;
+}
+
+/* THUMBNAIL */
+.thumb {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: rgba(120, 120, 128, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.thumb span {
+  font-size: 18px;
+  color: #8e8e93;
+}
+
+/* INFO */
+.info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.nameJa {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1c1c1e;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ACTIONS & DROPDOWN MENU */
+.actions {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.moreBtn {
+  width: 28px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: #636366;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.moreBtn:hover {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+.moreBtn span {
+  font-size: 18px;
+}
+
+.dropdownMenu {
+  position: fixed;
+
+  background: rgba(255, 255, 255, 0.96);
+
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+  z-index: 99999;
+
+  width: 130px;
+  min-width: 130px;
+
+  padding: 4px;
+
+  display: flex;
+  flex-direction: column;
+
+  box-sizing: border-box;
+}
+
+.dropdownMenu button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 6px 10px;
+  border: none;
+  background: transparent;
+  font-size: 12px;
+  font-weight: 500;
+  color: #1c1c1e;
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: left;
+  transition: background-color 0.12s ease;
+}
+
+.dropdownMenu button span {
+  font-size: 16px;
+  color: #636366;
+}
+
+.dropdownMenu button:hover:not(:disabled) {
+  background: rgba(0, 122, 255, 0.08);
+  color: #007aff;
+}
+
+.dropdownMenu button:hover:not(:disabled) span {
+  color: #007aff;
+}
+
+.dropdownMenu button:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.dropdownDivider {
+  margin: 4px 0;
+  border: none;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.deleteMenuItem {
+  color: #ff3b30 !important;
+}
+
+.deleteMenuItem span {
+  color: #ff3b30 !important;
+}
+
+.deleteMenuItem:hover:not(:disabled) {
+  background: rgba(255, 59, 48, 0.08) !important;
+}
+
+/* FORM MODAL CARD */
+.formCard {
+  margin: 10px;
+  padding: 14px;
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.formHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.formHeader h3 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+  color: #1c1c1e;
+}
+
+.closeButton {
+  border: none;
+  background: transparent;
+  color: #8e8e93;
+  cursor: pointer;
+  padding: 2px;
+}
+
+.formFields {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.field span {
+  font-size: 11px;
+  font-weight: 600;
+  color: #636366;
+}
+
+.required {
+  color: #ff3b30;
+  font-size: 9px;
+  background: rgba(255, 59, 48, 0.1);
+  padding: 1px 4px;
+  border-radius: 4px;
+}
+
+.field input {
+  padding: 7px 10px;
+  border-radius: 8px;
+  border: 1px solid #e5e5ea;
+  font-size: 12px;
+  outline: none;
+  background: #f2f2f7;
+  transition: border-color 0.15s, background-color 0.15s;
+}
+
+.field input:focus {
+  background: #ffffff;
+  border-color: #007aff;
+}
+
+.checkboxLabel {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #3a3a3c;
+  margin-top: 4px;
+  cursor: pointer;
+}
+
+.formActions {
+  display: flex;
+  gap: 8px;
+}
+
+.cancelBtn,
+.saveBtn {
+  flex: 1;
+  padding: 8px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+}
+
+.cancelBtn {
+  background: #e5e5ea;
+  color: #3a3a3c;
+}
+
+.saveBtn {
+  background: #007aff;
+  color: #ffffff;
+}
+
+.saveBtn:disabled {
+  opacity: 0.5;
+}
+
+.multiLangGrid {
+  display: grid;
+  gap: 6px;
+}
+
+/* RESPONSIVE DESIGN - FIXED OVERFLOW & DROPDOWN ON MOBILE */
+@media (max-width: 768px) {
+  .categoryPanel {
+    width: 100%;
+    min-width: 100%;
+    height: auto;
+    border-right: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    position: relative;
+  }
+
+  .categoryList {
+    display: flex;
+    flex-direction: row;
+
+    overflow-x: auto;
+    overflow-y: hidden;
+
+    padding: 8px 12px;
+
+    margin: 0;
+
+    gap: 8px;
+
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+
+    align-items: center;
+
+    /*
+     * Quan trọng:
+     * Không dùng overflow-y: visible ở đây.
+     * Dropdown đã được Portal ra document.body.
+     */
+  }
+
+  .categoryItem {
+    flex: 0 0 auto;
+    width: auto;
+
+    scroll-snap-align: start;
+
+    padding: 6px 12px;
+    border-radius: 20px;
+
+    background: rgba(120, 120, 128, 0.08);
+
+    position: relative;
+  }
+
+  .selected::before {
+    display: none;
+  }
+
+  .thumb {
+    width: 28px;
+    height: 28px;
+  }
+
+  .multiLangGrid {
+    grid-template-columns: 1fr;
+  }
+}

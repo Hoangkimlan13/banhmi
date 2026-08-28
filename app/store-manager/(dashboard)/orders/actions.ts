@@ -62,15 +62,23 @@ export async function getStoreOrders() {
 // 2. Lấy trạng thái hoạt động của quán từ tbl_store
 export async function getStoreStatus() {
   const session = await getStoreSession();
+
   if (!session) {
     throw new Error("Unauthorized");
   }
 
+  const todayStr = new Intl.DateTimeFormat("sv-SE", {
+    timeZone: "Asia/Tokyo",
+  }).format(new Date());
+
   const store = await db.tbl_store.findUnique({
-    where: { id: session.storeId },
+    where: {
+      id: session.storeId,
+    },
     select: {
       id: true,
       title: true,
+      type: true,
       accepting_orders: true,
       order_status_date: true,
       order_stop_reason: true,
@@ -83,40 +91,114 @@ export async function getStoreStatus() {
     throw new Error("Store not found");
   }
 
-  const todayStr = new Intl.DateTimeFormat("sv-SE", {
-    timeZone: "Asia/Tokyo",
-  }).format(new Date());
+  // ============================================================
+  // TODAY'S TRUCK SCHEDULE
+  // ============================================================
+
+  // ============================================================
+  // TODAY'S TRUCK SCHEDULE
+  // ============================================================
+
+  let todaySchedule = null;
+
+  if (store.type === "Truck") {
+    const startOfTodayJST = new Date(
+      `${todayStr}T00:00:00+09:00`
+    );
+
+    const startOfTomorrowJST = new Date(
+      `${todayStr}T00:00:00+09:00`
+    );
+
+    startOfTomorrowJST.setUTCDate(
+      startOfTomorrowJST.getUTCDate() + 1
+    );
+
+    todaySchedule =
+      await db.tbl_store_daily_schedule.findFirst({
+        where: {
+          store_id: session.storeId,
+
+          work_date: {
+            gte: startOfTodayJST,
+            lt: startOfTomorrowJST,
+          },
+        },
+
+        orderBy: {
+          id: "desc",
+        },
+
+        select: {
+          id: true,
+          work_date: true,
+          location_name: true,
+          address: true,
+        },
+      });
+
+    console.log(
+      "[StoreHeader] Today's Truck schedule:",
+      todaySchedule
+    );
+  }
+
+  // ============================================================
+  // RESET DAILY ORDER STATUS
+  // ============================================================
+
+  let result = store;
 
   let storedDateStr = null;
+
   if (store.order_status_date) {
     storedDateStr = new Intl.DateTimeFormat("sv-SE", {
       timeZone: "Asia/Tokyo",
-    }).format(new Date(store.order_status_date));
+    }).format(
+      new Date(store.order_status_date)
+    );
   }
 
-  if (storedDateStr && storedDateStr !== todayStr && store.accepting_orders === false) {
-    await db.tbl_store.update({
-      where: { id: session.storeId },
-      data: {
-        accepting_orders: true,
-        order_status_date: new Date(`${todayStr}T00:00:00.000Z`),
-        order_stop_reason: null,
-        order_stopped_at: null,
-        order_reopen_at: null,
-      },
-    });
+  if (
+    storedDateStr &&
+    storedDateStr !== todayStr &&
+    store.accepting_orders === false
+  ) {
+    const updatedStore =
+      await db.tbl_store.update({
+        where: {
+          id: session.storeId,
+        },
+        data: {
+          accepting_orders: true,
+          order_status_date: new Date(
+            `${todayStr}T00:00:00+09:00`
+          ),
+          order_stop_reason: null,
+          order_stopped_at: null,
+          order_reopen_at: null,
+        },
+        select: {
+          id: true,
+          title: true,
+          type: true,
+          accepting_orders: true,
+          order_status_date: true,
+          order_stop_reason: true,
+          order_stopped_at: true,
+          order_reopen_at: true,
+        },
+      });
 
-    return {
-      ...store,
-      accepting_orders: true,
-      order_status_date: new Date(`${todayStr}T00:00:00.000Z`),
-      order_stop_reason: null,
-      order_stopped_at: null,
-      order_reopen_at: null,
-    };
+    result = updatedStore;
   }
 
-  return store;
+  return {
+    ...result,
+
+    // 👇 Trả lịch hôm nay cho StoreHeader
+    schedule: todaySchedule,
+  };
 }
 
 // 3. Bật / Tắt trạng thái nhận đơn trực tiếp trên tbl_store

@@ -1,0 +1,215 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(15, 23, 42, 0.45);
+  backdrop-filter: blur(5px);
+}
+
+.modal {
+  width: min(560px, 100%);
+  max-height: calc(100vh - 40px);
+  overflow-y: auto;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.2);
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px 22px;
+  border-bottom: 1px solid #eee;
+}
+
+.header h2 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.header p {
+  margin: 5px 0 0;
+  color: #6b7280;
+  font-size: 12px;
+}
+
+.closeButton {
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 9px;
+  background: #f3f4f6;
+  cursor: pointer;
+}
+
+.closeButton span {
+  font-size: 19px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding: 20px 22px 22px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.field > span {
+  font-size: 12px;
+  font-weight: 700;
+  color: #374151;
+}
+
+.field b {
+  margin-left: 3px;
+  color: #dc2626;
+}
+
+.field input {
+  width: 100%;
+  box-sizing: border-box;
+  height: 42px;
+  padding: 0 11px;
+  border: 1px solid #d1d5db;
+  border-radius: 9px;
+  outline: none;
+  font-size: 13px;
+}
+
+.field input:focus {
+  border-color: #111827;
+}
+
+.field small {
+  color: #9ca3af;
+  font-size: 10px;
+}
+
+.priceInput {
+  position: relative;
+}
+
+.priceInput > span {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #6b7280;
+  font-weight: 600;
+}
+
+.priceInput input {
+  padding-left: 30px;
+}
+
+.checkbox {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px;
+  border-radius: 10px;
+  background: #f9fafb;
+  cursor: pointer;
+}
+
+.checkbox input {
+  margin-top: 3px;
+}
+
+.checkbox strong {
+  display: block;
+  font-size: 12px;
+}
+
+.checkbox small {
+  display: block;
+  margin-top: 3px;
+  color: #9ca3af;
+  font-size: 10px;
+}
+
+.error {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 10px 12px;
+  border-radius: 9px;
+  background: #fef2f2;
+  color: #b91c1c;
+  font-size: 12px;
+}
+
+.error span {
+  font-size: 18px;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding-top: 5px;
+}
+
+.cancelButton,
+.saveButton {
+  min-height: 40px;
+  padding: 0 16px;
+  border-radius: 9px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.cancelButton {
+  border: 1px solid #d1d5db;
+  background: #fff;
+  color: #374151;
+}
+
+.saveButton {
+  border: 0;
+  background: #111827;
+  color: #fff;
+}
+
+.saveButton:disabled,
+.cancelButton:disabled,
+.closeButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+@media (max-width: 640px) {
+  .overlay {
+    align-items: flex-end;
+    padding: 0;
+  }
+
+  .modal {
+    width: 100%;
+    max-height: 92vh;
+    border-radius: 18px 18px 0 0;
+  }
+
+  .header {
+    padding: 17px;
+  }
+
+  .form {
+    padding: 17px;
+  }
+}

@@ -99,19 +99,6 @@ export default function OrderHeader({ locale, storeName, storeInfo }: OrderHeade
   }[locale] || "Enjoy authentic Vietnamese flavors";
 
   const baseStoreName = storeInfo?.title || storeInfo?.name || storeName || '';
-  
-  let displayStoreName = baseStoreName;
-  if (storeInfo?.type === 'Truck' && storeInfo?.locationName) {
-    displayStoreName = `${baseStoreName} (${storeInfo.locationName})`;
-  }
-
-  if (!displayStoreName) {
-    displayStoreName = (
-      locale === 'ja' ? '店舗を選択' :
-      locale === 'vi' ? 'Chọn cửa hàng' :
-      locale === 'zh' ? '选择门店' : 'Select Store'
-    );
-  }
 
   return (
     <>
@@ -121,12 +108,27 @@ export default function OrderHeader({ locale, storeName, storeInfo }: OrderHeade
             <span className="material-symbols-outlined">store</span>
           </div>
           <div className="store-info">
-            <span className="header-store-title">
-              {locale === 'ja' ? '店舗' :
-              locale === 'vi' ? 'CỬA HÀNG' :
-              locale === 'zh' ? '门店' : 'STORE'}
+            <span className="store-name">
+              {baseStoreName || (
+                locale === "ja"
+                  ? "店舗を選択"
+                  : locale === "vi"
+                  ? "Chọn cửa hàng"
+                  : locale === "zh"
+                  ? "选择门店"
+                  : "Select Store"
+              )}
             </span>
-            <span className="store-name">{displayStoreName}</span> 
+
+            {storeInfo?.type === "Truck" &&
+              storeInfo.locationName && (
+                <span className="store-location">
+                  <span className="material-symbols-outlined">
+                    location_on
+                  </span>
+                  {storeInfo.locationName}
+                </span>
+              )}
           </div>
         </div>
 

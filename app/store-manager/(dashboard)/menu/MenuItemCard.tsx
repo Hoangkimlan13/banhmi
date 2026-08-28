@@ -1,136 +1,136 @@
 "use client";
 
-import { Loader2, Power, PowerOff } from "lucide-react";
+import {
+  CheckCircle2,
+  Loader2,
+  Power,
+  PowerOff,
+} from "lucide-react";
 
-import styles from "./menu.module.css";
+import styles from "./styles/menuItemCard.module.css";
 
-import type { MenuCategory, MenuItem } from "./menu.types";
+import type {
+  MenuCategory,
+  MenuItem,
+} from "./menu.types";
 
 interface MenuItemCardProps {
   item: MenuItem;
   category: MenuCategory | undefined;
   isLoading: boolean;
-  onToggle: (item: MenuItem) => void;
+  onToggleItem: (item: MenuItem) => void;
 }
 
 export default function MenuItemCard({
   item,
   category,
   isLoading,
-  onToggle,
+  onToggleItem,
 }: MenuItemCardProps) {
+  const isAvailable = item.is_available;
+
   return (
     <article
-      className={`${styles.itemCard} ${
-        !item.is_available ? styles.itemUnavailable : ""
+      className={`${styles.card} ${
+        !isAvailable ? styles.unavailable : ""
       }`}
     >
-      {/* ============================================================
-          IMAGE
-      ============================================================ */}
+      {/* ======================================================
+          TOP STATUS
+          ====================================================== */}
 
-      <div className={styles.imageWrapper}>
-        {item.image_url ? (
-          <img
-            src={item.image_url}
-            alt={item.name_ja}
-            className={styles.itemImage}
-          />
-        ) : (
-          <div className={styles.noImage}>
-            <span className="material-symbols-outlined">
-              restaurant
-            </span>
-          </div>
-        )}
+      <div className={styles.topRow}>
+        <div className={styles.metaGroup}>
+          <span className={styles.categoryBadge}>
+            {category?.name_ja ?? "未分類"}
+          </span>
 
-        {!item.is_available && (
-          <div className={styles.soldOutOverlay}>
-            <span>売り切れ</span>
+          <span
+            className={`${styles.statusPill} ${
+              isAvailable
+                ? styles.statusActive
+                : styles.statusInactive
+            }`}
+          >
+            <span className={styles.statusDot} />
+
+            {isAvailable ? "販売中" : "売り切れ"}
+          </span>
+        </div>
+
+        <div className={styles.statusIcon}>
+          {isAvailable ? (
+            <CheckCircle2 size={18} />
+          ) : (
+            <Power size={18} />
+          )}
+        </div>
+      </div>
+
+      {/* ======================================================
+          MAIN CONTENT
+          ====================================================== */}
+
+      <div className={styles.content}>
+        <h3 className={styles.itemName}>
+          {item.name_ja}
+        </h3>
+
+        {item.name_vi && (
+          <div className={styles.itemSubName}>
+            {item.name_vi}
           </div>
         )}
       </div>
 
-      {/* ============================================================
-          CONTENT
-      ============================================================ */}
+      {/* ======================================================
+          BOTTOM
+          ====================================================== */}
 
-      <div className={styles.itemContent}>
-        <div className={styles.itemTop}>
-          <div>
-            <div className={styles.categoryName}>
-              {category?.name_ja ?? "未分類"}
-            </div>
+      <div className={styles.bottomRow}>
+        <div className={styles.priceBlock}>
+          <span className={styles.priceLabel}>
+            価格
+          </span>
 
-            <h3 className={styles.itemName}>{item.name_ja}</h3>
-
-            {item.name_vi && (
-              <div className={styles.itemNameVi}>
-                {item.name_vi}
-              </div>
-            )}
-          </div>
-
-          <div className={styles.itemPrice}>
+          <span className={styles.price}>
             ¥{item.price.toLocaleString("ja-JP")}
-          </div>
+          </span>
         </div>
 
-        {item.description_ja && (
-          <p className={styles.itemDescription}>
-            {item.description_ja}
-          </p>
-        )}
-
-        {/* ============================================================
-            STATUS
-        ============================================================ */}
-
-        <div className={styles.itemFooter}>
-          <div
-            className={`${styles.statusLabel} ${
-              item.is_available
-                ? styles.statusAvailable
-                : styles.statusUnavailable
-            }`}
-          >
-            <span
-              className={`${styles.statusDot} ${
-                item.is_available
-                  ? styles.statusDotAvailable
-                  : styles.statusDotUnavailable
-              }`}
-            />
-
-            {item.is_available ? "販売中" : "売り切れ"}
-          </div>
-
-          <button
-            type="button"
-            disabled={isLoading}
-            className={`${styles.toggleButton} ${
-              item.is_available
-                ? styles.soldOutButton
-                : styles.availableButton
-            }`}
-            onClick={() => onToggle(item)}
-          >
-            {isLoading ? (
+        <button
+          type="button"
+          disabled={isLoading}
+          className={`${styles.toggleButton} ${
+            isAvailable
+              ? styles.soldOutBtn
+              : styles.activeBtn
+          }`}
+          onClick={() => onToggleItem(item)}
+        >
+          {isLoading ? (
+            <>
               <Loader2
                 size={16}
                 className={styles.spinner}
               />
-            ) : item.is_available ? (
-              <PowerOff size={16} />
-            ) : (
-              <Power size={16} />
-            )}
 
-            {item.is_available
-              ? "売り切れにする"
-              : "販売を再開"}
-          </button>
-        </div>
+              <span>更新中...</span>
+            </>
+          ) : isAvailable ? (
+            <>
+              <PowerOff size={16} />
+
+              <span>売り切れにする</span>
+            </>
+          ) : (
+            <>
+              <Power size={16} />
+
+              <span>販売を再開</span>
+            </>
+          )}
+        </button>
       </div>
     </article>
   );

@@ -1,0 +1,309 @@
+/* ============================================================
+   iOS GLASSMORPHIC MENU ITEM CARD
+   ============================================================ */
+
+.itemCard {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+  
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  
+  border-radius: 14px;
+  border: 1px solid rgba(229, 229, 234, 0.8);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+  
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.itemCard:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+  border-color: rgba(0, 122, 255, 0.3);
+}
+
+/* TRẠNG THÁI KHÔNG HOẠT ĐỘNG */
+.itemUnavailable {
+  background: rgba(242, 242, 247, 0.85);
+}
+
+.itemDiscontinued {
+  background: rgba(242, 242, 247, 0.6);
+  opacity: 0.65;
+}
+
+/* 1. NÚT DI CHUYỂN (REORDER) */
+.reorderGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.moveBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: #8e8e93;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.moveBtn:hover:not(:disabled) {
+  background: rgba(120, 120, 128, 0.12);
+  color: #1c1c1e;
+}
+
+.moveBtn:disabled {
+  opacity: 0.25;
+  cursor: not-allowed;
+}
+
+.moveBtn span {
+  font-size: 16px;
+}
+
+/* 2. KHUNG ẢNH */
+.imageWrapper {
+  position: relative;
+  width: 96px; /* Chiều rộng khung ảnh trên Desktop */
+  aspect-ratio: 4 / 3; /* Tự động tính chiều cao theo tỉ lệ 4:3 (Height = 72px) */
+  flex: 0 0 96px; /* Giữ nguyên chiều rộng, không bị nén khi chữ dài */
+  border-radius: 10px;
+  background: rgba(120, 120, 128, 0.08);
+  overflow: hidden;
+}
+
+.previewImage {
+  object-fit: cover; /* Đảm bảo ảnh lấp đầy khung 4:3 không bị méo */
+}
+
+.placeholderImage {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #aeaeb2;
+  background: #f2f2f7;
+}
+
+.placeholderImage span {
+  font-size: 24px;
+}
+
+/* BADGE TRẠNG THÁI ĐÈ LÊN ẢNH */
+.statusBadge {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(2px);
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 700;
+  text-align: center;
+  padding: 4px;
+}
+
+.badgePaused {
+  color: #ffd60a;
+}
+
+.badgeDiscontinued {
+  color: #ff453a;
+}
+
+/* 3. THÂN CARD (ITEM BODY) */
+.itemBody {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex: 1;
+  min-width: 0;
+  gap: 8px;
+}
+
+/* HEADER: TÊN & GIÁ */
+.itemHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.titleGroup {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.nameJa {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  color: #1c1c1e;
+  line-height: 1.25;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.nameVi {
+  margin: 2px 0 0 0;
+  font-size: 12px;
+  color: #8e8e93;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.priceGroup {
+  flex-shrink: 0;
+}
+
+.price {
+  font-size: 15px;
+  font-weight: 700;
+  color: #007aff;
+}
+
+/* FOOTER: OPTION & HÀNH ĐỘNG */
+.itemFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.optionContainer {
+  display: flex;
+  align-items: center;
+}
+
+.optionTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 11px;
+  color: #007aff;
+  background: rgba(0, 122, 255, 0.08);
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-weight: 500;
+}
+
+.optionTag span {
+  font-size: 13px;
+}
+
+.optionEmpty {
+  font-size: 11px;
+  color: #c7c7cc;
+}
+
+/* CÁC NÚT THAO TÁC (ACTIONS) */
+.itemActions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+}
+
+.itemActions button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  height: 30px;
+  padding: 0 10px;
+  border-radius: 8px;
+  border: none;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.itemActions button span.material-symbols-outlined {
+  font-size: 16px;
+}
+
+/* Edit Button */
+.editBtn {
+  background: #f2f2f7;
+  color: #1c1c1e;
+}
+
+.editBtn:hover {
+  background: #e5e5ea;
+}
+
+/* Toggle (Pause/Play) Button */
+.btnDisable {
+  background: rgba(255, 149, 0, 0.12);
+  color: #ff9500;
+}
+
+.btnDisable:hover {
+  background: rgba(255, 149, 0, 0.2);
+}
+
+.btnEnable, .btnReactivate {
+  background: rgba(52, 199, 89, 0.12);
+  color: #34c759;
+}
+
+.btnEnable:hover, .btnReactivate:hover {
+  background: rgba(52, 199, 89, 0.2);
+}
+
+/* Discontinue Button (Chỉ có icon gọn gàng) */
+.discontinueBtn {
+  width: 30px;
+  padding: 0 !important;
+  background: rgba(255, 59, 48, 0.08);
+  color: #ff3b30;
+}
+
+.discontinueBtn:hover {
+  background: rgba(255, 59, 48, 0.18);
+}
+
+/* RESPONSIVE MOBILE */
+@media (max-width: 520px) {
+  .itemCard {
+    padding: 8px 10px;
+    gap: 8px;
+  }
+
+  .imageWrapper {
+    width: 80px; 
+    flex: 0 0 80px;
+  }
+
+  .btnText {
+    display: none;
+  }
+
+  .itemActions button {
+    padding: 0 8px;
+  }
+
+  .discontinueBtn {
+    width: 28px;
+  }
+}

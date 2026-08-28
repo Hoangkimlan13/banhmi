@@ -1,0 +1,156 @@
+/* ============================================================
+   COMPACT iOS GLASSMORPHIC HEADER DESIGN
+   ============================================================ */
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 16px 12px;
+
+  /* Glassmorphism Compact */
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+}
+
+/* BACK BUTTON COMPACT */
+.backButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  align-self: flex-start;
+  margin-left: -4px;
+  padding: 2px 8px 2px 4px;
+
+  color: #007aff;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 6px;
+  transition: background-color 0.15s ease;
+}
+
+
+.backButton:hover {
+  background-color: rgba(0, 122, 255, 0.08);
+}
+
+/* MAIN INFO ROW (HÀNG NGANG TỐI ƯU DIỆN TÍCH) */
+.mainInfo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.titleWrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+
+.menuTitle {
+  margin: 0;
+  color: #0f172a;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Tên cửa hàng phụ gộp chung dòng */
+.storeSubtext {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: #64748b;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.storeSubtext .material-symbols-outlined {
+  font-size: 14px;
+  color: #94a3b8;
+}
+
+
+/* BADGES COMPACT */
+.badgeGroup {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.defaultBadge,
+.activeBadge,
+.inactiveBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  height: 22px;
+  padding: 0 8px;
+  border-radius: 11px;
+  font-size: 10px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.defaultBadge {
+  background: rgba(255, 149, 0, 0.12);
+  color: #d97706;
+}
+
+.defaultBadge span {
+  font-size: 12px;
+}
+
+.activeBadge {
+  background: rgba(52, 199, 89, 0.12);
+  color: #16a34a;
+}
+
+.inactiveBadge {
+  background: rgba(142, 142, 147, 0.12);
+  color: #64748b;
+}
+
+.statusDot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background-color: currentColor;
+}
+
+/* ============================================================
+   RESPONSIVE DESIGN (MOBILE SLIM)
+   ============================================================ */
+
+@media (max-width: 640px) {
+  .header {
+    padding: 8px 12px 10px;
+    gap: 6px;
+  }
+
+  .menuTitle {
+    font-size: 17px;
+  }
+
+  .storeSubtext {
+    font-size: 11px;
+  }
+
+  .mainInfo {
+    align-items: flex-end;
+  }
+}

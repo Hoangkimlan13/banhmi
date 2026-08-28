@@ -1,0 +1,855 @@
+/* ============================================================
+   iOS Style System Variables & Keyframes
+   ============================================================ */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUpMobile {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+@keyframes popInDesktop {
+  from { opacity: 0; transform: scale(0.95) translateY(10px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* ============================================================
+   MODAL OVERLAY (Backdrop Blur)
+   ============================================================ */
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  display: flex;
+  align-items: flex-end; /* Mobile: Trượt từ dưới lên (Bottom Sheet) */
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  padding: 0;
+}
+
+@media (min-width: 640px) {
+  .modalOverlay {
+    align-items: center; /* Desktop: Căn giữa màn hình */
+    padding: 20px;
+  }
+}
+
+/* ============================================================
+   MODAL CONTAINER
+   ============================================================ */
+.modal {
+  width: 100%;
+  max-width: 580px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  border-radius: 32px 32px 0 0; /* Bottom sheet style on Mobile */
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.18), 0 0 0 1px rgba(255, 255, 255, 0.5) inset;
+  overflow: hidden;
+  animation: slideUpMobile 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (min-width: 640px) {
+  .modal {
+    border-radius: 28px;
+    animation: popInDesktop 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+}
+
+/* ============================================================
+   HEADER
+   ============================================================ */
+.modalHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 24px 24px 16px;
+  border-bottom: 1px solid rgba(60, 60, 67, 0.08);
+}
+
+.headerContent {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.headerEyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  color: #007aff;
+  text-transform: uppercase;
+}
+
+.modalHeader h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: #1c1c1e;
+  letter-spacing: -0.4px;
+}
+
+.modalHeader p {
+  margin: 2px 0 0;
+  font-size: 13px;
+  color: #8e8e93;
+  font-weight: 500;
+}
+
+.iconButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(120, 120, 128, 0.12);
+  color: #8e8e93;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.iconButton:hover:not(:disabled) {
+  background: rgba(120, 120, 128, 0.22);
+  color: #1c1c1e;
+}
+
+/* ============================================================
+   FORM BODY & GRID
+   ============================================================ */
+.form {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  padding: 20px 24px;
+  gap: 20px;
+}
+
+/* Grid tự co giãn: Mobile 1 cột, Tablet trở lên 2 cột */
+.formGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+@media (min-width: 520px) {
+  .formGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Field Input Container */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.field span {
+  font-size: 13px;
+  font-weight: 600;
+  color: #3a3a3c;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.field span b {
+  color: #ff3b30;
+}
+
+/* Styling Input chuẩn iOS */
+.field input {
+  width: 100%;
+  height: 44px;
+  padding: 0 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(60, 60, 67, 0.12);
+  background: rgba(255, 255, 255, 0.8);
+  font-size: 16px; /* Giữ 16px để Safari trên iOS không tự zoom */
+  color: #1c1c1e;
+  box-sizing: border-box;
+  outline: none;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.field input:focus {
+  border-color: #007aff;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.15);
+}
+
+/* Special Price Input */
+.priceInput {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.priceInput span {
+  position: absolute;
+  left: 14px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #8e8e93;
+  pointer-events: none;
+}
+
+.priceInput input {
+  padding-left: 30px;
+}
+
+/* ============================================================
+   INFO BOX & SWITCH ROW
+   ============================================================ */
+.sortInfo {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 16px;
+  background: rgba(120, 120, 128, 0.08);
+  border-radius: 14px;
+  font-size: 13px;
+}
+
+.sortInfoIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: rgba(0, 122, 255, 0.12);
+  color: #007aff;
+  font-weight: bold;
+  flex-shrink: 0;
+}
+
+.sortInfo strong {
+  display: block;
+  color: #1c1c1e;
+  margin-bottom: 2px;
+}
+
+.sortInfo span {
+  color: #636366;
+  line-height: 1.4;
+}
+
+/* Switch Row (iOS Toggle) */
+.switchRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(60, 60, 67, 0.08);
+  border-radius: 16px;
+  cursor: pointer;
+}
+
+.switchRow span {
+  display: flex;
+  flex-direction: column;
+}
+
+.switchRow strong {
+  font-size: 15px;
+  color: #1c1c1e;
+}
+
+.switchRow small {
+  font-size: 12px;
+  color: #8e8e93;
+}
+
+/* Custom Checkbox as iOS Switch */
+.switchRow input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 51px;
+  height: 31px;
+  background-color: rgba(120, 120, 128, 0.32);
+  border-radius: 31px;
+  position: relative;
+  cursor: pointer;
+  outline: none;
+  transition: background-color 0.25s ease;
+  flex-shrink: 0;
+}
+
+.switchRow input[type="checkbox"]::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 27px;
+  height: 27px;
+  background-color: #ffffff;
+  border-radius: 50%;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15), 0 3px 1px rgba(0, 0, 0, 0.06);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.switchRow input[type="checkbox"]:checked {
+  background-color: #34c759; /* iOS Green Switch */
+}
+
+.switchRow input[type="checkbox"]:checked::after {
+  transform: translateX(20px);
+}
+
+/* ============================================================
+   ERROR ALERT
+   ============================================================ */
+.formError {
+  padding: 12px 16px;
+  background: rgba(255, 59, 48, 0.1);
+  border: 1px solid rgba(255, 59, 48, 0.2);
+  border-radius: 12px;
+  color: #ff3b30;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+/* ============================================================
+   FOOTER BUTTONS
+   ============================================================ */
+.modalFooter {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  padding-top: 8px;
+}
+
+.secondaryButton,
+.primaryButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 44px;
+  padding: 0 20px;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+}
+
+.secondaryButton {
+  background: rgba(120, 120, 128, 0.12);
+  color: #007aff;
+}
+
+.secondaryButton:hover:not(:disabled) {
+  background: rgba(120, 120, 128, 0.2);
+}
+
+.primaryButton {
+  background: #007aff;
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3);
+}
+
+.primaryButton:hover:not(:disabled) {
+  background: #0062cc;
+}
+
+.primaryButton:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Styling Textarea đồng bộ iOS Input */
+.field textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(60, 60, 67, 0.12);
+  background: rgba(255, 255, 255, 0.8);
+  font-size: 15px;
+  color: #1c1c1e;
+  box-sizing: border-box;
+  outline: none;
+  resize: vertical;
+  min-height: 80px;
+  font-family: inherit;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.field textarea:focus {
+  border-color: #007aff;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.15);
+}
+
+
+/* ============================================================
+   OPTION SELECTION SETTINGS
+   Apple / iOS Style
+   ============================================================ */
+
+.selectionSettings {
+  margin-top: 8px;
+  padding: 20px;
+
+  border: 1px solid #e8eaf0;
+  border-radius: 18px;
+
+  background: #f8f9fc;
+
+  box-shadow:
+    0 1px 2px rgba(15, 23, 42, 0.02);
+}
+
+/* ============================================================
+   HEADER
+   ============================================================ */
+
+.selectionSettingsHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin-bottom: 18px;
+  padding-bottom: 15px;
+
+  border-bottom: 1px solid #e8eaf0;
+}
+
+.selectionSettingsHeader > div {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.selectionSettingsHeader strong {
+  font-size: 15px;
+  font-weight: 700;
+  color: #252a34;
+}
+
+.selectionSettingsHeader small {
+  font-size: 12px;
+  line-height: 1.6;
+  color: #7a8190;
+}
+
+/* ============================================================
+   SELECTION TYPE GRID
+   ============================================================ */
+
+.selectionTypeGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  gap: 10px;
+
+  margin-top: 8px;
+}
+
+/* ============================================================
+   SELECTION BUTTON
+   ============================================================ */
+
+.selectionTypeButton,
+.selectionTypeActive {
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+
+  min-height: 76px;
+  padding: 14px 16px;
+
+  border-radius: 14px;
+
+  font-family: inherit;
+  text-align: left;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.15s ease;
+}
+
+/* ============================================================
+   INACTIVE
+   ============================================================ */
+
+.selectionTypeButton {
+  border: 1px solid #dfe3eb;
+
+  background: #ffffff;
+
+  color: #343a46;
+
+  box-shadow:
+    0 1px 2px rgba(15, 23, 42, 0.02);
+}
+
+.selectionTypeButton:hover:not(:disabled) {
+  border-color: #c7ccd7;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 3px 10px rgba(15, 23, 42, 0.06);
+
+  transform: translateY(-1px);
+}
+
+.selectionTypeButton:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+/* ============================================================
+   ACTIVE
+   ============================================================ */
+
+.selectionTypeActive {
+  border: 1.5px solid #7c8cff;
+
+  background: #f1f3ff;
+
+  color: #4051b5;
+
+  box-shadow:
+    0 0 0 3px rgba(124, 140, 255, 0.08);
+}
+
+.selectionTypeActive:hover:not(:disabled) {
+  background: #eef0ff;
+}
+
+/* ============================================================
+   CHECK MARK
+   ============================================================ */
+
+.selectionTypeActive::after {
+  content: "✓";
+
+  position: absolute;
+
+  top: 10px;
+  right: 11px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 20px;
+  height: 20px;
+
+  border-radius: 50%;
+
+  background: #7c8cff;
+
+  color: #ffffff;
+
+  font-size: 11px;
+  font-weight: 700;
+
+  box-shadow:
+    0 2px 5px rgba(124, 140, 255, 0.25);
+}
+
+/* ============================================================
+   BUTTON TEXT
+   ============================================================ */
+
+.selectionTypeButton strong,
+.selectionTypeActive strong {
+  display: block;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  line-height: 1.4;
+}
+
+.selectionTypeButton small,
+.selectionTypeActive small {
+  display: block;
+
+  margin-top: 5px;
+
+  font-size: 12px;
+  font-weight: 400;
+
+  line-height: 1.5;
+}
+
+.selectionTypeButton small {
+  color: #858c99;
+}
+
+.selectionTypeActive small {
+  color: #6671a8;
+}
+
+/* ============================================================
+   DISABLED
+   ============================================================ */
+
+.selectionTypeButton:disabled,
+.selectionTypeActive:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* ============================================================
+   REQUIRED SWITCH ROW
+   ============================================================ */
+
+.selectionSettings .switchRow {
+  margin-bottom: 18px;
+}
+
+/* ============================================================
+   SWITCH ROW
+   ============================================================ */
+
+.switchRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 20px;
+
+  min-height: 58px;
+  padding: 12px 0;
+}
+
+.switchRow > span {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  min-width: 0;
+}
+
+.switchRow > span strong {
+  font-size: 14px;
+  font-weight: 700;
+
+  color: #343945;
+}
+
+.switchRow > span small {
+  font-size: 12px;
+  line-height: 1.5;
+
+  color: #858c99;
+}
+
+/* ============================================================
+   IOS STYLE SWITCH
+   ============================================================ */
+
+.switchRow > input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+
+  position: relative;
+
+  flex: 0 0 auto;
+
+  width: 44px;
+  height: 26px;
+
+  margin: 0;
+
+  border: none;
+  border-radius: 999px;
+
+  background: #d9dde5;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.switchRow > input[type="checkbox"]::after {
+  content: "";
+
+  position: absolute;
+
+  top: 3px;
+  left: 3px;
+
+  width: 20px;
+  height: 20px;
+
+  border-radius: 50%;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 1px 4px rgba(15, 23, 42, 0.2);
+
+  transition:
+    transform 0.2s ease;
+}
+
+.switchRow > input[type="checkbox"]:checked {
+  background: #7c8cff;
+}
+
+.switchRow > input[type="checkbox"]:checked::after {
+  transform: translateX(18px);
+}
+
+.switchRow > input[type="checkbox"]:focus-visible {
+  outline: none;
+
+  box-shadow:
+    0 0 0 3px rgba(124, 140, 255, 0.18);
+}
+
+.switchRow > input[type="checkbox"]:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* ============================================================
+   MAX CHOICES
+   ============================================================ */
+
+.selectionSettings .field {
+  margin-top: 16px;
+}
+
+.selectionSettings
+  .field
+  > input[type="number"] {
+  width: 120px;
+  height: 42px;
+
+  padding: 0 12px;
+
+  border: 1px solid #dfe3eb;
+  border-radius: 11px;
+
+  background: #ffffff;
+
+  font-family: inherit;
+  font-size: 14px;
+  color: #343945;
+
+  outline: none;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.selectionSettings
+  .field
+  > input[type="number"]:hover {
+  border-color: #cbd0da;
+}
+
+.selectionSettings
+  .field
+  > input[type="number"]:focus {
+  border-color: #9aa6ff;
+
+  box-shadow:
+    0 0 0 3px rgba(124, 140, 255, 0.12);
+}
+
+.selectionSettings .field > small {
+  display: block;
+
+  margin-top: 6px;
+
+  font-size: 11px;
+  line-height: 1.5;
+
+  color: #9aa0aa;
+}
+
+/* ============================================================
+   MOBILE
+   ============================================================ */
+
+@media (max-width: 640px) {
+  .selectionSettings {
+    padding: 16px;
+
+    border-radius: 16px;
+  }
+
+  .selectionSettingsHeader {
+    margin-bottom: 14px;
+  }
+
+  .selectionSettingsHeader strong {
+    font-size: 14px;
+  }
+
+  .selectionSettingsHeader small {
+    font-size: 11px;
+  }
+
+  .selectionTypeGrid {
+    gap: 8px;
+  }
+
+  .selectionTypeButton,
+  .selectionTypeActive {
+    min-height: 68px;
+
+    padding: 12px 14px;
+
+    border-radius: 12px;
+  }
+
+  .selectionTypeButton strong,
+  .selectionTypeActive strong {
+    font-size: 13px;
+  }
+
+  .selectionTypeButton small,
+  .selectionTypeActive small {
+    font-size: 11px;
+  }
+
+  .switchRow {
+    gap: 12px;
+    padding: 12px;
+  }
+
+  .switchRow > span strong {
+    font-size: 13px;
+  }
+
+  .switchRow > span small {
+    font-size: 11px;
+  }
+}

@@ -1,6 +1,6 @@
 /* =========================================================
-   FOOD GRID & CARD DESIGN (Tinh tế, gọn gàng trên 1 hàng ngang)
-========================================================= */
+   FOOD GRID
+   ========================================================= */
 
 .food-area {
   width: 100%;
@@ -8,91 +8,115 @@
 
 .food-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 10px;
 }
 
+/* =========================================================
+   RESPONSIVE GRID
+   ========================================================= */
+
 @media (min-width: 640px) {
   .food-grid {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 16px;
   }
 }
 
 @media (min-width: 1024px) {
   .food-grid {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 20px;
   }
 }
 
+/* =========================================================
+   FOOD CARD
+   ========================================================= */
+
 .food-card {
-  background: #ffffff;
-  border-radius: 12px;
-  overflow: hidden;
-  border: 1px solid #edf2f7;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+  position: relative;
   display: flex;
   flex-direction: column;
+  width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  background: #ffffff;
+  border: 1px solid #edf0f2;
+  border-radius: 14px;
+  box-shadow: 0 2px 7px rgba(0, 0, 0, 0.035);
   cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  position: relative;
+  transition:
+    transform 0.22s ease,
+    box-shadow 0.22s ease,
+    border-color 0.22s ease;
 }
 
-.food-card:hover {
+.food-card:not(.food-card-sold-out):hover {
   transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+  border-color: #e8e8e5;
+  box-shadow: 0 9px 24px rgba(0, 0, 0, 0.075);
 }
 
-.food-card:active {
-  transform: scale(0.97);
+.food-card:not(.food-card-sold-out):active {
+  transform: scale(0.975);
 }
+
+/* =========================================================
+   FOOD IMAGE
+   ========================================================= */
 
 .food-image-wrapper {
   position: relative;
   width: 100%;
   aspect-ratio: 4 / 3;
-  background: #f7fafc;
   overflow: hidden;
+  background: #f5f5f3;
 }
 
 .food-image {
   object-fit: cover;
-  transition: transform 0.3s ease;
+  transition:
+    transform 0.35s ease,
+    filter 0.35s ease;
 }
 
-.food-card:hover .food-image {
-  transform: scale(1.04);
+.food-card:not(.food-card-sold-out):hover .food-image {
+  transform: scale(1.045);
 }
 
 .food-no-image-wrapper {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  background: #f8fafc;
+  position: absolute;
+  inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
+  background: linear-gradient(145deg, #fafaf8 0%, #eeeeeb 100%);
+  color: #b5b5af;
 }
 
-.food-no-image-logo {
-  object-fit: contain;
-  padding: 20px;
-  opacity: 0.25;
-  filter: grayscale(100%);
-  transition: opacity 0.2s ease;
+.food-no-image-wrapper .material-symbols-outlined {
+  font-size: 52px;
+  line-height: 1;
+  font-variation-settings:
+    "FILL" 0,
+    "wght" 300,
+    "GRAD" 0,
+    "opsz" 48;
+  opacity: 0.75;
 }
 
-.food-card:hover .food-no-image-logo {
-  opacity: 0.4;
-}
+/* =========================================================
+   FOOD CONTENT
+   ========================================================= */
 
 .food-content {
-  padding: 10px;
   display: flex;
   flex-direction: column;
   flex-grow: 1;
   justify-content: space-between;
+  min-width: 0;
+  padding: 10px;
 }
 
 @media (min-width: 640px) {
@@ -102,12 +126,12 @@
 }
 
 .food-title {
-  font-family: "Noto Sans JP", "Inter", sans-serif;
+  margin: 0 0 4px 0;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Hiragino Sans", "Noto Sans JP", sans-serif;
   font-size: 13px;
   font-weight: 600;
+  line-height: 1.4;
   color: #2d3748;
-  line-height: 1.35;
-  margin: 0 0 4px 0;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -121,9 +145,11 @@
 }
 
 .food-desc {
-  font-size: 11px;
-  color: #718096;
   margin: 0 0 6px 0;
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 1.45;
+  color: #718096;
   display: -webkit-box;
   -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
@@ -131,31 +157,34 @@
 }
 
 /* =========================================================
-   FOOTER: LUÔN GIỮ TRÊN 1 HÀNG NGANG DUY NHẤT
-========================================================= */
+   FOOTER & PRICE
+   ========================================================= */
 
 .food-footer {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-top: 6px;
-  gap: 4px;
+  width: 100%;
+  min-width: 0;
+  margin-top: 7px;
+  gap: 6px;
 }
 
-/* Gom cụm giá và nhãn thuế (Cho phép nhãn thuế rớt nhẹ dòng dưới số nếu màn cực nhỏ, nhưng vẫn nằm gọn bên trái) */
 .food-price-wrapper {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  min-width: 0;
 }
 
 .food-price {
-  font-family: "Inter", sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", "Noto Sans JP", sans-serif;
   font-size: 13px;
   font-weight: 700;
+  line-height: 1.2;
   color: #e05622;
   letter-spacing: -0.01em;
-  line-height: 1.2;
+  white-space: nowrap;
 }
 
 @media (min-width: 640px) {
@@ -167,8 +196,8 @@
 .tax-included {
   font-size: 9px;
   font-weight: 400;
+  line-height: 1.15;
   color: #a0aec0;
-  line-height: 1.1;
   white-space: nowrap;
 }
 
@@ -179,22 +208,36 @@
 }
 
 /* =========================================================
-   NÚT GIỎ HÀNG & STEPPER GỌN GÀNG (Tối ưu cho mobile 1 hàng)
-========================================================= */
+   ADD TO CART BUTTON
+   ========================================================= */
 
 .food-cart-btn {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  background: #fff3ed;
-  border: 1px solid #ffd8cc;
-  color: #e05622;
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 30px;
+  height: 30px;
+  flex: 0 0 auto;
+  padding: 0;
+  border: 1px solid #ffd8cc;
+  border-radius: 50%;
+  background: #fff3ed;
+  color: #e05622;
   cursor: pointer;
-  transition: all 0.2s ease;
-  flex-shrink: 0;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.food-cart-btn:hover {
+  background: #ffe8df;
+  border-color: #ffc5b4;
+  transform: scale(1.06);
+}
+
+.food-cart-btn:active {
+  transform: scale(0.92);
 }
 
 @media (min-width: 640px) {
@@ -204,26 +247,34 @@
   }
 }
 
-/* Dùng kết hợp class cha để tăng độ ưu tiên và thêm !important */
 .food-cart-btn .cart-icon-symbol {
-  font-size: 20px !important;
+  font-size: 19px !important;
+  line-height: 1;
+  font-variation-settings:
+    "FILL" 0,
+    "wght" 500,
+    "GRAD" 0,
+    "opsz" 24;
 }
 
 @media (min-width: 640px) {
   .food-cart-btn .cart-icon-symbol {
-    font-size: 16px !important;
+    font-size: 20px !important;
   }
 }
+
+/* =========================================================
+   STEPPER
+   ========================================================= */
 
 .food-stepper {
   display: flex;
   align-items: center;
-  background: #fff3ed;
+  height: 30px;
+  flex: 0 0 auto;
+  overflow: hidden;
   border: 1px solid #ffd8cc;
   border-radius: 16px;
-  overflow: hidden;
-  height: 30px;
-  flex-shrink: 0;
 }
 
 @media (min-width: 640px) {
@@ -234,17 +285,26 @@
 }
 
 .stepper-btn {
-  background: transparent;
-  border: none;
-  color: #e05622;
-  font-size: 14px;
-  font-weight: 700;
-  width: 24px;
-  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 24px;
+  height: 100%;
+  padding: 0;
+  border: none;
+  background: transparent;
+  font-size: 14px;
+  font-weight: 700;
   cursor: pointer;
+  transition: background 0.18s ease;
+}
+
+.stepper-btn:hover {
+  background: rgba(224, 86, 34, 0.1);
+}
+
+.stepper-btn:active {
+  background: rgba(224, 86, 34, 0.16);
 }
 
 @media (min-width: 640px) {
@@ -254,25 +314,494 @@
   }
 }
 
-.stepper-btn:hover {
-  background: rgba(224, 86, 34, 0.1);
-}
-
 .stepper-count {
-  font-family: "Inter", sans-serif;
+  min-width: 16px;
+  padding: 0 2px;
+  text-align: center;
+  font-family: -apple-system, BlinkMacSystemFont, "Inter", sans-serif;
   font-size: 12px;
   font-weight: 700;
-  color: #e05622;
-  padding: 0 2px;
-  min-width: 16px;
-  text-align: center;
   line-height: 1;
+  color: #e05622;
 }
 
 @media (min-width: 640px) {
   .stepper-count {
-    font-size: 13.5px;
-    padding: 0 4px;
     min-width: 20px;
+    padding: 0 4px;
+    font-size: 13.5px;
+  }
+}
+
+/* =========================================================
+   iOS GLASSMORPHIC - SOLD OUT DESIGN
+   ========================================================= */
+
+.food-card-sold-out {
+  cursor: not-allowed;
+  border-color: rgba(0, 0, 0, 0.04) !important;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02) !important;
+  opacity: 0.85;
+}
+
+.food-card-sold-out:hover,
+.food-card-sold-out:active {
+  transform: none !important;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02) !important;
+}
+
+.food-card-sold-out .food-image {
+  filter: grayscale(45%) contrast(0.95) brightness(0.92);
+  transform: none !important;
+}
+
+.food-card-sold-out .food-no-image-wrapper {
+  filter: grayscale(30%);
+  background: #f2f2f7;
+}
+
+/* OVERLAY PHỦ TRÊN ẢNH */
+.sold-out-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.18);
+  backdrop-filter: blur(3px) saturate(120%);
+  -webkit-backdrop-filter: blur(3px) saturate(120%);
+  pointer-events: none;
+}
+
+/* BADGE TRẠNG THÁI TRÊN ẢNH */
+.sold-out-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 0.5px solid rgba(255, 255, 255, 0.6);
+  border-radius: 999px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04);
+  color: #1c1c1e;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Hiragino Sans", "Noto Sans JP", sans-serif;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+}
+
+.sold-out-badge::before {
+  content: "";
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #8e8e93;
+}
+
+.sold-out-text {
+  line-height: 1;
+  white-space: nowrap;
+}
+
+/* NÚT FOOTER SOLD OUT */
+.food-sold-out-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 28px;
+  padding: 0 10px;
+  background: rgba(120, 120, 128, 0.08);
+  border: 1px solid rgba(0, 0, 0, 0.03);
+  border-radius: 14px;
+  color: #8e8e93;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Hiragino Sans", "Noto Sans JP", sans-serif;
+  font-size: 10.5px;
+  font-weight: 500;
+  line-height: 1;
+  cursor: not-allowed;
+  user-select: none;
+}
+
+/* TEXT CARD HẾT MÓN */
+.food-card-sold-out .food-title {
+  color: #8e8e93;
+}
+
+.food-card-sold-out .food-desc {
+  color: #aeaeb2;
+}
+
+.food-card-sold-out .food-price {
+  color: #8e8e93;
+}
+
+.food-card-sold-out .tax-included {
+  color: #c7c7cc;
+}
+
+/* =========================================================
+   MOBILE RESPONSIVE ADJUSTMENTS
+   ========================================================= */
+
+@media (max-width: 639px) {
+  .food-card {
+    border-radius: 12px;
+  }
+
+  .food-content {
+    padding: 9px;
+  }
+
+  .food-title {
+    font-size: 12.5px;
+    line-height: 1.35;
+  }
+
+  .food-desc {
+    font-size: 10px;
+  }
+
+  .food-footer {
+    gap: 4px;
+  }
+
+  .food-price {
+    font-size: 12.5px;
+  }
+
+  .tax-included {
+    font-size: 8px;
+  }
+
+  .sold-out-badge {
+    padding: 5px 12px;
+    font-size: 10.5px;
+  }
+
+  .sold-out-badge::before {
+    width: 5px;
+    height: 5px;
+  }
+
+  .food-sold-out-btn {
+    height: 26px;
+    padding: 0 8px;
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 360px) {
+  .food-grid {
+    gap: 8px;
+  }
+
+  .food-content {
+    padding: 8px;
+  }
+
+  .food-title {
+    font-size: 12px;
+  }
+
+  .food-price {
+    font-size: 12px;
+  }
+
+  .tax-included {
+    font-size: 7.5px;
+  }
+
+  .food-cart-btn {
+    width: 28px;
+    height: 28px;
+  }
+
+  .food-cart-btn .cart-icon-symbol {
+    font-size: 18px !important;
+  }
+
+  .food-stepper {
+    height: 28px;
+  }
+
+  .stepper-btn {
+    width: 22px;
+  }
+
+  .stepper-count {
+    min-width: 15px;
+    font-size: 11px;
+  }
+
+  .sold-out-badge {
+    padding: 4px 10px;
+    font-size: 9.5px;
+  }
+
+  .food-sold-out-btn {
+    height: 24px;
+    padding: 0 6px;
+    font-size: 8.5px;
+  }
+}
+
+
+
+/* ========================================================= 
+   FOOD CARD TAGS (Modern Food Ordering UI)
+   ========================================================= */ 
+
+.food-tags { 
+  position: absolute; 
+  top: 8px; 
+  left: 8px; 
+  z-index: 5; 
+
+  display: flex; 
+  flex-direction: column; 
+  align-items: flex-start; 
+  gap: 5px; 
+
+  max-width: calc(100% - 16px); 
+
+  pointer-events: none; 
+} 
+
+
+/* ========================================================= 
+   BASE TAG (Glassmorphism & Tint Accent)
+   ========================================================= */ 
+
+.food-tag { 
+  --tag-color: #f97316; 
+
+  position: relative; 
+
+  display: inline-flex; 
+  align-items: center; 
+  justify-content: center;
+  gap: 4px; 
+
+  min-height: 24px; 
+  padding: 3px 9px; 
+
+  border-radius: 8px; 
+
+  /* Nền trắng mờ pha nhẹ màu tag, chữ theo màu tag */
+  background: color-mix(in srgb, var(--tag-color) 12%, rgba(255, 255, 255, 0.94)); 
+  color: color-mix(in srgb, var(--tag-color) 80%, #000); 
+
+  font-size: 11px; 
+  font-weight: 750; 
+  line-height: 1.2; 
+  letter-spacing: -0.01em; 
+
+  border: 1px solid color-mix(in srgb, var(--tag-color) 25%, transparent); 
+
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08); 
+
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+
+  max-width: 100%; 
+
+  transition: 
+    transform var(--transition-fast), 
+    box-shadow var(--transition-fast), 
+    background-color var(--transition-fast); 
+} 
+
+
+/* ========================================================= 
+   ICON 
+   ========================================================= */ 
+
+.food-tag-icon { 
+  display: inline-flex; 
+  align-items: center; 
+  justify-content: center; 
+
+  flex: 0 0 auto; 
+
+  font-size: 13px !important; 
+  line-height: 1; 
+
+  color: color-mix(in srgb, var(--tag-color) 85%, #000); 
+
+  font-variation-settings: 
+    "FILL" 1, 
+    "wght" 600, 
+    "GRAD" 0, 
+    "opsz" 20; 
+} 
+
+
+/* ========================================================= 
+   LABEL 
+   ========================================================= */ 
+
+.food-tag-label { 
+  display: block; 
+  min-width: 0; 
+
+  overflow: hidden; 
+  text-overflow: ellipsis; 
+  white-space: nowrap; 
+} 
+
+
+/* ========================================================= 
+   HOVER (Desktop)
+   ========================================================= */ 
+
+@media (hover: hover) and (pointer: fine) { 
+  .food-card:hover .food-tag { 
+    transform: translateY(-1px); 
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.12); 
+  } 
+} 
+
+
+/* ========================================================= 
+   SPECIAL / TOP 1 / HOT TAGS (Nổi bật rực rỡ)
+   ========================================================= */ 
+
+.food-tag.top-1,
+.food-tag[style*="#f97316"],
+.food-tag[style*="#ea580c"],
+.food-tag[style*="#e11d48"],
+.food-tag[style*="#dc2626"] { 
+  background: linear-gradient(135deg, #ff4d4d, #f97316) !important; 
+  color: #ffffff !important; 
+
+  border: 1px solid rgba(255, 255, 255, 0.4) !important; 
+
+  box-shadow: 
+    0 3px 10px rgba(249, 115, 22, 0.35), 
+    0 0 10px rgba(239, 68, 68, 0.2) !important; 
+
+  text-transform: uppercase;
+} 
+
+.food-tag.top-1 .food-tag-icon,
+.food-tag[style*="#f97316"] .food-tag-icon,
+.food-tag[style*="#ea580c"] .food-tag-icon,
+.food-tag[style*="#e11d48"] .food-tag-icon,
+.food-tag[style*="#dc2626"] .food-tag-icon { 
+  color: #ffffff !important; 
+} 
+
+
+/* ========================================================= 
+   MOBILE 
+   ========================================================= */ 
+
+@media (max-width: 640px) { 
+  .food-tags { 
+    top: 6px; 
+    left: 6px; 
+    gap: 4px; 
+    max-width: calc(100% - 12px); 
+  } 
+
+  .food-tag { 
+    min-height: 22px; 
+    padding: 2.5px 7px; 
+    border-radius: 7px; 
+
+    font-size: 10px; 
+    gap: 3px; 
+
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.08); 
+  } 
+
+  .food-tag-icon { 
+    font-size: 12px !important; 
+  } 
+} 
+
+
+/* ========================================================= 
+   VERY SMALL PHONE 
+   ========================================================= */ 
+
+@media (max-width: 380px) { 
+  .food-tags { 
+    top: 5px; 
+    left: 5px; 
+    gap: 3px; 
+  } 
+
+  .food-tag { 
+    min-height: 20px; 
+    padding: 2px 6px; 
+    border-radius: 6px; 
+
+    font-size: 9.5px; 
+  } 
+
+  .food-tag-icon { 
+    font-size: 11px !important; 
+  } 
+}
+
+
+/* =========================================================
+   VARIANT HINT
+   ========================================================= */
+
+.food-variant-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+
+  color: #777;
+
+  font-size: 10px;
+  font-weight: 500;
+
+  line-height: 1.2;
+
+  white-space: nowrap;
+}
+
+.food-variant-hint .material-symbols-outlined {
+  font-size: 13px;
+  line-height: 1;
+
+  color: #999;
+}
+
+/* =========================================================
+   HOVER
+   ========================================================= */
+
+.food-card:hover .food-variant-hint {
+  color: #555;
+}
+
+.food-card:hover .food-variant-hint
+.material-symbols-outlined {
+  color: #777;
+}
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 640px) {
+
+  .food-variant-hint {
+    font-size: 9px;
+  }
+
+  .food-variant-hint
+  .material-symbols-outlined {
+    font-size: 12px;
   }
 }

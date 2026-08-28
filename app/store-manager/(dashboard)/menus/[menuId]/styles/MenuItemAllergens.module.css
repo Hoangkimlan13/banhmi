@@ -1,0 +1,323 @@
+/* Container iOS Glass */
+.container {
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: 18px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", sans-serif;
+  color: #1d1d1f;
+}
+
+/* Header Compact */
+.header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.iconWrapper {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: rgba(255, 149, 0, 0.12);
+  color: #ff9500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.iconWrapper .material-symbols-outlined {
+  font-size: 20px;
+}
+
+.headerText {
+  flex: 1;
+  min-width: 0;
+}
+
+.titleRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.headerText h3 {
+  margin: 0;
+  font-size: 0.98rem;
+  font-weight: 700;
+  letter-spacing: -0.2px;
+}
+
+.headerText p {
+  margin: 2px 0 0;
+  font-size: 0.78rem;
+  color: #86868b;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.badge {
+  background: rgba(0, 122, 255, 0.1);
+  color: #007aff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+
+/* Selected Tags Bar (Horizontal Scroll) */
+.selectedContainer {
+  margin-bottom: 12px;
+}
+
+.selectedScroll {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 4px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.selectedScroll::-webkit-scrollbar {
+  display: none;
+}
+
+.selectedTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #007aff;
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 20px;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+  box-shadow: 0 2px 6px rgba(0, 122, 255, 0.2);
+}
+
+.selectedTag:hover {
+  opacity: 0.85;
+}
+
+.selectedTag .material-symbols-outlined {
+  font-size: 13px;
+}
+
+/* OVERFLOW-X AUTO GRID (Cuộn ngang tiết kiệm không gian) */
+.allergenGrid {
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 4px 2px 8px;
+  scroll-snap-type: x proximity;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none; /* Hide scrollbar for Firefox */
+}
+
+.allergenGrid::-webkit-scrollbar {
+  display: none; /* Hide scrollbar for Chrome/Safari */
+}
+
+/* Compact Allergen Card */
+.allergenCard {
+  position: relative;
+  flex: 0 0 96px; /* Cố định chiều rộng từng card */
+  width: 96px;
+  min-height: 70px;
+  padding: 8px;
+  box-sizing: border-box;
+  background: #f5f5f7;
+  border: 1.5px solid transparent;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  cursor: pointer;
+  scroll-snap-align: start;
+  user-select: none;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.allergenCard:hover {
+  background: #e8e8ed;
+}
+
+.allergenCard:active {
+  transform: scale(0.96);
+}
+
+.allergenCard.selected {
+  background: rgba(0, 122, 255, 0.08);
+  border-color: #007aff;
+  box-shadow: 0 3px 10px rgba(0, 122, 255, 0.12);
+}
+
+.hiddenCheckbox {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* Custom Checkbox Dot */
+.checkboxCustom {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 1.5px solid #c7c7cc;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: flex-end;
+  transition: all 0.2s ease;
+}
+
+.checkboxCustom span {
+  font-size: 12px;
+  color: transparent;
+  font-weight: bold;
+}
+
+.allergenCard.selected .checkboxCustom {
+  background: #007aff;
+  border-color: #007aff;
+}
+
+.allergenCard.selected .checkboxCustom span {
+  color: #ffffff;
+}
+
+/* Text Formatting Inside Card */
+.cardContent {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.allergenName {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #1d1d1f;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.allergenSubname {
+  font-size: 0.68rem;
+  color: #86868b;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Alerts & Loading States */
+.emptyState, .loadingState {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 16px;
+  background: #f5f5f7;
+  border-radius: 12px;
+  font-size: 0.82rem;
+  color: #86868b;
+}
+
+.errorMessage, .successMessage {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-size: 0.8rem;
+  margin-top: 10px;
+}
+
+.errorMessage {
+  background: rgba(255, 59, 48, 0.1);
+  color: #ff3b30;
+}
+
+.successMessage {
+  background: rgba(52, 199, 89, 0.1);
+  color: #34c759;
+}
+
+/* Footer & Buttons */
+.footerActions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 12px;
+}
+
+.primaryButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: #007aff;
+  color: #fff;
+  border: none;
+  padding: 8px 18px;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 122, 255, 0.25);
+  transition: all 0.2s ease;
+}
+
+.primaryButton:hover:not(:disabled) {
+  background: #0062cc;
+  box-shadow: 0 4px 12px rgba(0, 122, 255, 0.35);
+}
+
+.primaryButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Spinner & Animations */
+.spinner, .savingIcon {
+  animation: spin 0.8s linear infinite;
+}
+
+.spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(0, 122, 255, 0.15);
+  border-top-color: #007aff;
+  border-radius: 50%;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  
+  .allergenCard {
+    flex: 0 0 88px;
+    width: 88px;
+    min-height: 64px;
+  }
+
+  .primaryButton {
+    width: 100%;
+  }
+}

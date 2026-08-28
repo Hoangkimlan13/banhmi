@@ -1,0 +1,104 @@
+.toastContainer {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 280px;
+  max-width: 420px;
+  padding: 12px 16px;
+  border-radius: 10px;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1),
+              0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  font-size: 14px;
+  font-weight: 500;
+  color: #1f2937;
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  animation: slideIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.message {
+  flex: 1;
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+.icon {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.closeBtn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  color: #9ca3af;
+  transition: color 0.15s ease, background-color 0.15s ease;
+}
+
+.closeBtn:hover {
+  color: #374151;
+  background-color: #f3f4f6;
+}
+
+.closeBtn .icon {
+  font-size: 18px;
+}
+
+/* Các biến thể theo loại thông báo */
+.success {
+  border-left: 4px solid #10b981;
+}
+.success .icon {
+  color: #10b981;
+}
+
+.error {
+  border-left: 4px solid #ef4444;
+}
+.error .icon {
+  color: #ef4444;
+}
+
+.info {
+  border-left: 4px solid #3b82f6;
+}
+.info .icon {
+  color: #3b82f6;
+}
+
+.warning {
+  border-left: 4px solid #f59e0b;
+}
+.warning .icon {
+  color: #f59e0b;
+}
+
+/* Hiển thị tốt trên màn hình điện thoại */
+@media (max-width: 640px) {
+  .toastContainer {
+    left: 16px;
+    right: 16px;
+    bottom: 16px;
+    min-width: auto;
+  }
+}

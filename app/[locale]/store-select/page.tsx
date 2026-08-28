@@ -14,13 +14,15 @@ interface Props {
 interface Store {
   id: number;
   title: string;
-  slug: string; // Lấy trực tiếp từ database
+  slug: string;
   type: string;
   color: string | null;
   address: string | null;
   googleMapUrl: string | null;
   openTime: string | null;
   closeTime: string | null;
+  acceptingOrders: boolean;
+
   latitude: number | string | null;
   longitude: number | string | null;
   locationName?: string | null;
@@ -30,11 +32,20 @@ export default function StoreSelectPage({ params }: Props) {
   const [locale, setLocale] = useState<Locale>("ja");
   const [stores, setStores] = useState<Store[]>([]);
   const [loading, setLoading] = useState(true);
+  const [currentTime, setCurrentTime] = useState(new Date());
   const router = useRouter();
 
   useEffect(() => {
     params.then((p) => setLocale(p.locale));
   }, [params]);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 60 * 1000);
+
+    return () => clearInterval(timer);
+  }, []);
 
   useEffect(() => {
     getActiveStores().then((data) => {
@@ -75,6 +86,198 @@ export default function StoreSelectPage({ params }: Props) {
     }
   };
 
+
+
+  const getStoreStatus = (
+    store: Store
+  ): "OPEN" | "OUTSIDE_HOURS" | "STOPPED" => {
+
+    // ============================================
+    // 1. ORDER STOPPED
+    // ============================================
+    if (store.acceptingOrders !== true) {
+      return "STOPPED";
+    }
+
+    // ============================================
+    // 2. NO OPENING HOURS
+    // ============================================
+    if (!store.openTime || !store.closeTime) {
+      return "OPEN";
+    }
+
+    const open = formatTimeStr(store.openTime);
+    const close = formatTimeStr(store.closeTime);
+
+    if (!open || !close) {
+      return "OPEN";
+    }
+
+    const [openHour, openMinute] = open
+      .split(":")
+      .map(Number);
+
+    const [closeHour, closeMinute] = close
+      .split(":")
+      .map(Number);
+
+    if (
+      Number.isNaN(openHour) ||
+      Number.isNaN(openMinute) ||
+      Number.isNaN(closeHour) ||
+      Number.isNaN(closeMinute)
+    ) {
+      return "OPEN";
+    }
+
+    // ============================================
+    // JAPAN TIME
+    // ============================================
+    const japanTime = new Intl.DateTimeFormat("en-GB", {
+      timeZone: "Asia/Tokyo",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    }).format(currentTime);
+
+    const [currentHour, currentMinute] = japanTime
+      .split(":")
+      .map(Number);
+
+    const currentMinutes =
+      currentHour * 60 + currentMinute;
+
+    const openMinutes =
+      openHour * 60 + openMinute;
+
+    const closeMinutes =
+      closeHour * 60 + closeMinute;
+
+    // ============================================
+    // OVERNIGHT
+    // 18:00 → 02:00
+    // ============================================
+    if (closeMinutes < openMinutes) {
+      const isOpen =
+        currentMinutes >= openMinutes ||
+        currentMinutes < closeMinutes;
+
+      return isOpen
+        ? "OPEN"
+        : "OUTSIDE_HOURS";
+    }
+
+    // ============================================
+    // NORMAL
+    // 10:30 → 23:00
+    // ============================================
+    const isOpen =
+      currentMinutes >= openMinutes &&
+      currentMinutes < closeMinutes;
+
+    return isOpen
+      ? "OPEN"
+      : "OUTSIDE_HOURS";
+  };
+
+
+  const getStoreOpenStatus = (
+    openTime: string | null,
+    closeTime: string | null
+  ): boolean | null => {
+    if (!openTime || !closeTime) {
+      return null;
+    }
+
+    try {
+      const open = formatTimeStr(openTime);
+      const close = formatTimeStr(closeTime);
+
+      if (!open || !close) {
+        return null;
+      }
+
+      const [openHour, openMinute] = open
+        .split(":")
+        .map(Number);
+
+      const [closeHour, closeMinute] = close
+        .split(":")
+        .map(Number);
+
+      if (
+        Number.isNaN(openHour) ||
+        Number.isNaN(openMinute) ||
+        Number.isNaN(closeHour) ||
+        Number.isNaN(closeMinute)
+      ) {
+        return null;
+      }
+
+      // --------------------------------------------------
+      // Lấy giờ hiện tại theo Asia/Tokyo
+      // --------------------------------------------------
+
+      const japanTime = new Intl.DateTimeFormat("en-GB", {
+        timeZone: "Asia/Tokyo",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false,
+      }).format(currentTime);
+
+      const [currentHour, currentMinute] = japanTime
+        .split(":")
+        .map(Number);
+
+      const currentTotal =
+        currentHour * 60 + currentMinute;
+
+      const openTotal =
+        openHour * 60 + openMinute;
+
+      const closeTotal =
+        closeHour * 60 + closeMinute;
+
+      // --------------------------------------------------
+      // Trường hợp bình thường
+      // Ví dụ 11:00 → 20:00
+      // --------------------------------------------------
+
+      if (openTotal < closeTotal) {
+        return (
+          currentTotal >= openTotal &&
+          currentTotal < closeTotal
+        );
+      }
+
+      // --------------------------------------------------
+      // Trường hợp qua ngày
+      // Ví dụ 22:00 → 02:00
+      // --------------------------------------------------
+
+      if (openTotal > closeTotal) {
+        return (
+          currentTotal >= openTotal ||
+          currentTotal < closeTotal
+        );
+      }
+
+      // --------------------------------------------------
+      // open == close
+      // Không nên coi là đang mở
+      // --------------------------------------------------
+
+      return false;
+    } catch (error) {
+      console.error(
+        "[StoreSelect] Error checking opening status:",
+        error
+      );
+
+      return null;
+    }
+  };
+
   const titles: Record<Locale, string> = {
     ja: "店舗を選択してください",
     vi: "Vui lòng chọn cửa hàng",
@@ -105,12 +308,126 @@ export default function StoreSelectPage({ params }: Props) {
     zh: "暂无可用门店",
     ko: "이용 가능한 매장이 없습니다",
   };
+
   const selectStoreText: Record<Locale, string> = {
-    ja: "店舗を選ぶ",
-    vi: "Chọn quán",
-    en: "Select Store",
-    zh: "选择门店",
-    ko: "매장 선택",
+      ja: "店舗を選ぶ",
+      vi: "Chọn quán",
+      en: "Select Store",
+      zh: "选择门店",
+      ko: "매장 선택",
+    };
+
+  const orderStatusText: Record<
+    Locale,
+    {
+      accepting: string;
+      outsideHours: string;
+      stopped: string;
+    }
+  > = {
+    ja: {
+      accepting: "注文受付中",
+      outsideHours: "営業時間外",
+      stopped: "注文受付停止中",
+    },
+
+    vi: {
+      accepting: "Đang nhận đơn",
+      outsideHours: "Ngoài giờ mở cửa",
+      stopped: "Đang tạm dừng nhận đơn",
+    },
+
+    en: {
+      accepting: "Orders Open",
+      outsideHours: "Outside Business Hours",
+      stopped: "Order Acceptance Stopped",
+    },
+
+    zh: {
+      accepting: "正在接受订单",
+      outsideHours: "营业时间外",
+      stopped: "暂停接单",
+    },
+
+    ko: {
+      accepting: "주문 접수 중",
+      outsideHours: "영업시간 외",
+      stopped: "주문 접수 중지",
+    },
+  };
+
+  const statusText: Record<
+    Locale,
+    {
+      open: string;
+      outsideHours: string;
+      stopped: string;
+    }
+  > = {
+    ja: {
+      open: "営業中",
+      outsideHours: "営業時間外",
+      stopped: "注文受付停止中",
+    },
+    vi: {
+      open: "Đang mở cửa",
+      outsideHours: "Ngoài giờ mở cửa",
+      stopped: "Đang tạm dừng nhận đơn",
+    },
+    en: {
+      open: "Open now",
+      outsideHours: "Outside business hours",
+      stopped: "Orders temporarily paused",
+    },
+    zh: {
+      open: "营业中",
+      outsideHours: "营业时间外",
+      stopped: "暂停接单",
+    },
+    ko: {
+      open: "영업 중",
+      outsideHours: "영업시간 외",
+      stopped: "주문 접수 일시 중지",
+    },
+  };
+
+    const openStatusText: Record<
+    Locale,
+    {
+      open: string;
+      closed: string;
+      unknown: string;
+    }
+  > = {
+    ja: {
+      open: "現在営業中",
+      closed: "現在営業時間外",
+      unknown: "営業時間未設定",
+    },
+
+    vi: {
+      open: "Hiện đang mở cửa",
+      closed: "Hiện đang ngoài giờ mở cửa",
+      unknown: "Chưa có giờ mở cửa",
+    },
+
+    en: {
+      open: "Open now",
+      closed: "Currently closed",
+      unknown: "Opening hours unavailable",
+    },
+
+    zh: {
+      open: "现在营业中",
+      closed: "当前非营业时间",
+      unknown: "营业时间未设置",
+    },
+
+    ko: {
+      open: "현재 영업 중",
+      closed: "현재 영업시간 외",
+      unknown: "영업시간 미설정",
+    },
   };
 
   const labels: Record<Locale, { location: string; address: string; hours: string }> = {
@@ -146,20 +463,50 @@ export default function StoreSelectPage({ params }: Props) {
               const formattedOpen = formatTimeStr(store.openTime);
               const formattedClose = formatTimeStr(store.closeTime);
 
-              const hasCoord = store.latitude && store.longitude;
+              const storeStatus = getStoreStatus(store);
+
+              const statusLabel =
+                storeStatus === "OPEN"
+                  ? statusText[locale].open
+                  : storeStatus === "OUTSIDE_HOURS"
+                    ? statusText[locale].outsideHours
+                    : statusText[locale].stopped;
+
+              const isOpen = getStoreOpenStatus(
+                store.openTime,
+                store.closeTime
+              );
+
+              const hasOpeningHours =
+                formattedOpen && formattedClose;
+
+              const hasCoord =
+                store.latitude !== null &&
+                store.longitude !== null;
+
               const embedMapUrl = hasCoord
                 ? `https://maps.google.com/maps?q=${store.latitude},${store.longitude}&t=&z=16&ie=UTF8&iwloc=&output=embed`
-                : `https://maps.google.com/maps?q=${encodeURIComponent(store.address || store.title)}&t=&z=15&ie=UTF8&iwloc=&output=embed`;
+                : `https://maps.google.com/maps?q=${encodeURIComponent(
+                    store.address || store.title
+                  )}&t=&z=15&ie=UTF8&iwloc=&output=embed`;
 
-              const mapLink = store.googleMapUrl || (hasCoord
-                ? `https://www.google.com/maps/search/?api=1&query=${store.latitude},${store.longitude}`
-                : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(store.address || store.title)}`);
+              const mapLink =
+                store.googleMapUrl ||
+                (hasCoord
+                  ? `https://www.google.com/maps/search/?api=1&query=${store.latitude},${store.longitude}`
+                  : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+                      store.address || store.title
+                    )}`);
 
               return (
                 <div
                   key={store.id}
                   onClick={() => handleSelectStore(store)}
-                  className="store-card-modern"
+                  className={`store-card-modern ${
+                    isOpen === false
+                      ? "store-card-closed"
+                      : ""
+                  }`}
                 >
                   <div className="store-map-preview" onClick={(e) => e.stopPropagation()}>
                     <iframe
@@ -182,6 +529,13 @@ export default function StoreSelectPage({ params }: Props) {
                     <div className="store-card-body">
                       <div className="store-name-row">
                         <h3 className="store-title">{store.title}</h3>
+
+                        <span
+                          className={`store-status-badge ${storeStatus.toLowerCase()}`}
+                        >
+                          <span className="store-status-dot"></span>
+                          {statusLabel}
+                        </span>
                       </div>
 
                       {store.locationName && (

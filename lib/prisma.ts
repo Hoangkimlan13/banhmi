@@ -1,4 +1,4 @@
-/**
+/** 
 import { PrismaClient } from "@prisma/client";
 
 import { PrismaMariaDb } from "@prisma/adapter-mariadb";
@@ -34,7 +34,7 @@ if (process.env.NODE_ENV !== "production") {
 
 
  * CODE CŨ - KHÔNG SỬ DỤNG
- */
+ * /
 import { PrismaClient } from "@prisma/client";
 import { PrismaMariaDb } from "@prisma/adapter-mariadb";
 

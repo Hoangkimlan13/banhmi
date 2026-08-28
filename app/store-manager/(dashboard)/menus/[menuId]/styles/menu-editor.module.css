@@ -1,0 +1,842 @@
+.page {
+  min-height: 100vh;
+  background: #f5f5f7;
+  color: #1d1d1f;
+}
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  min-height: 84px;
+  padding: 16px 24px;
+
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid #e5e5e7;
+}
+
+.headerLeft {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.backButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  color: #555;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.storeLabel,
+.itemsEyebrow {
+  color: #86868b;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.header h1 {
+  margin: 2px 0;
+  font-size: 25px;
+  line-height: 1.2;
+}
+
+.header p {
+  margin: 0;
+  color: #86868b;
+  font-size: 13px;
+}
+
+.headerBadges {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.defaultBadge,
+.activeBadge,
+.inactiveBadge {
+  display: inline-flex;
+  align-items: center;
+
+  padding: 5px 9px;
+
+  border-radius: 999px;
+
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.defaultBadge {
+  background: #fff3cd;
+  color: #7a5b00;
+}
+
+.activeBadge {
+  background: #e8f7ed;
+  color: #147a38;
+}
+
+.inactiveBadge {
+  background: #eeeeee;
+  color: #777;
+}
+
+.workspace {
+  display: grid;
+  grid-template-columns: 260px minmax(0, 1fr);
+  min-height: calc(100vh - 84px);
+}
+
+.categoryPanel {
+  padding: 20px;
+
+  background: #fff;
+  border-right: 1px solid #e5e5e7;
+}
+
+.panelHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin-bottom: 16px;
+}
+
+.panelHeader > div {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.panelHeader h2 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.panelHeader span {
+  color: #999;
+  font-size: 12px;
+}
+
+.iconButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 36px;
+  height: 36px;
+
+  border: 0;
+  border-radius: 10px;
+
+  background: #f2f2f7;
+  cursor: pointer;
+}
+
+.categoryList {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.categoryButton {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  width: 100%;
+  padding: 11px 12px;
+
+  border: 0;
+  border-radius: 10px;
+
+  background: transparent;
+
+  text-align: left;
+  cursor: pointer;
+}
+
+.categoryButton:hover {
+  background: #f5f5f7;
+}
+
+.categorySelected {
+  background: #111;
+  color: #fff;
+}
+
+.categoryArrow {
+  display: flex;
+  align-items: center;
+}
+
+.categoryForm {
+  margin-bottom: 16px;
+}
+
+.categoryForm input {
+  width: 100%;
+  box-sizing: border-box;
+
+  padding: 9px 10px;
+
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  outline: none;
+}
+
+.categoryForm > div {
+  display: flex;
+  gap: 6px;
+  margin-top: 7px;
+}
+
+.categoryForm button {
+  flex: 1;
+  padding: 7px;
+
+  border: 0;
+  border-radius: 7px;
+
+  cursor: pointer;
+}
+
+.content {
+  min-width: 0;
+  padding: 28px;
+}
+
+.itemsHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin-bottom: 22px;
+}
+
+.itemsHeader h2 {
+  margin: 4px 0;
+  font-size: 25px;
+}
+
+.itemsHeader span {
+  color: #fff;
+  font-size: 13px;
+}
+
+.primaryButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+
+  min-height: 40px;
+  padding: 0 16px;
+
+  border: 0;
+  border-radius: 10px;
+
+  background: #007aff;
+  color: #fff;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.primaryButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.itemGrid {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(330px, 1fr)
+  );
+  gap: 16px;
+}
+
+.itemCard {
+  display: flex;
+  min-height: 160px;
+
+  overflow: hidden;
+
+  background: #fff;
+  border: 1px solid #e6e6e8;
+  border-radius: 16px;
+
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.04);
+}
+
+.itemUnavailable {
+  opacity: 0.62;
+}
+
+.itemImage {
+  flex: 0 0 130px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #f1f1f3;
+  overflow: hidden;
+}
+
+.itemImage img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.itemImage > span {
+  font-size: 32px;
+  color: #aaa;
+}
+
+.itemBody {
+  flex: 1;
+  min-width: 0;
+  padding: 16px;
+}
+
+.itemTop {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.itemTop h3 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.itemTop p {
+  margin: 4px 0 0;
+  color: #888;
+  font-size: 12px;
+}
+
+.itemTop strong {
+  white-space: nowrap;
+  font-size: 16px;
+}
+
+.itemActions {
+  display: flex;
+  gap: 7px;
+  margin-top: 20px;
+}
+
+.itemActions button {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+
+  padding: 7px 9px;
+
+  border: 1px solid #ddd;
+  border-radius: 8px;
+
+  background: #fff;
+
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.soldOutBadge {
+  display: inline-block;
+  margin-top: 10px;
+
+  padding: 4px 7px;
+
+  border-radius: 6px;
+
+  background: #eee;
+  color: #666;
+
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.emptyItems,
+.selectCategory {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 350px;
+
+  border: 1px dashed #d5d5d8;
+  border-radius: 16px;
+
+  text-align: center;
+}
+
+.emptyItems > span,
+.selectCategory > span {
+  margin-bottom: 12px;
+  font-size: 38px;
+  color: #aaa;
+}
+
+.emptyItems h3,
+.selectCategory h2 {
+  margin: 0 0 6px;
+}
+
+.emptyItems p,
+.selectCategory p {
+  margin: 0 0 18px;
+  color: #888;
+  font-size: 13px;
+}
+
+/* ============================================================
+   MODAL
+   ============================================================ */
+
+.modalBackdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 20px;
+
+  background: rgba(0, 0, 0, 0.38);
+  backdrop-filter: blur(8px);
+}
+
+.itemFormModal {
+  display: flex;
+  flex-direction: column;
+
+  width: min(760px, 100%);
+  max-height: calc(100vh - 40px);
+
+  overflow: hidden;
+
+  background: #fff;
+  border-radius: 20px;
+
+  box-shadow: 0 24px 70px
+    rgba(0, 0, 0, 0.22);
+}
+
+.formModalHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 20px 22px;
+
+  border-bottom: 1px solid #eee;
+}
+
+.formModalHeader h2 {
+  margin: 4px 0 0;
+  font-size: 21px;
+}
+
+.formScroll {
+  overflow-y: auto;
+  padding: 22px;
+}
+
+.formSection {
+  padding: 20px 0;
+
+  border-bottom: 1px solid #eee;
+}
+
+.formSection:first-child {
+  padding-top: 0;
+}
+
+.formSectionTitle {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+
+  margin-bottom: 18px;
+}
+
+.formSectionTitle > span {
+  font-size: 22px;
+}
+
+.formSectionTitle h3 {
+  margin: 0 0 3px;
+  font-size: 15px;
+}
+
+.formSectionTitle p {
+  margin: 0;
+  color: #888;
+  font-size: 12px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+
+  margin-bottom: 14px;
+}
+
+.field > span {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.field input,
+.field textarea {
+  width: 100%;
+  box-sizing: border-box;
+
+  padding: 10px 11px;
+
+  border: 1px solid #dcdce0;
+  border-radius: 9px;
+
+  outline: none;
+
+  font: inherit;
+}
+
+.field input:focus,
+.field textarea:focus {
+  border-color: #111;
+}
+
+.twoColumns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.tagList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tag,
+.tagSelected {
+  padding: 8px 12px;
+
+  border-radius: 999px;
+
+  cursor: pointer;
+}
+
+.tag {
+  border: 1px solid #ddd;
+  background: #fff;
+}
+
+.tagSelected {
+  border: 1px solid #111;
+  background: #111;
+  color: #fff;
+}
+
+.allergenGrid {
+  display: grid;
+  grid-template-columns: repeat(
+    4,
+    1fr
+  );
+  gap: 8px;
+}
+
+.allergen {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+
+  padding: 9px;
+
+  border: 1px solid #eee;
+  border-radius: 8px;
+
+  font-size: 12px;
+}
+
+.optionGroupList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.optionGroup {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+
+  padding: 11px;
+
+  border: 1px solid #eee;
+  border-radius: 10px;
+
+  cursor: pointer;
+}
+
+.optionGroup strong {
+  display: block;
+  font-size: 13px;
+}
+
+.optionGroup small {
+  display: block;
+  margin-top: 4px;
+  color: #888;
+}
+
+.helper {
+  margin: 10px 0 0;
+
+  color: #888;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.error {
+  margin-top: 16px;
+  padding: 10px 12px;
+
+  border-radius: 8px;
+
+  background: #fff0f0;
+  color: #c62828;
+
+  font-size: 13px;
+}
+
+.formFooter {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+
+  padding: 15px 22px;
+
+  border-top: 1px solid #eee;
+  background: #fafafa;
+}
+
+.cancelButton {
+  padding: 0 16px;
+
+  min-height: 40px;
+
+  border: 1px solid #ddd;
+  border-radius: 10px;
+
+  background: #fff;
+
+  cursor: pointer;
+}
+
+/* ============================================================
+   MOBILE
+   ============================================================ */
+
+@media (max-width: 768px) {
+  .header {
+    position: relative;
+
+    align-items: flex-start;
+    gap: 12px;
+
+    padding: 14px;
+  }
+
+  .headerLeft {
+    gap: 10px;
+  }
+
+  .header h1 {
+    font-size: 20px;
+  }
+
+  .headerBadges {
+    display: none;
+  }
+
+  .workspace {
+    display: block;
+  }
+
+  .categoryPanel {
+    border-right: 0;
+    border-bottom: 1px solid #e5e5e7;
+  }
+
+  .categoryList {
+    flex-direction: row;
+    overflow-x: auto;
+  }
+
+  .categoryButton {
+    flex: 0 0 auto;
+    width: auto;
+    white-space: nowrap;
+  }
+
+  .content {
+    padding: 16px;
+  }
+
+  .itemsHeader {
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .itemsHeader h2 {
+    font-size: 21px;
+  }
+
+  .itemGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .twoColumns {
+    grid-template-columns: 1fr;
+  }
+
+  .allergenGrid {
+    grid-template-columns: repeat(
+      2,
+      1fr
+    );
+  }
+
+  .modalBackdrop {
+    align-items: flex-end;
+    padding: 0;
+  }
+
+  .itemFormModal {
+    width: 100%;
+    max-height: 94vh;
+
+    border-radius: 20px 20px 0 0;
+  }
+}
+
+
+
+
+/* ============================================================
+   PRICE FIELD & INPUT WRAPPER
+   ============================================================ */
+
+.priceField {
+  margin-top: 16px;
+}
+
+
+/* Wrapper chứa Ký hiệu Yen và Ô Nhập Giá */
+.priceInputWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.pricePrefix {
+  position: absolute;
+  left: 14px;
+  z-index: 1;
+
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-secondary, #6e6e73);
+
+  pointer-events: none;
+  user-select: none;
+}
+
+.priceInputWrapper input[type="number"] {
+  width: 100%;
+  min-height: 46px;
+
+  padding: 0 14px 0 32px; /* Khoảng trống bên trái cho ký hiệu ¥ */
+
+  font: inherit;
+  font-size: 15px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+
+  color: var(--text-primary, #1d1d1f);
+  background-color: #ffffff;
+
+  border: 1px solid var(--border-strong, rgba(60, 60, 67, 0.18));
+  border-radius: var(--radius-sm, 11px);
+
+  outline: none;
+
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease,
+    background-color 0.18s ease;
+}
+
+/* Ẩn mũi tên tăng giảm số mặc định của browser */
+.priceInputWrapper input[type="number"]::-webkit-outer-spin-button,
+.priceInputWrapper input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.priceInputWrapper input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+/* Focus & Hover State cho Input Giá */
+.priceInputWrapper input[type="number"]:hover:not(:disabled) {
+  border-color: #a1a1a6;
+}
+
+.priceInputWrapper input[type="number"]:focus {
+  border-color: var(--accent, #007aff);
+  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.14);
+}
+
+.priceInputWrapper input[type="number"]:focus + .pricePrefix,
+.priceInputWrapper:focus-within .pricePrefix {
+  color: var(--accent, #007aff);
+}
+
+/* Disabled State */
+.priceInputWrapper input[type="number"]:disabled {
+  background-color: #f2f2f7;
+  color: var(--text-tertiary, #86868b);
+  cursor: not-allowed;
+  opacity: 0.72;
+}
+
+.priceInputWrapper input[type="number"]:disabled ~ .pricePrefix {
+  color: var(--text-tertiary, #86868b);
+}

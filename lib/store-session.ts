@@ -3,9 +3,13 @@ import { cookies } from "next/headers";
 
 const COOKIE_NAME = "store_manager_session";
 
-const SESSION_MAX_AGE = 60 * 60 * 24 * 7; // 7 ngày
+const SESSION_MAX_AGE = 60 * 60 * 24 * 7; // 7日
 
-function getSessionSecret() {
+// ============================================================
+// SECRET
+// ============================================================
+
+function getSessionSecret(): string {
   const secret = process.env.STORE_MANAGER_SESSION_SECRET;
 
   if (!secret) {
@@ -17,56 +21,121 @@ function getSessionSecret() {
   return secret;
 }
 
-function sign(payload: string) {
+// ============================================================
+// SIGN
+// ============================================================
+
+function sign(payload: string): string {
   return crypto
     .createHmac("sha256", getSessionSecret())
     .update(payload)
     .digest("base64url");
 }
 
-export function createStoreSession(storeId: number) {
+// ============================================================
+// CREATE SESSION
+// ============================================================
+
+export function createStoreSession(
+  storeId: number
+): string {
   const payload = JSON.stringify({
     storeId,
-    expiresAt: Date.now() + SESSION_MAX_AGE * 1000,
+    expiresAt:
+      Date.now() +
+      SESSION_MAX_AGE * 1000,
   });
 
-  const encodedPayload = Buffer.from(payload).toString("base64url");
-  const signature = sign(encodedPayload);
+  const encodedPayload =
+    Buffer.from(payload).toString("base64url");
+
+  const signature =
+    sign(encodedPayload);
 
   return `${encodedPayload}.${signature}`;
 }
 
-export function verifyStoreSession(token: string) {
-  try {
-    const [encodedPayload, signature] = token.split(".");
+// ============================================================
+// VERIFY SESSION
+// ============================================================
 
-    if (!encodedPayload || !signature) {
+export function verifyStoreSession(
+  token: string
+) {
+  try {
+    const parts = token.split(".");
+
+    if (parts.length !== 2) {
       return null;
     }
 
-    const expectedSignature = sign(encodedPayload);
+    const [
+      encodedPayload,
+      signature,
+    ] = parts;
 
-    const valid = crypto.timingSafeEqual(
-      Buffer.from(signature),
-      Buffer.from(expectedSignature)
-    );
+    if (
+      !encodedPayload ||
+      !signature
+    ) {
+      return null;
+    }
+
+    const expectedSignature =
+      sign(encodedPayload);
+
+    const signatureBuffer =
+      Buffer.from(signature);
+
+    const expectedBuffer =
+      Buffer.from(expectedSignature);
+
+    // timingSafeEqual sẽ throw nếu length khác nhau
+    if (
+      signatureBuffer.length !==
+      expectedBuffer.length
+    ) {
+      return null;
+    }
+
+    const valid =
+      crypto.timingSafeEqual(
+        signatureBuffer,
+        expectedBuffer
+      );
 
     if (!valid) {
       return null;
     }
 
     const payload = JSON.parse(
-      Buffer.from(encodedPayload, "base64url").toString("utf8")
+      Buffer.from(
+        encodedPayload,
+        "base64url"
+      ).toString("utf8")
     );
 
     if (
-      typeof payload.storeId !== "number" ||
-      typeof payload.expiresAt !== "number"
+      typeof payload.storeId !==
+        "number" ||
+      typeof payload.expiresAt !==
+        "number"
     ) {
       return null;
     }
 
-    if (payload.expiresAt < Date.now()) {
+    if (
+      payload.storeId <= 0 ||
+      !Number.isInteger(
+        payload.storeId
+      )
+    ) {
+      return null;
+    }
+
+    if (
+      payload.expiresAt <= Date.now()
+    ) {
       return null;
     }
 
@@ -79,10 +148,18 @@ export function verifyStoreSession(token: string) {
   }
 }
 
-export async function getStoreSession() {
-  const cookieStore = await cookies();
+// ============================================================
+// GET SESSION
+// ============================================================
 
-  const token = cookieStore.get(COOKIE_NAME)?.value;
+export async function getStoreSession() {
+  const cookieStore =
+    await cookies();
+
+  const token =
+    cookieStore.get(
+      COOKIE_NAME
+    )?.value;
 
   if (!token) {
     return null;
@@ -91,22 +168,56 @@ export async function getStoreSession() {
   return verifyStoreSession(token);
 }
 
-export async function setStoreSession(storeId: number) {
-  const cookieStore = await cookies();
+// ============================================================
+// SET SESSION
+// ============================================================
 
-  const token = createStoreSession(storeId);
+export async function setStoreSession(
+  storeId: number
+) {
+  if (
+    !Number.isInteger(storeId) ||
+    storeId <= 0
+  ) {
+    throw new Error(
+      "Invalid storeId"
+    );
+  }
 
-  cookieStore.set(COOKIE_NAME, token, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
-    path: "/",
-    maxAge: SESSION_MAX_AGE,
-  });
+  const cookieStore =
+    await cookies();
+
+  const token =
+    createStoreSession(storeId);
+
+  cookieStore.set(
+    COOKIE_NAME,
+    token,
+    {
+      httpOnly: true,
+
+      secure:
+        process.env.NODE_ENV ===
+        "production",
+
+      sameSite: "lax",
+
+      path: "/",
+
+      maxAge: SESSION_MAX_AGE,
+    }
+  );
 }
 
-export async function clearStoreSession() {
-  const cookieStore = await cookies();
+// ============================================================
+// CLEAR SESSION
+// ============================================================
 
-  cookieStore.delete(COOKIE_NAME);
+export async function clearStoreSession() {
+  const cookieStore =
+    await cookies();
+
+  cookieStore.delete(
+    COOKIE_NAME
+  );
 }

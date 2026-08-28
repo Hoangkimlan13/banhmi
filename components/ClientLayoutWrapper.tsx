@@ -13,7 +13,7 @@ export default function ClientLayoutWrapper({ children, locale }: Props) {
   const pathname = usePathname();
   
   // Kiểm tra xem có phải đang ở trang order hoặc checkout không (hỗ trợ đa ngôn ngữ /ja/order, /vi/checkout...)
-  const isOrderOrCheckoutPage = pathname?.includes("/order") || pathname?.includes("/checkout");
+  const isOrderOrCheckoutPage = pathname?.includes("/order") || pathname?.includes("/checkout")  || pathname?.includes("/store-select") ;
 
   return (
     <>

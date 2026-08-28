@@ -1,0 +1,240 @@
+import { NextResponse } from "next/server";
+import Stripe from "stripe";
+
+export async function POST(req: Request) {
+  console.log("========================================");
+  console.log("CHECKOUT API HIT - VERSION 2026-08-10");
+  console.log("========================================");
+
+  try {
+    // =========================================================
+    // 1. READ REQUEST
+    // =========================================================
+    const body = await req.json();
+
+    console.log("CHECKOUT BODY:", body);
+
+    // =========================================================
+    // 2. STRIPE CONFIG
+    // =========================================================
+    const secretKey = process.env.STRIPE_SECRET_KEY?.trim();
+
+    console.log("STRIPE KEY EXISTS:", !!secretKey);
+    console.log(
+      "STRIPE KEY PREFIX:",
+      secretKey ? secretKey.substring(0, 8) : "NONE"
+    );
+
+    if (!secretKey) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "STRIPE_SECRET_KEY is missing",
+        },
+        { status: 500 }
+      );
+    }
+
+    if (!secretKey.startsWith("sk_")) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "STRIPE_SECRET_KEY is invalid",
+        },
+        { status: 500 }
+      );
+    }
+
+    const stripeClient = new Stripe(secretKey);
+
+    // =========================================================
+    // 3. BASIC VALIDATION
+    // =========================================================
+    const storeId = Number(body.storeId);
+
+    if (!Number.isInteger(storeId) || storeId <= 0) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "storeId is invalid",
+        },
+        { status: 400 }
+      );
+    }
+
+    const orderType = String(
+      body.orderType || "IMMEDIATE"
+    );
+
+    if (
+      ![
+        "IMMEDIATE",
+        "SCHEDULED_TIME",
+        "SCHEDULED_DATE",
+      ].includes(orderType)
+    ) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "orderType is invalid",
+        },
+        { status: 400 }
+      );
+    }
+
+    // =========================================================
+    // 4. CART
+    // =========================================================
+    const items = body.items;
+
+    if (!Array.isArray(items) || items.length === 0) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Cart is empty",
+        },
+        { status: 400 }
+      );
+    }
+
+    console.log("CHECKOUT ITEMS:", items);
+
+    // =========================================================
+    // 5. CALCULATE TOTAL
+    //
+    // Support multiple possible frontend structures:
+    //
+    // item.totalPrice
+    // item.total
+    // item.price * item.quantity
+    //
+    // But DO NOT trust client total in production.
+    // This is only for getting the checkout flow running.
+    // =========================================================
+    const totalAmount = items.reduce(
+      (sum: number, item: any) => {
+        let itemTotal = 0;
+
+        if (item.totalPrice !== undefined) {
+          itemTotal = Number(item.totalPrice);
+        } else if (item.total !== undefined) {
+          itemTotal = Number(item.total);
+        } else if (
+          item.price !== undefined &&
+          item.quantity !== undefined
+        ) {
+          itemTotal =
+            Number(item.price) *
+            Number(item.quantity);
+        }
+
+        if (!Number.isFinite(itemTotal)) {
+          return sum;
+        }
+
+        return sum + itemTotal;
+      },
+      0
+    );
+
+    console.log(
+      "CALCULATED TOTAL:",
+      totalAmount
+    );
+
+    if (
+      !Number.isFinite(totalAmount) ||
+      totalAmount <= 0
+    ) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: `Invalid total: ${totalAmount}`,
+        },
+        { status: 400 }
+      );
+    }
+
+    // JPY has no decimal subunit.
+    const stripeAmount = Math.round(totalAmount);
+
+    console.log(
+      "STRIPE AMOUNT:",
+      stripeAmount
+    );
+
+    // =========================================================
+    // 6. CREATE STRIPE PAYMENT INTENT
+    // =========================================================
+    console.log(
+      "CREATING STRIPE PAYMENT INTENT..."
+    );
+
+    const stripeIntent =
+      await stripeClient.paymentIntents.create({
+        amount: stripeAmount,
+        currency: "jpy",
+
+        automatic_payment_methods: {
+          enabled: true,
+        },
+
+        metadata: {
+          store_id: String(storeId),
+          order_type: orderType,
+        },
+      });
+
+    console.log(
+      "STRIPE PAYMENT INTENT CREATED:",
+      stripeIntent.id
+    );
+
+    // =========================================================
+    // 7. RESPONSE
+    // =========================================================
+    return NextResponse.json({
+      success: true,
+
+      clientSecret:
+        stripeIntent.client_secret,
+
+      paymentIntentId:
+        stripeIntent.id,
+
+      amount: stripeAmount,
+
+      currency: "jpy",
+    });
+  } catch (error: unknown) {
+    // =========================================================
+    // ERROR
+    // =========================================================
+    console.error(
+      "========================================"
+    );
+
+    console.error(
+      "CHECKOUT API ERROR:"
+    );
+
+    console.error(error);
+
+    console.error(
+      "========================================"
+    );
+
+    const message =
+      error instanceof Error
+        ? error.message
+        : String(error);
+
+    return NextResponse.json(
+      {
+        success: false,
+        error: message,
+      },
+      { status: 500 }
+    );
+  }
+}
