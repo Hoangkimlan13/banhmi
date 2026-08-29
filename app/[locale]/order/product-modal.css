@@ -375,9 +375,6 @@
   margin: 0 auto 14px;
   overflow: hidden;
   border-radius: 16px;
-  background: #f8fafc;
-  box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.06),
-              0 8px 20px -4px rgba(15, 23, 42, 0.06);
   transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -543,8 +540,6 @@
   justify-content: center;
   border: none;
   border-radius: 8px;
-  background: #ffedd5;
-  color: #ea580c;
   cursor: pointer;
   transition: all 0.15s ease;
 }
@@ -587,7 +582,7 @@
   min-height: 0;
   flex: 1;
 
-  padding: 16px 20px 24px;
+  padding: 5px 20px 24px;
 
   overflow-y: auto;
   overscroll-behavior: contain;
@@ -796,19 +791,6 @@
   box-shadow: 0 3px 10px rgba(249, 115, 22, 0.1);
 }
 
-.option-card.selected::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 9px;
-  bottom: 9px;
-
-  width: 3px;
-
-  border-radius: 0 4px 4px 0;
-  background: var(--primary);
-}
-
 /* DISABLED OPTION */
 
 .option-card.disabled,
@@ -896,67 +878,435 @@
 }
 
 /* =========================================================
-   ALLERGENS SECTION (MINIMALIST & CLEAN)
+   ALLERGENS
+   Compact disclosure / Japanese restaurant style
    ========================================================= */
 
 .modal-allergens-section {
-  margin-bottom: 20px;
-  padding: 10px 0;
-  border-top: 1px dashed var(--border-color);
-  border-bottom: 1px dashed var(--border-color);
+  margin: 16px 0 20px;
+
+  background: var(--surface);
+
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+
+  overflow: hidden;
+
+  box-shadow: var(--shadow-sm);
+
+  transition:
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
 }
 
-.allergens-title-box {
+
+/* =========================================================
+   TOGGLE
+   ========================================================= */
+
+.allergens-toggle {
+  width: 100%;
+
   display: flex;
   align-items: center;
-  gap: 6px;
-  margin-bottom: 8px;
+  justify-content: space-between;
+
+  padding: 11px 13px;
+
+  border: 0;
+  outline: none;
+
+  background: transparent;
+
+  color: var(--text-main);
+
+  cursor: pointer;
+
+  text-align: left;
+
+  -webkit-tap-highlight-color: transparent;
 }
 
-.allergens-icon {
-  color: var(--text-muted);
-  opacity: 0.8;
-  flex-shrink: 0;
+
+.allergens-toggle:hover {
+  background: var(--surface-soft);
 }
 
-.modal-allergens-section h3 {
-  margin: 0;
+
+.allergens-toggle:focus-visible {
+  box-shadow:
+    inset 0 0 0 2px var(--primary-soft);
+}
+
+
+/* =========================================================
+   LEFT
+   ========================================================= */
+
+.allergens-toggle-left {
+  display: flex;
+  align-items: center;
+
+  gap: 9px;
+
+  min-width: 0;
+}
+
+
+/* =========================================================
+   ICON
+   ========================================================= */
+
+.allergens-icon-wrap {
+  width: 27px;
+  height: 27px;
+
+  flex: 0 0 27px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
   color: var(--text-muted);
-  font-size: 12px;
+
+  background: var(--surface-soft);
+
+  border: 1px solid var(--border-color);
+  border-radius: 50%;
+
+  transition:
+    color var(--transition-fast),
+    background-color var(--transition-fast),
+    border-color var(--transition-fast);
+}
+
+
+.modal-allergens-section.is-open
+  .allergens-icon-wrap {
+  color: var(--primary);
+
+  background: var(--primary-light);
+
+  border-color: var(--primary-soft);
+}
+
+
+/* =========================================================
+   TITLE
+   ========================================================= */
+
+.allergens-title-wrap {
+  display: flex;
+  flex-direction: column;
+
+  min-width: 0;
+}
+
+
+.allergens-title {
+  color: var(--text-main);
+
+  font-size: 12.5px;
   font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
+
+  line-height: 1.4;
+
+  letter-spacing: 0.015em;
 }
+
+
+.allergens-subtitle {
+  margin-top: 1px;
+
+  color: var(--text-light);
+
+  font-size: 9.5px;
+  font-weight: 400;
+
+  line-height: 1.4;
+
+  letter-spacing: 0.01em;
+}
+
+
+/* =========================================================
+   CHEVRON
+   ========================================================= */
+
+.allergens-chevron {
+  width: 28px;
+  height: 28px;
+
+  flex: 0 0 28px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  color: var(--text-light);
+
+  border-radius: 50%;
+
+  transition:
+    transform var(--transition),
+    color var(--transition-fast),
+    background-color var(--transition-fast);
+}
+
+
+.allergens-toggle:hover
+  .allergens-chevron {
+  color: var(--text-muted);
+
+  background: var(--surface-soft);
+}
+
+
+.allergens-chevron.open {
+  transform: rotate(180deg);
+
+  color: var(--primary);
+}
+
+
+/* =========================================================
+   CONTENT
+   ========================================================= */
+
+.allergens-content {
+  display: grid;
+
+  grid-template-rows: 0fr;
+
+  opacity: 0;
+
+  transition:
+    grid-template-rows 260ms
+      cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 180ms ease;
+}
+
+
+.allergens-content > * {
+  min-height: 0;
+
+  overflow: hidden;
+}
+
+
+.allergens-content.open {
+  grid-template-rows: 1fr;
+
+  opacity: 1;
+}
+
+
+/* =========================================================
+   INNER CONTENT
+   ========================================================= */
+
+.allergens-content {
+  padding: 0 13px;
+}
+
+
+.allergens-content.open {
+  padding-bottom: 12px;
+}
+
+
+/* =========================================================
+   ALLERGEN LIST
+   ========================================================= */
 
 .allergen-list {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
+
   gap: 6px;
+
+  padding-top: 2px;
 }
+
+
+/* =========================================================
+   ALLERGEN CHIP
+   ========================================================= */
 
 .allergen-badge {
   display: inline-flex;
   align-items: center;
 
-  padding: 3px 10px;
-  min-height: 22px;
+  gap: 5px;
+
+  min-height: 27px;
+
+  padding: 5px 9px;
+
+  color: var(--text-secondary);
 
   background: var(--surface-soft);
-  color: var(--text-secondary);
+
   border: 1px solid var(--border-color);
+
   border-radius: var(--radius-sm);
 
-  font-size: 11.5px;
+  font-size: 11px;
   font-weight: 500;
-  line-height: 1;
-  transition: all var(--transition-fast);
+
+  line-height: 1.2;
+
+  transition:
+    color var(--transition-fast),
+    background-color var(--transition-fast),
+    border-color var(--transition-fast),
+    transform var(--transition-fast);
 }
 
+
+.allergen-badge-icon {
+  flex: 0 0 auto;
+
+  color: var(--text-light);
+
+  transition:
+    color var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+
 .allergen-badge:hover {
-  background: #ffffff;
-  border-color: var(--text-light);
   color: var(--text-main);
+
+  background: var(--surface);
+
+  border-color: var(--primary-soft);
+
+  transform: translateY(-1px);
+}
+
+
+.allergen-badge:hover
+  .allergen-badge-icon {
+  color: var(--primary);
+
+  transform: scale(1.08);
+}
+
+
+/* =========================================================
+   NOTE
+   ========================================================= */
+
+.allergens-note {
+  display: flex;
+  align-items: flex-start;
+
+  gap: 6px;
+
+  margin-top: 10px;
+  padding-top: 9px;
+
+  color: var(--text-light);
+
+  border-top: 1px solid var(--border-light);
+
+  font-size: 9px;
+  font-weight: 400;
+
+  line-height: 1.55;
+}
+
+
+.allergens-note svg {
+  flex: 0 0 auto;
+
+  margin-top: 2px;
+
+  color: var(--text-light);
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 480px) {
+
+  .modal-allergens-section {
+    margin: 14px 0 18px;
+
+    border-radius: var(--radius-md);
+  }
+
+
+  .allergens-toggle {
+    padding: 10px 12px;
+  }
+
+
+  .allergens-icon-wrap {
+    width: 26px;
+    height: 26px;
+
+    flex-basis: 26px;
+  }
+
+
+  .allergens-title {
+    font-size: 12px;
+  }
+
+
+  .allergens-subtitle {
+    font-size: 9px;
+  }
+
+
+  .allergens-content {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+
+  .allergens-content.open {
+    padding: 11px;
+  }
+
+
+  .allergen-list {
+    gap: 5px;
+  }
+
+
+  .allergen-badge {
+    min-height: 26px;
+
+    padding: 5px 8px;
+
+    font-size: 10.5px;
+  }
+
+
+  .allergens-note {
+    font-size: 8.8px;
+  }
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .allergens-content,
+  .allergens-chevron,
+  .allergens-icon-wrap,
+  .allergen-badge,
+  .allergen-badge-icon {
+    transition: none;
+  }
 }
 
 /* =========================================================
@@ -1346,5 +1696,426 @@
   .tag-badge.top-1 {
     transition: none !important;
     animation: none !important;
+  }
+}
+
+
+/* ============================================================
+   MODAL ERROR
+   Sản phẩm không tìm thấy / không khả dụng / lỗi tải dữ liệu
+   ============================================================ */
+
+.modal-error {
+  flex: 1;
+  min-height: 320px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 40px 24px;
+
+  background: #ffffff;
+}
+
+.modal-error-content {
+  width: 100%;
+  max-width: 380px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+}
+
+/* ============================================================
+   ERROR ICON
+   ============================================================ */
+
+.modal-error-icon {
+  width: 68px;
+  height: 68px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 20px;
+
+  border-radius: 50%;
+
+  background: #fff7ed;
+
+  font-size: 32px;
+  line-height: 1;
+
+  box-shadow:
+    0 8px 24px rgba(249, 115, 22, 0.08);
+
+  animation: modalErrorIconIn 0.35s ease-out;
+}
+
+@keyframes modalErrorIconIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ============================================================
+   ERROR MESSAGE
+   ============================================================ */
+
+.modal-error-text {
+  width: 100%;
+
+  margin: 0;
+
+  color: #334155;
+
+  font-size: 15px;
+  font-weight: 600;
+
+  line-height: 1.65;
+  letter-spacing: -0.01em;
+
+  word-break: keep-all;
+}
+
+/* ============================================================
+   ACTIONS
+   ============================================================ */
+
+.modal-error-actions {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 10px;
+
+  margin-top: 24px;
+}
+
+/* ============================================================
+   RETRY BUTTON
+   ============================================================ */
+
+.modal-error-retry {
+  min-width: 120px;
+  min-height: 46px;
+
+  padding: 11px 22px;
+
+  border: 1px solid #ea580c;
+  border-radius: 12px;
+
+  background: #f97316;
+  color: #ffffff;
+
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+
+  line-height: 1.2;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 4px 12px rgba(249, 115, 22, 0.18);
+
+  transition:
+    background 0.18s ease,
+    border-color 0.18s ease,
+    box-shadow 0.18s ease,
+    transform 0.15s ease;
+}
+
+.modal-error-retry:hover {
+  background: #ea580c;
+  border-color: #c2410c;
+
+  box-shadow:
+    0 6px 16px rgba(249, 115, 22, 0.24);
+}
+
+.modal-error-retry:active {
+  transform: scale(0.97);
+  box-shadow: none;
+}
+
+.modal-error-retry:focus-visible {
+  outline: 3px solid rgba(249, 115, 22, 0.25);
+  outline-offset: 2px;
+}
+
+/* ============================================================
+   CLOSE BUTTON
+   ============================================================ */
+
+.modal-error-close {
+  min-width: 110px;
+  min-height: 46px;
+
+  padding: 11px 22px;
+
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+
+  background: #ffffff;
+  color: #475569;
+
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+
+  line-height: 1.2;
+
+  cursor: pointer;
+
+  transition:
+    background 0.18s ease,
+    border-color 0.18s ease,
+    color 0.18s ease,
+    transform 0.15s ease;
+}
+
+.modal-error-close:hover {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  color: #1e293b;
+}
+
+.modal-error-close:active {
+  transform: scale(0.97);
+}
+
+.modal-error-close:focus-visible {
+  outline: 3px solid rgba(100, 116, 139, 0.2);
+  outline-offset: 2px;
+}
+
+/* ============================================================
+   DISABLED
+   ============================================================ */
+
+.modal-error-retry:disabled,
+.modal-error-close:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* ============================================================
+   MOBILE
+   ============================================================ */
+
+@media (max-width: 480px) {
+  .modal-error {
+    min-height: 260px;
+    padding: 32px 18px;
+  }
+
+  .modal-error-content {
+    max-width: 340px;
+  }
+
+  .modal-error-icon {
+    width: 60px;
+    height: 60px;
+
+    margin-bottom: 18px;
+
+    font-size: 28px;
+  }
+
+  .modal-error-text {
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .modal-error-actions {
+    gap: 8px;
+    margin-top: 22px;
+  }
+
+  .modal-error-retry,
+  .modal-error-close {
+    flex: 1;
+
+    min-width: 0;
+    min-height: 44px;
+
+    padding: 10px 14px;
+
+    font-size: 13px;
+  }
+}
+
+/* ============================================================
+   VERY SMALL MOBILE
+   ============================================================ */
+
+@media (max-width: 360px) {
+  .modal-error {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  .modal-error-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .modal-error-retry,
+  .modal-error-close {
+    width: 100%;
+  }
+}
+
+/* ============================================================
+   REDUCE MOTION
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .modal-error-icon {
+    animation: none;
+  }
+
+  .modal-error-retry,
+  .modal-error-close {
+    transition: none;
+  }
+}
+
+/* =========================================================
+   VARIANT SELECTOR
+   ========================================================= */
+
+.modal-variant-section {
+  margin-bottom: 24px;
+}
+
+.variant-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.variant-title-left {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.variant-title {
+  margin: 0;
+  color: var(--text-main);
+  font-size: 14px;
+  font-weight: 750;
+  line-height: 1.4;
+  letter-spacing: -0.005em;
+}
+
+.variant-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.variant-card {
+  flex: 1 1 0;
+  min-width: 72px;
+  min-height: 48px;
+  padding: 8px 16px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+  gap: 2px;
+  border: 1.5px solid var(--border-color);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  color: var(--text-secondary);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color var(--transition-fast),
+              background var(--transition-fast),
+              box-shadow var(--transition-fast),
+              transform var(--transition-fast);
+}
+
+.variant-card:hover {
+  border-color: #cbd5e1;
+  background: var(--surface-soft);
+  transform: translateY(-1px);
+}
+
+.variant-card:active {
+  transform: scale(0.97);
+}
+
+.variant-card.selected {
+  border-color: var(--primary);
+  background: var(--primary-light);
+  color: var(--primary-dark);
+  box-shadow: 0 2px 8px rgba(249, 115, 22, 0.12);
+}
+
+.variant-card.selected:hover {
+  box-shadow: 0 4px 14px rgba(249, 115, 22, 0.2);
+}
+
+.variant-card .variant-name {
+  font-weight: 600;
+}
+
+.variant-card .variant-price {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  transition: color var(--transition-fast);
+}
+
+.variant-card.selected .variant-price {
+  color: var(--primary-dark);
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  .variant-card {
+    min-width: 60px;
+    min-height: 42px;
+    padding: 6px 12px;
+    font-size: 12px;
+    gap: 1px;
+  }
+
+  .variant-card .variant-price {
+    font-size: 10px;
+  }
+}
+
+/* Tablet */
+@media (min-width: 481px) and (max-width: 768px) {
+  .variant-card {
+    min-width: 68px;
+    min-height: 44px;
+    padding: 7px 14px;
   }
 }

@@ -1,13 +1,13 @@
 'use client';
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import "./order.css";
 
 import OrderHeader from "./OrderHeader";
 import CategoryTabs from "./CategoryTabs";
-import FoodGrid from "./FoodGrid";
-import ProductDetailModal from './ProductDetailModal';
+import FoodGrid from "./components/food-grid/FoodGrid";
+import ProductDetailModal from "./components/product-detail/ProductDetailModal";
 import CartSidebar from "./CartSidebar";
 
 import { getMenuItems, getMenuCategories, getStoreInfoBySlug } from "@/app/web/actions/menu.action";
@@ -43,6 +43,30 @@ export default function OrderContainerPage({ params }: Props) {
   const currentActiveRef = useRef<number | null>(null);
   const isProgrammaticScroll = useRef(false);
 
+  // ============================================================
+  // LẤY storeSlug TỪ URL HOẶC localStorage
+  // ============================================================
+
+  const getStoreSlug = useCallback(() => {
+    // Lấy từ URL trước
+    if (storeSlugParam) {
+      return storeSlugParam;
+    }
+    // Nếu không có, lấy từ localStorage
+    const saved = getSelectedStore();
+    return saved?.slug ?? null;
+  }, [storeSlugParam]);
+
+  const [storeSlug, setStoreSlug] = useState<string | null>(null);
+
+  useEffect(() => {
+    setStoreSlug(getStoreSlug());
+  }, [getStoreSlug]);
+
+  // ============================================================
+  // CART
+  // ============================================================
+
   useEffect(() => {
     if (!isCartHydrated) return;
     saveCartToStorage(cart);
@@ -53,11 +77,19 @@ export default function OrderContainerPage({ params }: Props) {
     setIsCartHydrated(true);
   }, []);
 
+  // ============================================================
+  // LOCALE
+  // ============================================================
+
   useEffect(() => {
     params.then((p) => {
       setLocale(p.locale);
     });
   }, [params]);
+
+  // ============================================================
+  // STORE
+  // ============================================================
 
   useEffect(() => {
     if (storeSlugParam) {
@@ -65,8 +97,6 @@ export default function OrderContainerPage({ params }: Props) {
         if (info) {
           setStoreId(info.id);
           setStoreInfo(info);
-
-          // ★★★ MENU ĐÚNG CỦA NGÀY HÔM NAY ★★★
           setMenuId(info.menuId ?? null);
 
           console.log(
@@ -102,16 +132,16 @@ export default function OrderContainerPage({ params }: Props) {
     }
   }, [storeSlugParam, locale]);
 
+  // ============================================================
+  // MENU
+  // ============================================================
+
   useEffect(() => {
     if (!storeId) {
       setMenuItems([]);
       setCategories([]);
       return;
     }
-
-    // ========================================================
-    // SHOP
-    // ========================================================
 
     if (storeInfo?.type === "Shop") {
       Promise.all([
@@ -125,12 +155,7 @@ export default function OrderContainerPage({ params }: Props) {
       return;
     }
 
-    // ========================================================
-    // TRUCK
-    // ========================================================
-
     if (storeInfo?.type === "Truck") {
-      // Không có menu hôm nay
       if (!menuId) {
         console.warn(
           "[OrderContainer] Truck has no menu for today's schedule:",
@@ -170,6 +195,10 @@ export default function OrderContainerPage({ params }: Props) {
     storeInfo?.type,
     storeInfo?.locationName,
   ]);
+
+  // ============================================================
+  // CATEGORIES
+  // ============================================================
 
   const activeCategories = categories.filter((cat) => {
     const items = menuItems.filter((i) => i.category_id === cat.id);
@@ -218,6 +247,10 @@ export default function OrderContainerPage({ params }: Props) {
     };
   }, [storeId, activeCategories]);
 
+  // ============================================================
+  // HELPERS
+  // ============================================================
+
   const getName = (item: any) => {
     if (locale === "ja") return item.name_ja;
     if (locale === "vi") return item.name_vi || item.name_ja;
@@ -257,6 +290,10 @@ export default function OrderContainerPage({ params }: Props) {
       }, 800);
     }
   };
+
+  // ============================================================
+  // MODAL
+  // ============================================================
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedItemId, setSelectedItemId] = useState<any>(null);
@@ -312,6 +349,10 @@ export default function OrderContainerPage({ params }: Props) {
 
   const totalItemsCount = cart.reduce((a, b) => a + b.quantity, 0);
   const total = cart.reduce((a, b) => a + Number(b.totalPrice || 0), 0);
+
+  // ============================================================
+  // RENDER
+  // ============================================================
 
   return (
     <section className="menu-page"> 
@@ -397,10 +438,12 @@ export default function OrderContainerPage({ params }: Props) {
               loading={loading}
             />
 
+            {/* ✅ TRUYỀN storeSlug vào ProductDetailModal */}
             <ProductDetailModal
               isOpen={isModalOpen}
               itemId={selectedItemId}
               locale={locale}
+              storeSlug={storeSlug}
               onClose={handleCloseOptions}
               onAddToCart={handleAddToCartFromModal}
             />

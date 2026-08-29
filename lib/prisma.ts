@@ -36,9 +36,7 @@ if (process.env.NODE_ENV !== "production") {
  * CODE CŨ - KHÔNG SỬ DỤNG
  * Giữ lại để tham khảo, không được chạy.
  * ============================================================
-
 */
-
 import { PrismaClient } from "@prisma/client";
 import { PrismaMariaDb } from "@prisma/adapter-mariadb";
 
@@ -65,4 +63,3 @@ export const db =
 if (process.env.NODE_ENV !== "production") {
   globalForPrisma.prisma = db;
 }
-
