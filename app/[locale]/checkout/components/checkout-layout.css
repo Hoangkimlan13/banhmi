@@ -1,104 +1,427 @@
-/* Checkout Layout Styles */
-.checkout-layout-wrapper {
-  min-height: 100vh;
-  background-color: rgb(248 250 252 / 0.5);
-  padding-bottom: 1.5rem; 
-  color: rgb(15 23 42);
+/* =========================================================
+   CHECKOUT — iOS / APPLE STYLE
+   ========================================================= */
+
+:root {
+  --checkout-bg: #f5f5f7;
+  --checkout-surface: rgba(255, 255, 255, 0.88);
+  --checkout-surface-solid: #ffffff;
+
+  --checkout-text: #1d1d1f;
+  --checkout-text-secondary: #6e6e73;
+  --checkout-text-tertiary: #86868b;
+
+  --checkout-border: rgba(0, 0, 0, 0.075);
+  --checkout-border-strong: rgba(0, 0, 0, 0.11);
+
+  --checkout-orange: #f97316;
+  --checkout-orange-dark: #ea580c;
+  --checkout-orange-soft: #fff7ed;
+
+  --checkout-radius: 22px;
+  --checkout-radius-small: 16px;
+
+  --checkout-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.025),
+    0 8px 30px rgba(0, 0, 0, 0.045);
+
+  --checkout-shadow-large:
+    0 2px 5px rgba(0, 0, 0, 0.025),
+    0 16px 45px rgba(0, 0, 0, 0.075);
+
+  --checkout-ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  --checkout-safe-bottom: env(safe-area-inset-bottom, 0px);
 }
 
-@media (min-width: 768px) {
-  .checkout-layout-wrapper {
-    padding-bottom: 3rem;
-  }
+
+/* =========================================================
+   PAGE
+   ========================================================= */
+
+.checkout-layout-wrapper {
+  position: relative;
+
+  min-height: 100dvh;
+
+  color: var(--checkout-text);
+
+  background:
+    radial-gradient(
+      circle at 50% -10%,
+      rgba(249, 115, 22, 0.045),
+      transparent 34%
+    ),
+    var(--checkout-bg);
+
+  padding-bottom: 2rem;
+
+  overflow-x: hidden;
+
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
+
+
+/* =========================================================
+   CONTAINER
+   ========================================================= */
 
 .checkout-layout-container {
-  max-width: 72rem; /* max-w-6xl */
-  margin-left: auto;
-  margin-right: auto;
-  padding-left: 1rem;
-  padding-right: 1rem;
-  padding-top: 1.5rem;
-  padding-bottom: 1.5rem;
+  width: 100%;
+  max-width: 1180px;
+
+  margin: 0 auto;
+
+  
 }
 
-@media (min-width: 768px) {
-  .checkout-layout-container {
-    padding-top: 2.5rem;
-    padding-bottom: 2.5rem;
-  }
+
+/* =========================================================
+   OPTIONAL HEADER
+   ========================================================= */
+
+.checkout-header-wrapper {
+  margin-bottom: 22px;
 }
+
+
+/* =========================================================
+   PAGE HEADER
+   ========================================================= */
 
 .checkout-header-block {
-  margin-bottom: 1.5rem;
+  position: relative;
+
+  margin-bottom: 12px;
+
+  padding: 2px 2px 0;
 }
 
 .checkout-main-title {
-  font-size: 1.5rem;
-  line-height: 2rem;
-  font-weight: 700;
-  letter-spacing: -0.025em;
-  color: #0f172a;
-}
+  margin: 0;
 
-@media (min-width: 768px) {
-  .checkout-main-title {
-    font-size: 1.875rem;
-    line-height: 2.25rem;
-  }
+  color: var(--checkout-text);
+
+  font-size: clamp(1.75rem, 3vw, 2.35rem);
+
+  line-height: 1.12;
+
+  font-weight: 760;
+
+  letter-spacing: -0.045em;
 }
 
 .checkout-main-subtitle {
-  font-size: 0.875rem;
-  line-height: 1.25rem;
-  color: #64748b;
-  margin-top: 0.25rem;
+  margin: 8px 0 0;
+
+  max-width: 620px;
+
+  color: var(--checkout-text-secondary);
+
+  font-size: 0.92rem;
+
+  line-height: 1.5;
+
+  font-weight: 450;
+
+  letter-spacing: -0.01em;
 }
+
+
+/* =========================================================
+   MAIN GRID
+   ========================================================= */
 
 .checkout-grid {
   display: grid;
-  grid-template-columns: repeat(1, minmax(0, 1fr));
-  gap: 2rem;
+
+  grid-template-columns: minmax(0, 1fr);
+
+  gap: 20px;
+
   align-items: start;
+  padding: 5px;
 }
 
-@media (min-width: 1024px) {
-  .checkout-grid {
-    grid-template-columns: repeat(12, minmax(0, 1fr));
-  }
-}
+
+/* =========================================================
+   LEFT CONTENT
+   ========================================================= */
 
 .checkout-content-area {
   display: flex;
+
   flex-direction: column;
-  gap: 1.5rem;
+
+  gap: 16px;
+
+  min-width: 0;
 }
 
-@media (min-width: 1024px) {
-  .checkout-content-area {
-    grid-column: span 7 / span 7;
-  }
-}
+
+/* =========================================================
+   RIGHT SUMMARY
+   ========================================================= */
 
 .checkout-summary-area {
   display: none;
+
+  min-width: 0;
 }
 
+
+/* =========================================================
+   SUMMARY STICKY
+   ========================================================= */
+
 @media (min-width: 1024px) {
+
+  .checkout-layout-container {
+    padding-bottom: 60px;
+  }
+
+  .checkout-grid {
+    grid-template-columns:
+      minmax(0, 1.35fr)
+      minmax(320px, 0.85fr);
+
+    gap: 24px;
+  }
+
   .checkout-summary-area {
     display: block;
-    grid-column: span 5 / span 5;
+
     position: sticky;
-    top: 1.5rem;
+
+    top: 24px;
   }
+
+  .checkout-content-area {
+    gap: 18px;
+  }
+
 }
+
+
+/* =========================================================
+   LARGE DESKTOP
+   ========================================================= */
+
+@media (min-width: 1280px) {
+
+  .checkout-layout-container {
+    max-width: 1240px;
+
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
+  .checkout-grid {
+    grid-template-columns:
+      minmax(0, 1.42fr)
+      minmax(350px, 0.78fr);
+
+    gap: 28px;
+  }
+
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (min-width: 768px) and (max-width: 1023px) {
+
+  .checkout-layout-container {
+    padding:
+      32px 24px
+      44px;
+  }
+
+
+  .checkout-main-title {
+    font-size: 2rem;
+  }
+
+  .checkout-main-subtitle {
+    font-size: 0.9rem;
+  }
+
+}
+
+
+/* =========================================================
+   MOBILE FOOTER
+   ========================================================= */
 
 .checkout-mobile-footer {
   display: block;
 }
 
-@media (min-width: 1024px) {
-  .checkout-mobile-footer {
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 767px) {
+
+  .checkout-layout-wrapper {
+    min-height: 100dvh;
+
+    padding-bottom:
+      calc(
+        92px +
+        var(--checkout-safe-bottom)
+      );
+
+    background:
+      linear-gradient(
+        180deg,
+        #f7f7f8 0%,
+        #f5f5f7 100%
+      );
+  }
+
+  .checkout-layout-container {
+    max-width: none;
+
+  }
+
+
+  /* ---------------------------------------------------------
+     HEADER
+     --------------------------------------------------------- */
+
+  .checkout-header-wrapper {
+    margin-bottom: 18px;
+  }
+
+  .checkout-header-block {
+
+    padding:
+      5px;
+  }
+
+  .checkout-main-title {
+    font-size: 1.65rem;
+
+    line-height: 1.14;
+
+    letter-spacing: -0.045em;
+  }
+
+  .checkout-main-subtitle {
+    margin-top: 7px;
+
+    font-size: 0.82rem;
+
+    line-height: 1.45;
+
+    color: #6e6e73;
+  }
+
+
+  /* ---------------------------------------------------------
+     CONTENT
+     --------------------------------------------------------- */
+
+  .checkout-content-area {
+    gap: 12px;
+  }
+
+
+  /* ---------------------------------------------------------
+     GRID
+     --------------------------------------------------------- */
+
+  .checkout-grid {
+    display: block;
+  }
+
+
+  /* ---------------------------------------------------------
+     SUMMARY
+     --------------------------------------------------------- */
+
+  .checkout-summary-area {
     display: none;
   }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 390px) {
+
+  .checkout-layout-container {
+    padding:
+      15px 11px
+      22px;
+  }
+
+  .checkout-main-title {
+    font-size: 1.5rem;
+  }
+
+  .checkout-main-subtitle {
+    font-size: 0.78rem;
+  }
+
+}
+
+
+/* =========================================================
+   VERY LARGE DESKTOP
+   ========================================================= */
+
+@media (min-width: 1440px) {
+
+  .checkout-main-title {
+    font-size: 2.4rem;
+  }
+
+  .checkout-main-subtitle {
+    font-size: 0.95rem;
+  }
+
+}
+
+
+/* =========================================================
+   SAFARI / IOS GLASS SUPPORT
+   ========================================================= */
+
+@supports (
+  backdrop-filter: blur(10px)
+) {
+
+  .checkout-layout-wrapper {
+    background:
+      radial-gradient(
+        circle at 50% -10%,
+        rgba(249, 115, 22, 0.055),
+        transparent 35%
+      ),
+      #f5f5f7;
+  }
+
+}
+
+
+/* =========================================================
+   ACCESSIBILITY
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .checkout-layout-wrapper,
+  .checkout-layout-wrapper * {
+    scroll-behavior: auto !important;
+  }
+
 }

@@ -9,6 +9,7 @@ interface CheckoutLayoutProps {
   children: ReactNode;
   summary: ReactNode;
   footer: ReactNode;
+  header?: ReactNode; // 👈 thêm prop header
   locale?: Locale;
   title?: string;
   subtitle?: string;
@@ -26,6 +27,7 @@ export default function CheckoutLayout({
   children,
   summary,
   footer,
+  header,
   locale = 'ja',
   title,
   subtitle,
@@ -33,26 +35,65 @@ export default function CheckoutLayout({
   const displaySubtitle = subtitle || layoutSubtitles[locale].subtitle;
 
   return (
-    <motion.div
-      initial={{ x: '100%', opacity: 0 }}
-      animate={{ x: 0, opacity: 1 }}
-      exit={{ x: '100%', opacity: 0 }}
-      transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-      className="checkout-layout-wrapper"
-    >
-      <div className="checkout-layout-container">
-        <div className="checkout-header-block">
-          {title && <h1 className="checkout-main-title">{title}</h1>}
-          <p className="checkout-main-subtitle">{displaySubtitle}</p>
-        </div>
+<motion.div
+  initial={{
+    opacity: 0,
+    y: 12,
+    scale: 0.985,
+  }}
+  animate={{
+    opacity: 1,
+    y: 0,
+    scale: 1,
+  }}
+  exit={{
+    opacity: 0,
+    y: 8,
+    scale: 0.99,
+  }}
+  transition={{
+    duration: 0.42,
+    ease: [0.22, 1, 0.36, 1],
+  }}
+  className="checkout-layout-wrapper"
+>
+  <div className="checkout-layout-container">
 
-        <div className="checkout-grid">
-          <div className="checkout-content-area">{children}</div>
-          <div className="checkout-summary-area">{summary}</div>
-        </div>
+    {header && (
+      <div className="checkout-header-wrapper">
+        {header}
+      </div>
+    )}
+
+    <div className="checkout-header-block">
+      {title && (
+        <h1 className="checkout-main-title">
+          {title}
+        </h1>
+      )}
+
+      <p className="checkout-main-subtitle">
+        {displaySubtitle}
+      </p>
+    </div>
+
+    <div className="checkout-grid">
+
+      <div className="checkout-content-area">
+        {children}
       </div>
 
-      <div className="checkout-mobile-footer">{footer}</div>
-    </motion.div>
+      <div className="checkout-summary-area">
+        {summary}
+      </div>
+
+    </div>
+  </div>
+
+  <div className="checkout-mobile-footer">
+    {footer}
+  </div>
+</motion.div>
+
   );
 }

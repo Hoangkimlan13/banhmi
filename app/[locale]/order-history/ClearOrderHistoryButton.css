@@ -1,0 +1,110 @@
+/* ============================================================
+   CLEAR ORDER HISTORY BUTTON
+   ============================================================ */
+
+.clear-order-history-btn {
+  appearance: none;
+  border: 1px solid rgba(220, 38, 38, 0.18);
+  background: rgba(254, 242, 242, 0.9);
+  color: #dc2626;
+
+  min-height: 42px;
+  padding: 0 15px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  border-radius: 12px;
+
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.18s ease,
+    border-color 0.18s ease,
+    color 0.18s ease,
+    box-shadow 0.18s ease,
+    transform 0.18s ease;
+
+  white-space: nowrap;
+}
+
+.clear-order-history-btn:hover {
+  background: #fef2f2;
+  border-color: rgba(220, 38, 38, 0.35);
+  color: #b91c1c;
+
+  box-shadow:
+    0 4px 12px rgba(220, 38, 38, 0.08);
+
+  transform: translateY(-1px);
+}
+
+.clear-order-history-btn:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+.clear-order-history-btn:focus-visible {
+  outline: none;
+
+  box-shadow:
+    0 0 0 3px rgba(220, 38, 38, 0.12);
+}
+
+.clear-order-history-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* ============================================================
+   ICON
+   ============================================================ */
+
+.clear-order-history-icon {
+  width: 17px;
+  height: 17px;
+  flex: 0 0 17px;
+}
+
+/* ============================================================
+   MOBILE
+   ============================================================ */
+
+@media (max-width: 600px) {
+  .clear-order-history-btn {
+    min-height: 40px;
+    padding: 0 12px;
+    gap: 7px;
+
+    border-radius: 11px;
+    font-size: 12px;
+  }
+
+  .clear-order-history-icon {
+    width: 16px;
+    height: 16px;
+    flex-basis: 16px;
+  }
+}
+
+@media (max-width: 420px) {
+  .clear-order-history-btn {
+    min-height: 38px;
+    padding: 0 11px;
+  }
+
+  .clear-order-history-btn span {
+    max-width: 130px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}

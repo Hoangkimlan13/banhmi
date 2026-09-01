@@ -36,6 +36,7 @@ export interface CheckoutCartItemInput {
   quantity?: unknown;
   note?: unknown;
   selectedOptions?: unknown;
+  selectedOptionIds?: unknown; // 👈 THÊM DÒNG NÀY
   variantId?: unknown;
   variantCode?: unknown;
 }
@@ -111,12 +112,15 @@ export class ValidationError extends Error {
     }
   ) {
     super(message);
+
     this.name = 'ValidationError';
+
     this.code = options?.code ?? 'INVALID_CHECKOUT_REQUEST';
+
     this.item = options?.item;
     this.details = options?.details;
 
-    // Fix cho instanceof khi target ES5/older
+    // Quan trọng: đảm bảo prototype đúng khi kế thừa Error
     Object.setPrototypeOf(this, ValidationError.prototype);
   }
 }
@@ -426,10 +430,20 @@ function normalizeCartItem(rawItem: unknown, index: number): NormalizedCheckoutI
   }
 
   // ----------------------------------------------------------
-  // SELECTED OPTIONS
+  // SELECTED OPTIONS — SỬA PHẦN NÀY
   // ----------------------------------------------------------
+  let selectedOptionIds: number[] = [];
 
-  const selectedOptionIds = normalizeSelectedOptionIds(item.selectedOptions);
+  // Ưu tiên lấy từ selectedOptionIds nếu có (frontend mới gửi)
+  if (Array.isArray((item as any).selectedOptionIds)) {
+    selectedOptionIds = (item as any).selectedOptionIds
+      .map((id: any) => Number(id))
+      .filter((id: number) => Number.isInteger(id) && id > 0);
+  } 
+  // Fallback sang selectedOptions (cho các request cũ)
+  else if (item.selectedOptions) {
+    selectedOptionIds = normalizeSelectedOptionIds(item.selectedOptions);
+  }
 
   return {
     menuItemId,

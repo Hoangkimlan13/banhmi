@@ -16,13 +16,14 @@ const translations = {
   ja: {
     titleImmediate: 'お客様情報（任意）',
     titleScheduled: 'お客様情報（必須）',
-    nameLabel: 'お名前',
-    namePlaceholder: 'お名前を入力してください',
+    nameLabel: 'お名前（カタカナ）',
+    namePlaceholder: '例：ヤマダ タロウ',
     phoneLabel: '電話番号',
     phonePlaceholder: '例: 09012345678 または 0312345678',
     optionalTag: '（任意）',
     requiredTag: '（必須）',
     phoneError: '有効な日本の電話番号を入力してください（携帯・固定電話対応）',
+    nameError: '全角カタカナで入力してください（例：ヤマダ タロウ）',
   },
   vi: {
     titleImmediate: 'Thông tin khách hàng (Không bắt buộc)',
@@ -34,6 +35,7 @@ const translations = {
     optionalTag: '(Không bắt buộc)',
     requiredTag: '(Bắt buộc)',
     phoneError: 'Vui lòng nhập đúng định dạng số điện thoại Nhật Bản (Di động hoặc Điện thoại bàn)',
+    nameError: 'Vui lòng nhập họ tên hợp lệ',
   },
   en: {
     titleImmediate: 'Customer Information (Optional)',
@@ -45,17 +47,31 @@ const translations = {
     optionalTag: '(Optional)',
     requiredTag: '(Required)',
     phoneError: 'Please enter a valid Japanese phone number (Mobile or Landline)',
+    nameError: 'Please enter a valid name (letters, spaces, hyphens, apostrophes)',
   },
   zh: {
     titleImmediate: '客户信息（选填）',
     titleScheduled: '客户信息（必填）',
-    nameLabel: '姓名',
-    namePlaceholder: '请输入您的姓名',
+    nameLabel: '姓名（英文）',
+    namePlaceholder: '例如：Yamada Taro',
     phoneLabel: '电话号码',
     phonePlaceholder: '例如：09012345678 或 0312345678',
     optionalTag: '（选填）',
     requiredTag: '（必填）',
     phoneError: '请输入有效的日本电话号码（手机或固定电话）',
+    nameError: '请使用英文字母输入姓名（例如：Yamada Taro）',
+  },
+  ko: {
+    titleImmediate: '고객 정보 (선택)',
+    titleScheduled: '고객 정보 (필수)',
+    nameLabel: '성명',
+    namePlaceholder: '이름을 입력하세요',
+    phoneLabel: '전화번호',
+    phonePlaceholder: '예: 09012345678 또는 0312345678',
+    optionalTag: '(선택)',
+    requiredTag: '(필수)',
+    phoneError: '유효한 일본 전화번호를 입력하세요 (휴대폰 또는 유선)',
+    nameError: '유효한 이름을 입력하세요',
   },
 };
 
@@ -71,17 +87,53 @@ export default function CustomerInfoSection({
 }: CustomerInfoSectionProps) {
   const t = translations[locale as LocaleKey] || translations.ja;
   const [phoneError, setPhoneError] = useState(false);
+  const [nameError, setNameError] = useState(false);
 
-  // Nếu là đặt lịch trước (SCHEDULED_TIME) thì bắt buộc nhập, IMMEDIATE có thể tùy chọn
   const isCustomerInfoRequired = orderType === 'SCHEDULED_TIME';
 
   const title = isCustomerInfoRequired ? t.titleScheduled : t.titleImmediate;
   const fieldTag = isCustomerInfoRequired ? t.requiredTag : t.optionalTag;
 
-  // Regex kiểm tra số điện thoại Nhật Bản chuẩn
+  // ============================================================
+  // VALIDATION: TÊN
+  // ============================================================
+  const validateName = (value: string) => {
+    const trimmed = value.trim();
+    if (trimmed === '') return !isCustomerInfoRequired; // Nếu không bắt buộc thì cho phép trống
+
+    if (locale === 'ja') {
+      // Katakana (全角カタカナ) + khoảng trắng + dấu gạch ngang
+      const katakanaRegex = /^[ァ-ヴー\s\-]+$/;
+      return katakanaRegex.test(trimmed);
+    }
+
+    if (locale === 'zh') {
+      // Latin: chữ cái (có dấu), khoảng trắng, dấu gạch ngang, dấu nháy
+      const latinRegex = /^[a-zA-ZÀ-ỹ\s\-']+$/;
+      return latinRegex.test(trimmed);
+    }
+
+    // Các ngôn ngữ khác: chỉ kiểm tra không chứa ký tự đặc biệt nguy hiểm
+    const basicRegex = /^[a-zA-ZÀ-ỹ\s\-']+$/;
+    return basicRegex.test(trimmed);
+  };
+
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    setName(val);
+    if (val.trim() === '') {
+      setNameError(false);
+    } else {
+      setNameError(!validateName(val));
+    }
+  };
+
+  // ============================================================
+  // VALIDATION: SỐ ĐIỆN THOẠI
+  // ============================================================
   const validateJapanesePhone = (value: string) => {
     const cleanValue = value.replace(/[-ー\s]/g, '');
-    if (cleanValue === '') return !isCustomerInfoRequired; // Nếu không bắt buộc thì cho phép trống
+    if (cleanValue === '') return !isCustomerInfoRequired;
     const jpPhoneRegex = /^(0[1-9][0-9]{8,9})$/;
     return jpPhoneRegex.test(cleanValue);
   };
@@ -96,6 +148,9 @@ export default function CustomerInfoSection({
     }
   };
 
+  // ============================================================
+  // RENDER
+  // ============================================================
   return (
     <div className="customer-info-card">
       <div className="customer-info-header">
@@ -119,11 +174,14 @@ export default function CustomerInfoSection({
             type="text"
             placeholder={t.namePlaceholder}
             value={name}
-            onChange={(e) => setName(e.target.value)}
+            onChange={handleNameChange}
             required={isCustomerInfoRequired}
             autoComplete="name"
-            className="customer-input"
+            className={`customer-input ${nameError ? 'input-error' : ''}`}
           />
+          {nameError && (
+            <span className="error-message">{t.nameError}</span>
+          )}
         </div>
 
         {/* 電話番号 */}

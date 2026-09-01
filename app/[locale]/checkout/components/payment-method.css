@@ -6,7 +6,7 @@
   background-color: var(--surface);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-lg);
-  padding: clamp(16px, 4vw, 28px); /* Tự động co giãn padding theo màn hình */
+  padding: clamp(16px, 4vw, 28px); 
   box-shadow: var(--shadow-md);
   width: 100%;
   margin: 0 auto;
@@ -189,7 +189,6 @@
     border-radius: var(--radius-md);
     border-left: none;
     border-right: none; 
-    margin-bottom: 60px;
   }
 
   .payment-method-header {

@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { type Locale } from "@/app/i18n";
 import { getSelectedStore } from "@/app/web/store/selected-store";
 import "./cart-sidebar.css";
@@ -34,6 +34,20 @@ export default function CartSidebar({
   const [validating, setValidating] = useState(false);
   const [validationError, setValidationError] = useState<string | null>(null);
 
+  // ============================================================
+  // DRAG TO DISMISS — STATE & REFS
+  // ============================================================
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragOffset, setDragOffset] = useState(0);
+  const [isReadyToClose, setIsReadyToClose] = useState(false);
+  const cartBoxRef = useRef<HTMLElement | null>(null);
+  const startYRef = useRef(0);
+  const currentYRef = useRef(0);
+  const overlayRef = useRef<HTMLDivElement | null>(null);
+
+  // ============================================================
+  // DICTIONARY
+  // ============================================================
   const dict = {
     ja: {
       cartTitle: "ご注文内容",
@@ -104,7 +118,9 @@ export default function CartSidebar({
 
   const t = dict[locale] || dict.en;
 
-  // Cải tiến getLocalizedText: ưu tiên locale, fallback đúng thứ tự
+  // ============================================================
+  // HELPERS
+  // ============================================================
   const getLocalizedText = (obj: any, currentLocale: Locale) => {
     if (!obj) return "";
     if (typeof obj === "string") return obj;
@@ -126,9 +142,8 @@ export default function CartSidebar({
   };
 
   // ============================================================
-  // RENDER SELECTED OPTIONS – CẢI TIẾN: ưu tiên snapshot, rồi groupInfo
+  // RENDER SELECTED OPTIONS
   // ============================================================
-
   const renderSelectedOptions = (item: any, currentLocale: Locale) => {
     const selectedOptions = item.selectedOptions;
     const optionGroups = item.optionGroups || [];
@@ -136,44 +151,53 @@ export default function CartSidebar({
 
     if (!selectedOptions) return null;
 
+    const groupIds = Object.keys(selectedOptions);
+
+    const groupsWithSort = groupIds.map((groupId) => {
+      const cleanGroupId = groupId.replace("group-", "");
+      const groupInfo = optionGroups.find(
+        (g: any) =>
+          String(g.id) === String(cleanGroupId) || String(g.id) === String(groupId)
+      );
+      const sortOrder = groupInfo?.sort_order ?? Number(groupInfo?.id ?? 999);
+      return { groupId, groupInfo, sortOrder };
+    });
+
+    groupsWithSort.sort((a, b) => a.sortOrder - b.sortOrder);
+
     return (
       <div className="cart-item-options">
-        {Object.entries(selectedOptions).map(([groupId, val]: [string, any], idx) => {
-          const cleanGroupId = groupId.replace("group-", "");
-          const groupInfo = optionGroups.find(
-            (g: any) =>
-              String(g.id) === String(cleanGroupId) || String(g.id) === String(groupId)
-          );
-
+        {groupsWithSort.map(({ groupId, groupInfo }) => {
+          const val = selectedOptions[groupId];
           const groupName = getLocalizedText(groupInfo, currentLocale);
           const optionsList = Array.isArray(val) ? val : [val];
           if (optionsList.length === 0 || !optionsList[0]) return null;
 
-          // Sắp xếp theo sort_order
           let sortedOptions = [...optionsList];
+
           if (groupInfo && groupInfo.options) {
             const sortMap = new Map();
             groupInfo.options.forEach((opt: any) => {
-              sortMap.set(String(opt.id), opt.sort_order ?? 999);
+              const order = opt.sort_order ?? Number(opt.id ?? 999);
+              sortMap.set(String(opt.id), order);
             });
             sortedOptions.sort((a, b) => {
               const orderA = sortMap.get(String(a.id)) ?? 999;
               const orderB = sortMap.get(String(b.id)) ?? 999;
               return orderA - orderB;
             });
+          } else {
+            sortedOptions.sort((a, b) => String(a.id).localeCompare(String(b.id)));
           }
 
           return (
-            <div key={idx} className="option-group-container">
+            <div key={groupId} className="option-group-container">
               <div className="option-row-item">
                 {groupName && (
                   <span className="option-group-title">{groupName}:</span>
                 )}
                 <div className="option-tags">
                   {sortedOptions.map((opt: any, oIdx: number) => {
-                    // =========================================================
-                    // 1. Lấy thông tin từ snapshot trước (có tên và giá)
-                    // =========================================================
                     let optName = "";
                     let optPrice = 0;
 
@@ -181,7 +205,6 @@ export default function CartSidebar({
                     if (Array.isArray(snapshot)) {
                       const found = snapshot.find((s: any) => String(s.id) === String(opt.id));
                       if (found) {
-                        // Ưu tiên lấy tên từ snapshot theo locale
                         optName = getLocalizedText(found, currentLocale);
                         optPrice = found.price || 0;
                       }
@@ -192,9 +215,6 @@ export default function CartSidebar({
                       }
                     }
 
-                    // =========================================================
-                    // 2. Nếu không có snapshot, lấy từ groupInfo.options
-                    // =========================================================
                     if (!optName) {
                       let realOpt = opt;
                       if (groupInfo && groupInfo.options) {
@@ -204,11 +224,9 @@ export default function CartSidebar({
                         if (found) realOpt = found;
                       }
                       optName = getLocalizedText(realOpt, currentLocale);
-                      // Nếu vẫn không có tên, dùng id
                       if (!optName) {
                         optName = `#${opt.id}`;
                       }
-                      // Lấy giá: ưu tiên từ variantPrices nếu có
                       const variantId = item.variantId;
                       if (variantId && realOpt.variantPrices) {
                         optPrice = Number(realOpt.variantPrices[String(variantId)] ?? realOpt.price ?? 0);
@@ -233,9 +251,8 @@ export default function CartSidebar({
   };
 
   // ============================================================
-  // HELPER: LẤY SUFFIX THEO REASON VÀ LOCALE
+  // REASON SUFFIX
   // ============================================================
-
   const getReasonSuffix = (reason: string | undefined, loc: Locale): string => {
     const map: Record<string, Record<Locale, string>> = {
       ITEM_NOT_AVAILABLE_AT_STORE: {
@@ -292,9 +309,8 @@ export default function CartSidebar({
   };
 
   // ============================================================
-  // HANDLE CHECKOUT – VALIDATE TRƯỚC KHI CHUYỂN
+  // CHECKOUT
   // ============================================================
-
   const handleGoToCheckout = async () => {
     if (validating || parentLoading) return;
 
@@ -380,14 +396,118 @@ export default function CartSidebar({
     }
   };
 
+  // ============================================================
+  // DRAG TO DISMISS — HANDLERS
+  // ============================================================
+  const handleTouchStart = useCallback((e: TouchEvent) => {
+    if (!cartBoxRef.current) return;
+    const touch = e.touches[0];
+    startYRef.current = touch.clientY;
+    currentYRef.current = touch.clientY;
+    setIsDragging(true);
+    setDragOffset(0);
+    setIsReadyToClose(false);
+    cartBoxRef.current.classList.add('dragging');
+    if (overlayRef.current) {
+      overlayRef.current.classList.add('dragging');
+    }
+  }, []);
+
+  const handleTouchMove = useCallback((e: TouchEvent) => {
+    if (!isDragging || !cartBoxRef.current) return;
+    const touch = e.touches[0];
+    const deltaY = touch.clientY - startYRef.current;
+
+    if (deltaY < 0) {
+      if (dragOffset > 0) {
+        setDragOffset(0);
+        cartBoxRef.current.style.transform = `translateY(0)`;
+      }
+      return;
+    }
+
+    currentYRef.current = touch.clientY;
+    const offset = Math.min(deltaY, window.innerHeight * 0.6);
+    setDragOffset(offset);
+    cartBoxRef.current.style.transform = `translateY(${offset}px)`;
+
+    const threshold = window.innerHeight * 0.25;
+    if (offset > threshold) {
+      setIsReadyToClose(true);
+      cartBoxRef.current.classList.add('drag-ready-to-close');
+    } else {
+      setIsReadyToClose(false);
+      cartBoxRef.current.classList.remove('drag-ready-to-close');
+    }
+  }, [isDragging, dragOffset]);
+
+  const handleTouchEnd = useCallback(() => {
+    if (!cartBoxRef.current) return;
+
+    setIsDragging(false);
+    cartBoxRef.current.classList.remove('dragging');
+    cartBoxRef.current.classList.remove('drag-ready-to-close');
+    if (overlayRef.current) {
+      overlayRef.current.classList.remove('dragging');
+    }
+
+    if (isReadyToClose) {
+      cartBoxRef.current.style.transform = '';
+      setIsCartOpen(false);
+    } else {
+      cartBoxRef.current.style.transform = '';
+      setDragOffset(0);
+      setIsReadyToClose(false);
+    }
+  }, [isReadyToClose, setIsCartOpen]);
+
+  // ============================================================
+  // DRAG — ATTACH / DETACH EVENTS
+  // ============================================================
+  useEffect(() => {
+    const cartBox = cartBoxRef.current;
+    if (!cartBox) return;
+
+    const isMobile = window.innerWidth <= 900;
+    if (!isMobile) return;
+
+    cartBox.addEventListener('touchstart', handleTouchStart, { passive: true });
+    cartBox.addEventListener('touchmove', handleTouchMove, { passive: false });
+    cartBox.addEventListener('touchend', handleTouchEnd, { passive: true });
+
+    return () => {
+      cartBox.removeEventListener('touchstart', handleTouchStart);
+      cartBox.removeEventListener('touchmove', handleTouchMove);
+      cartBox.removeEventListener('touchend', handleTouchEnd);
+    };
+  }, [handleTouchStart, handleTouchMove, handleTouchEnd]);
+
+  // ============================================================
+  // RESET KHI CART ĐÓNG
+  // ============================================================
+  useEffect(() => {
+    if (!isCartOpen && cartBoxRef.current) {
+      cartBoxRef.current.style.transform = '';
+      setDragOffset(0);
+      setIsReadyToClose(false);
+    }
+  }, [isCartOpen]);
+
+  // ============================================================
+  // RENDER
+  // ============================================================
   return (
     <>
       <div
+        ref={overlayRef}
         className={`cart-overlay ${isCartOpen ? "active" : ""}`}
         onClick={() => setIsCartOpen(false)}
       />
 
-      <aside className={`cart-box ${isCartOpen ? "mobile-open" : ""}`}>
+      <aside
+        ref={cartBoxRef}
+        className={`cart-box ${isCartOpen ? "mobile-open" : ""}`}
+      >
         <div className="cart-header-row">
           <h2>🛒 {t.cartTitle}</h2>
           <button className="close-cart-btn" onClick={() => setIsCartOpen(false)} aria-label="Close cart">
@@ -405,7 +525,6 @@ export default function CartSidebar({
             <div className="cart-items">
               {cart.map((item) => {
                 const itemName = getLocalizedText(item, locale);
-
                 const variantName = getLocalizedText(
                   {
                     name_vi: item.variantName_vi,

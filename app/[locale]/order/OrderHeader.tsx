@@ -36,7 +36,6 @@ export default function OrderHeader({ locale, storeName, storeInfo }: OrderHeade
   const router = useRouter();
   const searchParams = useSearchParams();
   
-  // Lấy trực tiếp currentStoreSlug từ URL query (?store=...)
   const currentStoreSlug = searchParams.get("store");
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -100,12 +99,43 @@ export default function OrderHeader({ locale, storeName, storeInfo }: OrderHeade
 
   const baseStoreName = storeInfo?.title || storeInfo?.name || storeName || '';
 
+  // ✅ Xác định icon theo loại cửa hàng
+  const storeIcon = storeInfo?.type === "Truck" ? "local_shipping" : "store";
+
+  // ✅ Text gợi ý thay đổi cửa hàng theo ngôn ngữ
+  const changeStoreText = {
+    ja: "変更",
+    vi: "Đổi",
+    en: "Change",
+    zh: "更换",
+    ko: "변경"
+  }[locale] || "Change";
+
   return (
     <>
       <header className="order-mini-header">
-        <div className="order-header-left" onClick={() => router.push(`/${locale}/store-select`)} style={{ cursor: 'pointer' }} title="Change store">
+        <div 
+          className="order-header-left" 
+          onClick={() => {
+            if (currentStoreSlug) {
+              router.push(`/${locale}/order?store=${currentStoreSlug}`);
+            } else {
+              router.push(`/${locale}/store-select`);
+            }
+          }} 
+          style={{ cursor: 'pointer' }} 
+          title={
+            currentStoreSlug
+              ? (locale === 'ja' ? 'メニューに戻る' : 
+                locale === 'vi' ? 'Quay lại menu' : 
+                locale === 'zh' ? '返回菜单' : 'Back to Menu')
+              : (locale === 'ja' ? '店舗を選択' : 
+                locale === 'vi' ? 'Chọn cửa hàng' : 
+                locale === 'zh' ? '选择门店' : 'Select Store')
+          }
+        >
           <div className="store-avatar">
-            <span className="material-symbols-outlined">store</span>
+            <span className="material-symbols-outlined">{storeIcon}</span>
           </div>
           <div className="store-info">
             <span className="store-name">
@@ -219,7 +249,6 @@ export default function OrderHeader({ locale, storeName, storeInfo }: OrderHeade
                 </span>
               </Link>
 
-              {/* MỤC LỊCH SỬ MUA HÀNG - ĐÃ ĐỔI ICON THÀNH ĐỒNG HỒ */}
               <Link href={`/${locale}/order-history?store=${currentStoreSlug}`} className="drawer-link" onClick={() => setIsMenuOpen(false)}>
                 <span className="material-symbols-outlined">history</span>
                 <span>

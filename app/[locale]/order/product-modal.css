@@ -91,7 +91,7 @@
 
   overflow: hidden;
 
-  background: var(--surface);
+  background: #fff;
 
   border-radius: var(--radius-xl) var(--radius-xl) 0 0;
 

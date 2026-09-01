@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+
 import { db } from "@/lib/prisma";
 
 export async function GET(
@@ -51,6 +52,18 @@ export async function GET(
 
     // ============================================================
     // 3. GET VARIANTS
+    //
+    // IMPORTANT:
+    //
+    // variant.price = GIÁ CỦA VARIANT
+    //
+    // Ví dụ:
+    // Regular = 790
+    // Mini    = 500
+    //
+    // Không phải:
+    // Regular = +790
+    // Mini    = +500
     // ============================================================
 
     const variants = await db.tbl_menu_item_variants.findMany({
@@ -87,7 +100,9 @@ export async function GET(
     // 5. GET OPTION ITEMS
     // ============================================================
 
-    const optionGroupIds = groups.map((group) => group.option_group_id);
+    const optionGroupIds = groups.map(
+      (group) => group.option_group_id
+    );
 
     const options =
       optionGroupIds.length > 0
@@ -106,6 +121,18 @@ export async function GET(
 
     // ============================================================
     // 6. GET OPTION PRICE BY VARIANT
+    //
+    // Ví dụ:
+    //
+    // Regular + Egg = +100
+    // Mini + Egg     = +100
+    //
+    // Hoặc:
+    //
+    // Regular + Cheese = +250
+    // Mini + Cheese     = +200
+    //
+    // Các giá này là GIÁ OPTION CỘNG THÊM.
     // ============================================================
 
     const optionIds = options.map((option) => option.id);
@@ -132,11 +159,21 @@ export async function GET(
       id: variant.id,
       code: variant.code,
       sku: variant.sku ?? null,
+
       name_vi: variant.name_vi ?? "",
       name_ja: variant.name_ja ?? "",
       name_en: variant.name_en ?? "",
       name_zh: variant.name_zh ?? "",
+
+      // IMPORTANT:
+      // Đây là GIÁ THỰC TẾ của size.
+      //
+      // Regular = 790
+      // Mini    = 500
+      //
+      // Không cộng với product.price nữa.
       price: Number(variant.price ?? 0),
+
       is_default: variant.is_default,
       is_available: variant.is_available,
       stock_status: variant.stock_status,
@@ -147,153 +184,167 @@ export async function GET(
     // 8. BUILD OPTION GROUPS
     // ============================================================
 
-    // ============================================================
-// 8. BUILD OPTION GROUPS
-// ============================================================
+    const optionGroups = groups.map((group) => {
+      const groupInfo = group.tbl_menu_option_groups;
 
-const optionGroups = groups.map((group) => {
-  const groupInfo = group.tbl_menu_option_groups;
+      const groupOptions = options
+        .filter(
+          (option) =>
+            option.option_group_id === group.option_group_id
+        )
+        .map((option) => {
+          const variantPriceMap: Record<string, number> = {};
 
-  const groupOptions = options
-    .filter(
-      (option) =>
-        option.option_group_id === group.option_group_id
-    )
-    .map((option) => {
-      const variantPriceMap: Record<string, number> = {};
+          for (const row of variantPrices) {
+            if (row.option_item_id !== option.id) {
+              continue;
+            }
 
-      for (const row of variantPrices) {
-        if (row.option_item_id !== option.id) continue;
+            variantPriceMap[String(row.variant_id)] = Number(
+              row.price ?? 0
+            );
+          }
 
-        variantPriceMap[String(row.variant_id)] =
-          Number(row.price ?? 0);
-      }
+          const hasVariantPricing =
+            Object.keys(variantPriceMap).length > 0;
 
-      const hasVariantPricing =
-        Object.keys(variantPriceMap).length > 0;
+          return {
+            id: option.id,
+            code: option.code,
+
+            name_vi: option.name_vi ?? "",
+            name_ja: option.name_ja ?? "",
+            name_en: option.name_en ?? "",
+            name_zh: option.name_zh ?? "",
+
+            name:
+              option.name_vi ??
+              option.name_ja ??
+              option.name_en ??
+              option.name_zh ??
+              "",
+
+            icon_url: option.icon_url ?? null,
+
+            // Giá mặc định của option.
+            //
+            // Đây là GIÁ CỘNG THÊM.
+            //
+            // Ví dụ:
+            // Egg = +100
+            // Cheese = +250
+            price: Number(option.price ?? 0),
+
+            // Giá option theo variant.
+            //
+            // Key = variantId
+            //
+            // Ví dụ:
+            // {
+            //   "1": 100,
+            //   "2": 100
+            // }
+            variantPrices: variantPriceMap,
+
+            pricingMode: hasVariantPricing
+              ? "VARIANT"
+              : "DEFAULT",
+
+            sort_order: option.sort_order ?? 0,
+          };
+        });
+
+      // ==========================================================
+      // GROUP NAME
+      // ==========================================================
+
+      const displayName =
+        locale === "ja"
+          ? group.display_name_ja ??
+            groupInfo.name_ja ??
+            group.display_name_vi ??
+            groupInfo.name_vi ??
+            ""
+          : locale === "en"
+          ? group.display_name_en ??
+            groupInfo.name_en ??
+            group.display_name_vi ??
+            groupInfo.name_vi ??
+            ""
+          : locale === "zh"
+          ? group.display_name_zh ??
+            groupInfo.name_zh ??
+            group.display_name_vi ??
+            groupInfo.name_vi ??
+            ""
+          : group.display_name_vi ??
+            groupInfo.name_vi ??
+            group.display_name_ja ??
+            groupInfo.name_ja ??
+            "";
+
+      // ==========================================================
+      // GROUP SETTINGS
+      // ==========================================================
+
+      const isRequired = groupInfo.is_required ?? false;
+
+      const selectionType =
+        String(groupInfo.type).toLowerCase() === "multiple"
+          ? "multiple"
+          : "single";
+
+      const maxChoices = groupInfo.max_choices ?? 1;
 
       return {
-        id: option.id,
-        code: option.code,
+        id: group.id,
 
-        name_vi: option.name_vi ?? "",
-        name_ja: option.name_ja ?? "",
-        name_en: option.name_en ?? "",
-        name_zh: option.name_zh ?? "",
+        option_group_id: group.option_group_id,
 
-        name:
-          option.name_vi ??
-          option.name_ja ??
-          option.name_en ??
-          option.name_zh ??
+        name_vi:
+          group.display_name_vi ??
+          groupInfo.name_vi ??
           "",
 
-        icon_url: option.icon_url ?? null,
+        name_ja:
+          group.display_name_ja ??
+          groupInfo.name_ja ??
+          "",
 
-        // ----------------------------------------------------
-        // DEFAULT PRICE
-        // ----------------------------------------------------
+        name_en:
+          group.display_name_en ??
+          groupInfo.name_en ??
+          "",
 
-        price: Number(option.price ?? 0),
+        name_zh:
+          group.display_name_zh ??
+          groupInfo.name_zh ??
+          "",
 
-        // ----------------------------------------------------
-        // PRICE BY VARIANT
-        //
-        // {
-        //   "1": 100,
-        //   "2": 150,
-        //   "3": 200
-        // }
-        // ----------------------------------------------------
+        name: displayName,
 
-        variantPrices: variantPriceMap,
+        title: displayName,
 
-        pricingMode: hasVariantPricing
-          ? "VARIANT"
-          : "DEFAULT",
+        required: isRequired,
+
+        type: selectionType,
+
+        is_required: isRequired,
+
+        selection_type: selectionType,
+
+        min_choices: group.min_choices ?? 0,
+
+        max_choices: maxChoices,
+
+        options: groupOptions,
+
+        sort_order:
+          group.sort_order ??
+          groupInfo.sort_order ??
+          0,
       };
     });
-
-  const displayName =
-    locale === "ja"
-      ? group.display_name_ja ??
-        groupInfo.name_ja ??
-        group.display_name_vi ??
-        groupInfo.name_vi ??
-        ""
-      : locale === "en"
-      ? group.display_name_en ??
-        groupInfo.name_en ??
-        group.display_name_vi ??
-        groupInfo.name_vi ??
-        ""
-      : locale === "zh"
-      ? group.display_name_zh ??
-        groupInfo.name_zh ??
-        group.display_name_vi ??
-        groupInfo.name_vi ??
-        ""
-      : group.display_name_vi ??
-        groupInfo.name_vi ??
-        group.display_name_ja ??
-        groupInfo.name_ja ??
-        "";
-
-  const isRequired =
-    groupInfo.is_required ?? false;
-
-  const selectionType =
-    String(groupInfo.type).toLowerCase() ===
-    "multiple"
-      ? "multiple"
-      : "single";
-
-  const maxChoices =
-    groupInfo.max_choices ?? 1;
-
-  return {
-    id: group.id,
-
-    // ID của mapping
-    option_group_id: group.option_group_id,
-
-    name_vi:
-      group.display_name_vi ??
-      groupInfo.name_vi ??
-      "",
-
-    name_ja:
-      group.display_name_ja ??
-      groupInfo.name_ja ??
-      "",
-
-    name_en:
-      group.display_name_en ??
-      groupInfo.name_en ??
-      "",
-
-    name_zh:
-      group.display_name_zh ??
-      groupInfo.name_zh ??
-      "",
-
-    name: displayName,
-    title: displayName,
-
-    required: isRequired,
-    is_required: isRequired,
-
-    type: selectionType,
-    selection_type: selectionType,
-
-    min_choices:
-      group.min_choices ?? 0,
-
-    max_choices: maxChoices,
-
-    options: groupOptions,
-  };
-});
 
     // ============================================================
     // 9. ALLERGENS
@@ -337,12 +388,20 @@ const optionGroups = groups.map((group) => {
 
     const description =
       locale === "ja"
-        ? food.description_ja ?? food.description_vi ?? ""
+        ? food.description_ja ??
+          food.description_vi ??
+          ""
         : locale === "en"
-        ? food.description_en ?? food.description_vi ?? ""
+        ? food.description_en ??
+          food.description_vi ??
+          ""
         : locale === "zh"
-        ? food.description_zh ?? food.description_vi ?? ""
-        : food.description_vi ?? food.description_ja ?? "";
+        ? food.description_zh ??
+          food.description_vi ??
+          ""
+        : food.description_vi ??
+          food.description_ja ??
+          "";
 
     // ============================================================
     // 12. RESPONSE
@@ -350,38 +409,52 @@ const optionGroups = groups.map((group) => {
 
     return NextResponse.json({
       success: true,
+
       data: {
         ...food,
+
         description,
+
         variants: variantResponse,
+
         optionGroups,
+
         allergens: allergens.map((a) => ({
           id: a.allergen_id,
           code: a.tbl_allergen.code,
+
           name_ja: a.tbl_allergen.name_ja,
           name_vi: a.tbl_allergen.name_vi,
           name_en: a.tbl_allergen.name_en,
           name_zh: a.tbl_allergen.name_zh,
         })),
+
         tags: tags.map((t) => ({
           id: t.tag_id,
           code: t.tbl_tag.code,
+
           name_ja: t.tbl_tag.name_ja,
           name_vi: t.tbl_tag.name_vi,
           name_en: t.tbl_tag.name_en,
           name_zh: t.tbl_tag.name_zh,
+
           color: t.tbl_tag.color,
           icon: t.tbl_tag.icon,
         })),
       },
     });
   } catch (error) {
-    console.error("[GET /api/menu-items/[id]] API Error:", error);
+    console.error(
+      "[GET /api/menu-items/[id]] API Error:",
+      error
+    );
 
     return NextResponse.json(
       {
         success: false,
+
         message: "Internal Server Error",
+
         error:
           process.env.NODE_ENV === "development"
             ? error instanceof Error

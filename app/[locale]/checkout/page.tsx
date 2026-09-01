@@ -202,9 +202,15 @@ export default function CheckoutPage({ params }: Props) {
     });
   }, [storeSlugParam, locale, router]);
 
+  // FIX: Tính total từ basePrice + optionsPrice thay vì totalPrice
   const total = useMemo(
     () =>
-      cart.reduce((sum, item) => sum + Number(item.totalPrice || 0), 0),
+      cart.reduce((sum, item) => {
+        const basePrice = Number(item.basePrice ?? item.price ?? 0);
+        const optionsPrice = Number(item.optionsPrice ?? 0);
+        const quantity = Number(item.quantity ?? 1);
+        return sum + (basePrice + optionsPrice) * quantity;
+      }, 0),
     [cart]
   );
 
@@ -245,48 +251,74 @@ export default function CheckoutPage({ params }: Props) {
     setInitError(null);
 
     try {
+      // 👇 Chuyển đổi cart items sang định dạng server
+      const items = cart.map((item) => {
+        // Lấy selectedOptionIds từ item nếu có
+        let optionIds: number[] = [];
+
+        if (Array.isArray(item.selectedOptionIds) && item.selectedOptionIds.length > 0) {
+          optionIds = item.selectedOptionIds;
+        } else if (item.selectedOptions && typeof item.selectedOptions === 'object') {
+          // Fallback: trích xuất từ selectedOptions
+          const selected = item.selectedOptions as Record<string, any>;
+          optionIds = Object.values(selected)
+            .flatMap((val: any) => {
+              if (Array.isArray(val)) {
+                return val.map((opt: any) => opt.id).filter(Boolean);
+              }
+              return val?.id ? [val.id] : [];
+            })
+            .filter((id): id is number => typeof id === 'number');
+        }
+
+        return {
+          menuItemId: item.menuItemId,
+          variantId: item.variantId ?? null,
+          variantCode: item.variantCode ?? null,
+          quantity: item.quantity,
+          selectedOptionIds: optionIds,
+          note: item.note ?? null,
+        };
+      });
+
       const payload = {
         storeId,
         locale,
         orderType,
-        scheduledTime, 
-        customer: orderType === 'IMMEDIATE'
-          ? null
-          : {
-              name: name.trim(),
-              phone: phone.trim(),
-            },
+        scheduledTime,
+        customer: orderType === 'IMMEDIATE' ? null : { name: name.trim(), phone: phone.trim() },
         paymentMethod,
-        items: cart,
+        items,
         orderToken,
       };
 
+      console.log('[Checkout] CLIENT CART BEFORE SUBMIT', cart.map((item) => ({
+        menuItemId: item.menuItemId,
+        variantId: item.variantId,
+        totalPrice: item.totalPrice,
+        selectedOptions: item.selectedOptions,
+        selectedOptionIds: item.selectedOptionIds,
+      })));
+      console.log('[Checkout] CLIENT TOTAL', total);
+
       const res = await fetch('/api/checkout', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
 
       const data = await res.json();
 
-      if (
-        res.ok &&
-        typeof data?.clientSecret === 'string' &&
-        data.clientSecret.length > 0
-      ) {
+      if (res.ok && typeof data?.clientSecret === 'string' && data.clientSecret.length > 0) {
         setClientSecret(data.clientSecret);
         return;
       }
 
-      // Xử lý lỗi (giữ nguyên)
+      // Xử lý lỗi...
       if (data?.error) {
         const { code, item } = data.error;
         if (code === 'ITEM_UNAVAILABLE' && item?.menuItemId) {
-          const cartItem = cart.find(
-            (ci) => Number(ci.menuItemId) === Number(item.menuItemId)
-          );
+          const cartItem = cart.find((ci) => Number(ci.menuItemId) === Number(item.menuItemId));
           const itemName = cartItem?.name || cartItem?.foodNameSnapshot || null;
           const message = getLocalizedItemUnavailableMessage(locale, itemName);
           setInitError(message);
@@ -299,11 +331,7 @@ export default function CheckoutPage({ params }: Props) {
       }
     } catch (error) {
       console.error('[Checkout] initialization error', error);
-      setInitError(
-        error instanceof Error
-          ? error.message
-          : 'Unable to initialize payment.'
-      );
+      setInitError(error instanceof Error ? error.message : 'Unable to initialize payment.');
     } finally {
       setLoading(false);
     }
@@ -313,12 +341,12 @@ export default function CheckoutPage({ params }: Props) {
 
   return (
     <>
-      <OrderHeader locale={locale} storeInfo={storeInfo} />
 
       <CheckoutLayout
         locale={locale}
         title={t.title}
         subtitle={t.subtitle}
+        header={<OrderHeader locale={locale} storeInfo={storeInfo} />}
         summary={
           <OrderSummarySection
             cart={cart}
